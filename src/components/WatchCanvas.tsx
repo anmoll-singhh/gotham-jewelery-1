@@ -67,7 +67,7 @@ export function WatchCanvas({
     onProgressRef.current = onProgress;
   }, [onProgress]);
 
-  const [mode, setMode] = useState<"detecting" | "canvas" | "video">(
+  const [mode, setMode] = useState<"detecting" | "canvas" | "video" | "static">(
     "detecting",
   );
   const [loadPct, setLoadPct] = useState(0);
@@ -81,6 +81,12 @@ export function WatchCanvas({
 
   // ─── Phase 1: Detect whether frames exist ───────────────────────────────
   useEffect(() => {
+    // Mobile: skip 121-frame loading entirely (~10MB on a cellular connection).
+    // Show a single still frame instead — scroll-driven canvas is desktop-only.
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
+      setMode("static");
+      return;
+    }
     const probe = new Image();
     probe.onload = () => setMode("canvas");
     probe.onerror = () => setMode("video");
@@ -116,9 +122,9 @@ export function WatchCanvas({
     };
   }, [mode, totalFrames, framesPath]);
 
-  // ─── Phase 2b: Video fallback mode — just mark ready ────────────────────
+  // ─── Phase 2b: Video fallback / static mode — just mark ready ───────────
   useEffect(() => {
-    if (mode === "video") setReady(true);
+    if (mode === "video" || mode === "static") setReady(true);
   }, [mode]);
 
   // ─── Phase 3a: Canvas RAF render loop ───────────────────────────────────
@@ -221,12 +227,14 @@ export function WatchCanvas({
             Math.floor(progress * (frames.current.length - 1)),
             frames.current.length - 1,
           );
-        } else {
+        } else if (mode === "video") {
           // Just update the ref — RAF loop in Phase 3b handles the actual seek
           const v = videoRef.current;
           if (!v?.duration) return;
           videoTargetTime.current = progress * v.duration;
         }
+        // "static" mode: falls through directly — no frame/video work needed,
+        // but we still must update entry/exit overlays and call onProgress.
         // Single source of truth — parent text panels driven from here
         onProgressRef.current?.(progress);
 
@@ -328,6 +336,24 @@ export function WatchCanvas({
             width: "100%",
             height: "100%",
             objectFit: "cover",
+            zIndex: 2,
+            background: "#000",
+          }}
+        />
+      )}
+
+      {/* ── Static poster (mobile — avoids 121-frame / video load) ── */}
+      {mode === "static" && (
+        <img
+          src={`${framesPath}/frame0061.jpg`}
+          alt="Swiss timepiece"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            objectPosition: "center",
             zIndex: 2,
             background: "#000",
           }}

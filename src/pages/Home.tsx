@@ -82,40 +82,51 @@ function HeroScene({ live }: { live: boolean }) {
   // Scroll-driven: sub-text, CTAs, address slide in as user scrolls through pin
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.set([subRef.current, ctaRef.current, sideRef.current], {
-        opacity: 0,
-        y: 30,
-      });
+      const mm = gsap.matchMedia();
 
-      // ─── Animation timeline over the first 220vh ────────────────
-      // Content reveals finish at 220vh; HeroScene STAYS PINNED until
-      // 320vh so WatchCanvas can travel from viewport-bottom to
-      // viewport-top without any visible gap between sections.
-      const tl = gsap.timeline({
-        scrollTrigger: {
+      // ── Desktop: full scroll-driven reveal + pin ─────────────────────────
+      // Content reveals finish at 220vh; HeroScene STAYS PINNED until 320vh
+      // so WatchCanvas can travel from viewport-bottom to viewport-top without
+      // any visible gap between sections.
+      mm.add("(min-width: 768px)", () => {
+        gsap.set([subRef.current, ctaRef.current, sideRef.current], {
+          opacity: 0,
+          y: 30,
+        });
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: wrapRef.current,
+            start: "top top",
+            end: "+=220%",
+            scrub: 1,
+          },
+        });
+        tl.to(videoRef.current, { scale: 1.06, duration: 2.0, ease: "none" }, 0);
+        tl.to(subRef.current,  { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.3);
+        tl.to(ctaRef.current,  { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 0.8);
+        tl.to(sideRef.current, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.95);
+
+        ScrollTrigger.create({
           trigger: wrapRef.current,
           start: "top top",
-          end: "+=220%",          // animations complete at 220vh
-          scrub: 1,
-          // No pin here — the dedicated pin ST below owns the pin
-        },
+          end: "+=320%",
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        });
       });
-      tl.to(videoRef.current, { scale: 1.06, duration: 2.0, ease: "none" }, 0);
-      tl.to(subRef.current,  { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.3);
-      tl.to(ctaRef.current,  { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 0.8);
-      tl.to(sideRef.current, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.95);
 
-      // ─── Pin extends 100vh BEYOND the animation end ─────────────
-      // The extra 100vh is exactly the distance WatchCanvas needs to
-      // travel to reach "top top". Result: when HeroScene unpins at
-      // 320vh, WatchCanvas is already at the top — zero visible gap.
-      ScrollTrigger.create({
-        trigger: wrapRef.current,
-        start: "top top",
-        end: "+=320%",            // 220% anim + 100% gap bridge
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
+      // ── Mobile: no pin, no scroll-driven reveal ───────────────────────────
+      // The 320vh pin creates 3+ screens of frozen scroll on mobile devices —
+      // catastrophic UX on iOS. Instead, show all content immediately (after
+      // the loader exits). The video still plays as an ambient background.
+      mm.add("(max-width: 767px)", () => {
+        gsap.set([subRef.current, ctaRef.current, sideRef.current], {
+          opacity: 1,
+          y: 0,
+          immediateRender: true,
+        });
       });
     }, wrapRef);
     return () => ctx.revert();
@@ -333,14 +344,25 @@ function VaultScene() {
   const p1 = useRef<HTMLDivElement>(null);
   const p2 = useRef<HTMLDivElement>(null);
   const p3 = useRef<HTMLDivElement>(null);
+  // Stable ref — read at GSAP callback time, never stale
+  const isMobileRef = useRef(
+    typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches
+  );
 
-  // Initialize panels as hidden
+  // Initialize panels as hidden (P3 immediately visible on mobile)
   useLayoutEffect(() => {
-    gsap.set([p1.current, p2.current, p3.current], {
-      opacity: 0,
-      y: 70,
-      immediateRender: true,
-    });
+    if (isMobileRef.current) {
+      // P1 + P2 are .hide-mobile anyway; P3 must be visible immediately —
+      // on mobile the scroll window is too short to reach 82% progress.
+      gsap.set([p1.current, p2.current], { opacity: 0, y: 70, immediateRender: true });
+      gsap.set(p3.current, { opacity: 1, y: 0, immediateRender: true });
+    } else {
+      gsap.set([p1.current, p2.current, p3.current], {
+        opacity: 0,
+        y: 70,
+        immediateRender: true,
+      });
+    }
   }, []);
 
   // Driven by WatchCanvas's single ScrollTrigger — no competing trigger
@@ -365,14 +387,16 @@ function VaultScene() {
         immediateRender: false,
       });
 
-    // P3 CTA — enters at 82%, stays through end
-    const p3i = c01((prog - 0.82) / 0.1);
-    if (p3.current)
-      gsap.set(p3.current, {
-        opacity: p3i,
-        y: (1 - p3i) * 60,
-        immediateRender: false,
-      });
+    // P3 CTA — desktop: animate in at 82%; mobile: already visible from init
+    if (!isMobileRef.current) {
+      const p3i = c01((prog - 0.82) / 0.1);
+      if (p3.current)
+        gsap.set(p3.current, {
+          opacity: p3i,
+          y: (1 - p3i) * 60,
+          immediateRender: false,
+        });
+    }
   }, []);
 
   return (

@@ -210,22 +210,35 @@ a, button { transition: opacity 0.2s var(--ease-ui); }
   will-change: transform;
 }
 @media (max-width: 767px) {
-  /* Disable horizontal scroll: unpin and show as vertical stack */
-  .h-scroll-container { overflow: visible !important; }
+  /* Disable horizontal scroll: unpin and show as vertical stack.
+     padding-top creates room for the absolute-positioned section header
+     that would otherwise overlap the first card. */
+  .h-scroll-container {
+    height: auto !important;
+    overflow: visible !important;
+    padding-top: 88px !important;
+  }
   .h-scroll-track {
     display: flex !important;
     flex-direction: column !important;
     width: 100% !important;
+    /* Override inline height: 100vh — without this the section is exactly
+       100vh regardless of how many cards are stacked inside it. */
+    height: auto !important;
     will-change: auto !important;
     transform: none !important;
   }
+  /* Each service card needs an explicit height on mobile so that the
+     internal `height: 52%` image div resolves to a real pixel value.
+     With height: auto on the parent the percentage collapses to 0. */
   .h-scroll-panel {
     width: 100% !important;
-    height: auto !important;
-    min-height: 0 !important;
-    flex-shrink: 1 !important;
+    height: clamp(380px, 88vw, 480px) !important;
+    min-height: 380px !important;
+    flex-shrink: 0 !important;
+    margin-right: 0 !important;
+    margin-bottom: 2px;
     border-right: none !important;
-    border-bottom: 1px solid var(--c-border) !important;
   }
 }
 
@@ -330,4 +343,53 @@ a, button { transition: opacity 0.2s var(--ease-ui); }
 /* ── Utility: hide on mobile ─────────────────────────────────────── */
 @media (max-width: 767px) {
   .hide-mobile { display: none !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ADDITIONAL MOBILE OVERRIDES — layout & density corrections
+   Applied on top of base mobile media queries above.
+═══════════════════════════════════════════════════════════════════ */
+
+/* ── General section padding: halve the heaviest values on mobile ── */
+@media (max-width: 767px) {
+  /* Exchange grid inner panels have var(--s-xl) top/bottom — too much */
+  .exchange-grid > * > div {
+    min-height: 54vh !important;
+    padding: var(--s-lg) var(--gutter) !important;
+  }
+
+  /* RingMoment / City parallax scenes: prevent excessive min-height */
+  /* (These use inline minHeight: "85vh" / "82vh" — fine on desktop,
+     but 85vh is almost full screen on a phone with no room to breathe) */
+  .ring-moment-scene { min-height: 64vh !important; }
+  .city-scene        { min-height: 64vh !important; }
+}
+
+/* ── Button tap area: ensure comfortable 44px minimum tap target ─── */
+@media (max-width: 767px) {
+  .btn-primary,
+  .btn-outline,
+  .btn-ghost {
+    min-height: 46px;
+    padding: 14px 28px;
+  }
+}
+
+/* ── Collection bento: tighter gap on mobile ─────────────────────── */
+@media (max-width: 767px) {
+  .bento-grid {
+    gap: 6px !important;
+  }
+}
+
+/* ── Footer: extra bottom padding for iOS home-bar ──────────────── */
+@media (max-width: 767px) {
+  footer {
+    padding-bottom: max(var(--s-sm), env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* ── Prevent horizontal overflow bleed from edge-to-edge sections ── */
+@media (max-width: 767px) {
+  main { overflow-x: hidden; }
 }
