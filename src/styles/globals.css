@@ -1,0 +1,333 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/* ─── Reset ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: auto; } /* Lenis owns smooth scroll */
+
+body {
+  background-color: var(--c-void);
+  color: var(--c-text);
+  font-family: var(--f-body);
+  font-size: var(--t-body);
+  font-weight: 300;
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img, video { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { background: none; border: none; cursor: pointer; font: inherit; color: inherit; }
+ul, ol { list-style: none; }
+
+/* ─── Label utility ──────────────────────────────────────────────── */
+.lbl {
+  font-family: var(--f-label);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+/* ─── Buttons ────────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 36px;
+  background: var(--c-accent);
+  color: var(--c-void);
+  font-family: var(--f-label);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: var(--ls-cta);
+  text-transform: uppercase;
+  border: 1px solid var(--c-accent);
+  cursor: pointer;
+  transition:
+    background  0.3s var(--ease-ui),
+    color       0.3s var(--ease-ui),
+    border-color 0.3s var(--ease-ui),
+    transform   0.2s var(--ease-ui);
+  white-space: nowrap;
+  user-select: none;
+}
+.btn-primary:hover {
+  background:   rgba(197,164,110,0.12);
+  border-color: var(--c-accent);
+  color:        var(--c-accent);
+}
+.btn-primary:active { transform: translateY(1px) scale(0.983); }
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 34px;
+  background: transparent;
+  color: var(--c-white);
+  font-family: var(--f-label);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: var(--ls-cta);
+  text-transform: uppercase;
+  border: 1px solid rgba(237,232,224,0.22);
+  cursor: pointer;
+  transition:
+    border-color 0.3s var(--ease-ui),
+    color        0.3s var(--ease-ui),
+    background   0.3s var(--ease-ui),
+    transform    0.2s var(--ease-ui);
+  white-space: nowrap;
+  user-select: none;
+}
+.btn-outline:hover {
+  border-color: rgba(197,164,110,0.55);
+  color:        var(--c-accent);
+}
+.btn-outline:active { transform: translateY(1px) scale(0.983); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: transparent;
+  color: var(--c-text-dark);
+  font-family: var(--f-label);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: var(--ls-cta);
+  text-transform: uppercase;
+  border: 1px solid rgba(28,27,25,0.18);
+  cursor: pointer;
+  transition:
+    border-color 0.3s var(--ease-ui),
+    background   0.3s var(--ease-ui),
+    color        0.3s var(--ease-ui),
+    transform    0.2s var(--ease-ui);
+  white-space: nowrap;
+}
+.btn-ghost:hover {
+  border-color: var(--c-accent-rich);
+  color:        var(--c-accent-rich);
+}
+.btn-ghost:active { transform: translateY(1px) scale(0.983); }
+
+/* ─── Smooth transitions ─────────────────────────────────────────── */
+a, button { transition: opacity 0.2s var(--ease-ui); }
+
+/* ─── Selection ──────────────────────────────────────────────────── */
+::selection { background: rgba(197,164,110,0.25); color: var(--c-white); }
+
+/* ─── Focus-visible (keyboard accessibility — WCAG 2.1 AA) ──────── */
+/* Gold outline only for keyboard navigation, invisible on mouse      */
+:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* ─── Prefers-reduced-motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:        0.001ms !important;
+    animation-iteration-count: 1       !important;
+    transition-duration:       0.001ms !important;
+    scroll-behavior:           auto    !important;
+  }
+}
+
+/* ─── Loading screen grain ───────────────────────────────────────── */
+.ls-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.2;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  animation: ls-grain-shift 0.5s steps(2) infinite;
+}
+@keyframes ls-grain-shift {
+  0%   { transform: translate(0, 0)     }
+  25%  { transform: translate(-4px, 2px)  }
+  50%  { transform: translate(2px, -3px)  }
+  75%  { transform: translate(-2px, 4px)  }
+  100% { transform: translate(3px, -1px)  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE-FIRST RESPONSIVE UTILITIES
+   Breakpoint: 767px
+═══════════════════════════════════════════════════════════════════ */
+
+/* ── Nav ─────────────────────────────────────────────────────────── */
+/* Desktop links — hidden on mobile */
+.nav-desktop { display: flex !important; }
+.nav-hamburger { display: none !important; }
+
+@media (max-width: 767px) {
+  .nav-desktop   { display: none !important; }
+  .nav-hamburger { display: flex !important; }
+}
+
+/* ── 2-col grids → 1-col on mobile ──────────────────────────────── */
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-md);
+}
+@media (max-width: 767px) {
+  .grid-2col { grid-template-columns: 1fr !important; gap: var(--s-sm) !important; }
+}
+
+/* ── 3-col grids → 1-col on mobile ──────────────────────────────── */
+.grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 2vw, 28px);
+}
+@media (max-width: 767px) {
+  .grid-3col { grid-template-columns: 1fr; gap: 14px; }
+  /* WatchTiltCard uses height:100% — give cells a defined dimension */
+  .grid-3col > * { aspect-ratio: 4/5; min-height: 260px; }
+}
+@media (min-width: 480px) and (max-width: 767px) {
+  .grid-3col { grid-template-columns: 1fr 1fr; }
+  .grid-3col > * { aspect-ratio: 3/4; min-height: 220px; }
+}
+
+/* ── Horizontal scroll containers → vertical stack on mobile ─────── */
+.h-scroll-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+@media (max-width: 767px) {
+  /* Disable horizontal scroll: unpin and show as vertical stack */
+  .h-scroll-container { overflow: visible !important; }
+  .h-scroll-track {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    will-change: auto !important;
+    transform: none !important;
+  }
+  .h-scroll-panel {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    flex-shrink: 1 !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--c-border) !important;
+  }
+}
+
+/* ── Hero min-height fix for mobile browsers ─────────────────────── */
+.hero-full { min-height: 100dvh; }
+@media (max-width: 767px) {
+  .hero-full { min-height: 100svh; }
+}
+
+/* ── Section padding scale on mobile ────────────────────────────── */
+@media (max-width: 767px) {
+  .section-pad {
+    padding-top:    var(--s-lg);
+    padding-bottom: var(--s-lg);
+  }
+  /* Reduce heavy s-xl padding to s-lg on mobile */
+  [style*="padding: var(--s-xl)"] {
+    padding: var(--s-lg) var(--gutter) !important;
+  }
+}
+
+/* ── Bento / asymmetric collection grid on mobile ────────────────── */
+@media (max-width: 767px) {
+  .bento-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: auto auto !important;
+    height: auto !important;
+  }
+  /* Give cells a defined height so WatchTiltCard height:100% resolves */
+  .bento-grid > * {
+    aspect-ratio: 3/4;
+    min-height: 180px;
+  }
+  .bento-grid > *:first-child {
+    grid-row: auto !important;
+    grid-column: 1 / -1 !important;
+    aspect-ratio: 16/9;
+    min-height: 220px;
+  }
+  .bento-grid > *:last-child {
+    grid-column: 1 / -1 !important;
+    aspect-ratio: 16/9;
+    min-height: 200px;
+  }
+}
+
+/* ── Footer responsive ───────────────────────────────────────────── */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--s-lg);
+  align-items: flex-start;
+}
+@media (max-width: 767px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: var(--s-md);
+  }
+  .footer-nav-cols {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: var(--s-sm) !important;
+  }
+}
+
+/* ── Exchange / 2-col CTAs → 1-col on mobile ────────────────────── */
+@media (max-width: 767px) {
+  .exchange-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .craft-grid {
+    grid-template-columns: 1fr !important;
+    direction: ltr !important;
+  }
+}
+
+/* ── Watch canvas: disable complex scrub on mobile ───────────────── */
+@media (max-width: 767px) {
+  .watch-canvas-wrap {
+    height: 70vw !important;
+    min-height: 320px !important;
+    max-height: 520px !important;
+  }
+}
+
+/* ── WatchTiltCard: simpler on mobile ───────────────────────────── */
+@media (max-width: 767px) {
+  .watch-tilt-card { transform: none !important; }
+}
+
+/* ── Touch: remove hover-only transforms ────────────────────────── */
+@media (hover: none) {
+  .btn-primary:hover,
+  .btn-outline:hover,
+  .btn-ghost:hover {
+    background: initial;
+    color:      initial;
+  }
+}
+
+/* ── Utility: hide on mobile ─────────────────────────────────────── */
+@media (max-width: 767px) {
+  .hide-mobile { display: none !important; }
+}

@@ -1,0 +1,100 @@
+/*
+ * GOTHAM CITY JEWELERS — Design Token System
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * TYPOGRAPHY STACK
+ *  --f-display  Bodoni Moda    Didone. Extreme thick/thin. Optical size axis.
+ *               Italic form is the money shot — thin strokes near-disappear
+ *               at 100px+ on dark backgrounds. Van Cleef / Vogue Italia DNA.
+ *
+ *  --f-body     Satoshi        Fontshare geometric sans. Clean, zero personality
+ *               (good). 300–700 weights. Pairs perfectly with Bodoni Moda.
+ *
+ *  --f-label    Clash Display  Fontshare geometric capitals. At 9–10px with
+ *               0.4em tracking it reads like stone-carved building inscription.
+ *               Perfect for "THE VAULT · SWISS MOVEMENT" label treatments.
+ *
+ * SIZE SCALE (per brief: hero max 140px, h1 max 96px)
+ *  Deliberately dramatic but restrained. Bodoni Moda at 100–140px italic on
+ *  #080808 is the closest you get to a printed Vogue spread in a browser.
+ */
+
+:root {
+
+  /* ── Fonts ──────────────────────────────────────────────────────────────── */
+  --f-display: 'Bodoni Moda', 'Didot', 'Bodoni MT', Georgia, serif;
+  --f-body:    'Satoshi', 'DM Sans', system-ui, sans-serif;
+  --f-label:   'Clash Display', 'Outfit', system-ui, sans-serif;
+
+  /* ── Palette ─────────────────────────────────────────────────────────────── */
+  --c-void:        #080808;   /* hero backgrounds — off-black, not pure */
+  --c-dark:        #111110;   /* raised surface */
+  --c-surface:     #F5F2EE;   /* warm cream — light sections */
+  --c-surface-2:   #EDEAE5;   /* slightly darker cream */
+  --c-white:       #EDE8E0;   /* off-white text */
+  --c-text:        #EDE8E0;
+  --c-text-dark:   #1C1B19;   /* text on light sections */
+  --c-muted:       rgba(237,232,224,0.44);
+  --c-muted-dark:  rgba(28,27,25,0.52);
+  --c-accent:      #C5A46E;   /* gold — all CTAs, labels, accents */
+  --c-accent-mid:  rgba(197,164,110,0.45);
+  --c-accent-light: rgba(197,164,110,0.15);
+  --c-accent-rich: #A8864F;   /* deeper gold for light sections */
+  --c-border:      rgba(197,164,110,0.08);
+
+  /* ── Typography — Display Scale ─────────────────────────────────────────── */
+  /*
+   * Per brief: hero = clamp(64px, 8vw, 140px).
+   * Bodoni Moda italic at these sizes with tight tracking = luxury editorial.
+   * Mobile sizes are handled via the media query below.
+   */
+  --t-hero:  clamp(56px, 8vw,  140px);   /* brief spec: 64→140px, pulled back slightly for balance */
+  --t-h1:    clamp(40px, 6.5vw, 96px);   /* major section headers */
+  --t-h2:    clamp(28px, 4.5vw, 64px);   /* sub-headers */
+  --t-h3:    clamp(22px, 3vw,   44px);   /* card / panel headers */
+  --t-sub:   clamp(13px, 1.05vw, 15px);  /* subtitles, body-adjacent */
+  --t-body:  13.5px;
+
+  /* ── Letter-spacing ──────────────────────────────────────────────────────── */
+  --ls-display:  -0.03em;     /* tight — Didone reads best compressed */
+  --ls-heading:  -0.025em;
+  --ls-body:      0.008em;
+  --ls-cta:       0.38em;     /* wide — Clash Display CTA treatment */
+  --ls-label:     0.42em;     /* very wide — stone-carved label feel */
+
+  /* ── Line-heights ────────────────────────────────────────────────────────── */
+  --lh-display:  0.96;        /* Bodoni Moda italic at 100px+ — slight tightness,
+                                 no overlap. 0.92 caused visible line collision. */
+  --lh-heading:  1.06;
+  --lh-body:     1.82;        /* More breathing room — minimal luxury needs air */
+
+  /* ── Spacing ─────────────────────────────────────────────────────────────── */
+  --s-xs:  12px;
+  --s-sm:  28px;
+  --s-md:  56px;
+  --s-lg:  96px;              /* +8px more air between sections */
+  --s-xl:  144px;             /* +16px — minimal luxury = generous whitespace */
+
+  /* ── Layout ──────────────────────────────────────────────────────────────── */
+  --max-w:  1320px;
+  --gutter: clamp(20px, 4.5vw, 72px);
+
+  /* ── Easing ──────────────────────────────────────────────────────────────── */
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-ui:   cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-silk: cubic-bezier(0.37, 0, 0.63, 1);
+}
+
+/* ── Mobile overrides ─────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  :root {
+    --t-hero:  clamp(40px, 11vw, 72px);
+    --t-h1:    clamp(32px, 9vw,  52px);
+    --t-h2:    clamp(24px, 7vw,  40px);
+    --t-h3:    clamp(20px, 5.5vw, 32px);
+    --t-sub:   14px;
+    --s-lg:    56px;
+    --s-xl:    72px;
+    --gutter:  20px;
+  }
+}
