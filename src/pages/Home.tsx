@@ -66,7 +66,6 @@ let _loaderShown = false;
 // ═════════════════════════════════════════════════════════════════════════════
 function HeroScene({ live }: { live: boolean }) {
   const wrapRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
   const subRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const sideRef = useRef<HTMLDivElement>(null);
@@ -140,23 +139,22 @@ function HeroScene({ live }: { live: boolean }) {
           transition: "opacity 1.1s var(--ease-silk)",
         }}
       >
-        <img
-          ref={imgRef}
-          src="/assets/gotham-newyork.jpg"
-          alt=""
-          aria-hidden="true"
-          className="hero-scenic-img"
-          onLoad={() => setImgReady(true)}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          onCanPlay={() => setImgReady(true)}
           onError={() => setImgReady(true)}
           style={{
             position: "absolute",
-            inset: "-6% -6%",
-            width: "112%",
-            height: "112%",
+            inset: 0,
+            width: "100%",
+            height: "100%",
             objectFit: "cover",
-            objectPosition: "center 40%",
-            filter: "brightness(0.22) saturate(0.75) sepia(0.18)",
+            filter: "brightness(0.24) saturate(0.85) sepia(0.12)",
           }}
+          src="/assets/hero-ring-void.mp4"
         />
         {/* Warm amber tone overlay — golden hour city glow */}
         <div style={{
@@ -420,11 +418,8 @@ function VaultScene() {
       />
 
       {/* P1 — left · "Mechanical." */}
-      <div
-        ref={p1}
-        className="vault-panel-1"
-      >
-        <div>
+      <div className="vault-panel-1">
+        <div ref={p1}>
           <span style={lbl}>The Vault · Swiss Movement</span>
           <p
             style={{
@@ -458,11 +453,8 @@ function VaultScene() {
       </div>
 
       {/* P2 — right · "Perfected." */}
-      <div
-        ref={p2}
-        className="vault-panel-2"
-      >
-        <div>
+      <div className="vault-panel-2">
+        <div ref={p2}>
           <p
             style={{
               fontFamily: "var(--f-display)",
@@ -505,7 +497,6 @@ function VaultScene() {
 
       {/* P3 — center bottom · CTA */}
       <div
-        ref={p3}
         style={{
           position: "absolute",
           bottom: "var(--s-sm)",
@@ -514,7 +505,7 @@ function VaultScene() {
           zIndex: 10,
         }}
       >
-        <div style={{ textAlign: "center" }}>
+        <div ref={p3} style={{ textAlign: "center" }}>
           <p
             className="vault-brand-list"
             style={{
@@ -728,7 +719,7 @@ const SERVICES = [
     body: "GIA-certified stones. Built in Manhattan from a single conversation. Yours from the first sketch — nothing exists until you say yes.",
     href: "/ring-builder",
     cta: "Begin Here",
-    img: "/assets/gotham-banner-patek.jpg",
+    img: "/assets/editorial-ring.png",
   },
   {
     num: "02",
@@ -738,7 +729,7 @@ const SERVICES = [
     body: "We don't sell collections. Every piece is made for someone specific. If you need to ask the price, we'll tell you. No pressure, ever.",
     href: "/custom-jewelry",
     cta: "Start Creating",
-    img: "/assets/gotham-rolex-lifestyle.webp",
+    img: "/assets/editorial-wrist.png",
   },
   {
     num: "03",

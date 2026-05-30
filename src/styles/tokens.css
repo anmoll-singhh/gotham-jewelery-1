@@ -22,9 +22,9 @@
 :root {
 
   /* ── Fonts ──────────────────────────────────────────────────────────────── */
-  --f-display: 'Cormorant Garamond', 'Cormorant', 'Garamond', Georgia, serif;
+  --f-display: 'Italiana', 'Bodoni Moda', Georgia, serif;
   --f-body:    'Jost', 'DM Sans', system-ui, sans-serif;
-  --f-label:   'Jost', 'Outfit', system-ui, sans-serif;
+  --f-label:   'Cinzel', 'Jost', system-ui, sans-serif;
 
   /* ── Palette ─────────────────────────────────────────────────────────────── */
   --c-void:        #080808;   /* hero backgrounds — off-black, not pure */
