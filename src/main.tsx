@@ -29,6 +29,18 @@ document.fonts.ready.then(() => {
   ScrollTrigger.refresh()
 })
 
+// Debounced resize refresh: GSAP pin spacers are calculated for a specific viewport.
+// Resizing (DevTools, orientation change, window snap) leaves stale spacers →
+// sections overlap or content appears at wrong scroll positions.
+let _resizeTimer: ReturnType<typeof setTimeout>
+window.addEventListener('resize', () => {
+  clearTimeout(_resizeTimer)
+  _resizeTimer = setTimeout(() => {
+    ScrollTrigger.refresh()
+    ;(lenis as unknown as { resize?: () => void }).resize?.()
+  }, 200)
+})
+
 // StrictMode OFF — breaks GSAP ScrollTrigger (double-fires effects)
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <BrowserRouter>

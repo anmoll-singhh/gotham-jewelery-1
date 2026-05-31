@@ -85,6 +85,17 @@
   --ease-silk: cubic-bezier(0.37, 0, 0.63, 1);
 }
 
+/* ── Tablet range (768–1023px) ────────────────────────────────────────────── */
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --t-hero:  clamp(44px, 7vw,   80px);
+    --t-h1:    clamp(32px, 5.5vw, 60px);
+    --t-h2:    clamp(24px, 4vw,   44px);
+    --gutter:  clamp(24px, 4vw,   48px);
+    --s-xl:    80px;
+  }
+}
+
 /* ── Mobile overrides ─────────────────────────────────────────────────────── */
 @media (max-width: 767px) {
   :root {
@@ -96,5 +107,15 @@
     --s-lg:    56px;
     --s-xl:    72px;
     --gutter:  20px;
+  }
+}
+
+/* ── Extra-small phones (< 480px) ─────────────────────────────────────────── */
+@media (max-width: 479px) {
+  :root {
+    --t-hero:  clamp(27px, 9.5vw, 40px);
+    --t-h1:    clamp(22px, 7.5vw, 34px);
+    --t-h2:    clamp(17px, 5.5vw, 26px);
+    --gutter:  16px;
   }
 }

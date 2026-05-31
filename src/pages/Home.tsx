@@ -129,7 +129,7 @@ function HeroScene({ live }: { live: boolean }) {
         {!imgReady && <HeroSkeleton key="sk" />}
       </AnimatePresence>
 
-      {/* Background — Manhattan at golden hour. Scenic, cinematic, grounded. */}
+      {/* Background — dark marble / watch hero. Static Ken Burns drift. */}
       <div
         style={{
           position: "absolute",
@@ -139,12 +139,12 @@ function HeroScene({ live }: { live: boolean }) {
           transition: "opacity 1.1s var(--ease-silk)",
         }}
       >
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          onCanPlay={() => setImgReady(true)}
+        <img
+          src="/assets/gotham-hero-watch-dark.jpg"
+          alt=""
+          aria-hidden="true"
+          className="hero-scenic-img"
+          onLoad={() => setImgReady(true)}
           onError={() => setImgReady(true)}
           style={{
             position: "absolute",
@@ -152,15 +152,15 @@ function HeroScene({ live }: { live: boolean }) {
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            filter: "brightness(0.24) saturate(0.85) sepia(0.12)",
+            objectPosition: "center center",
+            filter: "brightness(0.22) saturate(0.60) contrast(1.2)",
           }}
-          src="/assets/hero-ring-void.mp4"
         />
-        {/* Warm amber tone overlay — golden hour city glow */}
+        {/* Subtle warm-gold depth overlay */}
         <div style={{
           position: "absolute",
           inset: 0,
-          background: "radial-gradient(ellipse 70% 60% at 60% 45%, rgba(180,120,40,0.12) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse 80% 55% at 55% 42%, rgba(197,164,110,0.08) 0%, transparent 65%)",
           pointerEvents: "none",
         }} />
       </div>
@@ -212,6 +212,7 @@ function HeroScene({ live }: { live: boolean }) {
 
         {live && (
           <h1
+            className="hero-headline"
             style={{
               fontFamily: "var(--f-display)",
               fontSize: "var(--t-hero)",
@@ -344,12 +345,19 @@ function VaultScene() {
   const p1 = useRef<HTMLDivElement>(null);
   const p2 = useRef<HTMLDivElement>(null);
   const p3 = useRef<HTMLDivElement>(null);
+  const p1Wrap = useRef<HTMLDivElement>(null);
+  const p2Wrap = useRef<HTMLDivElement>(null);
 
   // Initialize panels as hidden
   useLayoutEffect(() => {
     gsap.set([p1.current, p2.current, p3.current], {
       opacity: 0,
       y: 70,
+      immediateRender: true,
+    });
+    gsap.set([p1Wrap.current, p2Wrap.current], {
+      opacity: 0,
+      pointerEvents: "none",
       immediateRender: true,
     });
   }, []);
@@ -359,20 +367,34 @@ function VaultScene() {
     // P1 "Mechanical." — enter 8→22%, hold, exit 35→46%
     const p1i = c01((prog - 0.08) / 0.14);
     const p1o = c01((prog - 0.35) / 0.11);
+    const p1val = p1i - p1o;
     if (p1.current)
       gsap.set(p1.current, {
-        opacity: p1i - p1o,
+        opacity: p1val,
         y: (1 - p1i) * 70 - p1o * 50,
+        immediateRender: false,
+      });
+    if (p1Wrap.current)
+      gsap.set(p1Wrap.current, {
+        opacity: p1val,
+        pointerEvents: p1val > 0.01 ? "auto" : "none",
         immediateRender: false,
       });
 
     // P2 "Perfected." — enter 50→64%, hold, exit 68→79%
     const p2i = c01((prog - 0.5) / 0.14);
     const p2o = c01((prog - 0.68) / 0.11);
+    const p2val = p2i - p2o;
     if (p2.current)
       gsap.set(p2.current, {
-        opacity: p2i - p2o,
+        opacity: p2val,
         y: (1 - p2i) * 70 - p2o * 50,
+        immediateRender: false,
+      });
+    if (p2Wrap.current)
+      gsap.set(p2Wrap.current, {
+        opacity: p2val,
+        pointerEvents: p2val > 0.01 ? "auto" : "none",
         immediateRender: false,
       });
 
@@ -390,7 +412,7 @@ function VaultScene() {
     <WatchCanvas
       totalFrames={121}
       framesPath="/assets/watch-frames"
-      videoSrc="/assets/watch-reveal-ap.mp4"
+      videoSrc="/assets/watch-patek-macro.mp4"
       scrubLength="260%"
       onProgress={onProgress}
     >
@@ -418,7 +440,7 @@ function VaultScene() {
       />
 
       {/* P1 — left · "Mechanical." */}
-      <div className="vault-panel-1">
+      <div className="vault-panel-1" ref={p1Wrap}>
         <div ref={p1}>
           <span style={lbl}>The Vault · Swiss Movement</span>
           <p
@@ -453,7 +475,7 @@ function VaultScene() {
       </div>
 
       {/* P2 — right · "Perfected." */}
-      <div className="vault-panel-2">
+      <div className="vault-panel-2" ref={p2Wrap}>
         <div ref={p2}>
           <p
             style={{
