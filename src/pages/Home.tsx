@@ -21,6 +21,7 @@ import {
   useState,
   useCallback,
   memo,
+  useEffect,
 } from "react";
 import {
   motion,
@@ -101,6 +102,8 @@ function HeroScene({ live }: { live: boolean }) {
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          preventOverlaps: true,
+          fastScrollEnd: true,
         });
       });
 
@@ -465,6 +468,8 @@ function VaultScene() {
               lineHeight: 1.8,
               marginTop: "20px",
               maxWidth: "250px",
+              textAlign: "center",
+              marginInline: "auto",
             }}
           >
             Every watch we carry has cleared
@@ -848,10 +853,10 @@ const SvcCard = memo(({ svc }: { svc: (typeof SERVICES)[0] }) => {
           <span
             style={{
               fontFamily: "var(--f-display)",
-              fontSize: "clamp(46px, 5vw, 68px)",
+              fontSize: "clamp(60px, 8vw, 80px)",
               fontStyle: "italic",
               color: "var(--c-accent-rich)",
-              opacity: 0.12,
+              opacity: 0.3,
               lineHeight: 0.82,
               display: "block",
               userSelect: "none",
@@ -1001,6 +1006,7 @@ function ServicesScene() {
           What We Do
         </span>
         <p
+          className="services-mobile-title"
           style={{
             fontFamily: "var(--f-display)",
             fontSize: "var(--t-h3)",
@@ -1009,12 +1015,10 @@ function ServicesScene() {
             fontWeight: 400,
             lineHeight: 1.1,
             marginTop: "6px",
-            maxWidth: "200px",
+            maxWidth: "100%",
           }}
         >
-          Three ways
-          <br />
-          to begin.
+          Three ways to begin.
         </p>
       </motion.div>
 
@@ -1046,7 +1050,14 @@ function ServicesScene() {
 // ═════════════════════════════════════════════════════════════════════════════
 function ExchangeScene() {
   return (
-    <section style={{ background: "var(--c-void)", overflow: "hidden" }}>
+    <section
+      style={{
+        background: "var(--c-void)",
+        overflow: "hidden",
+        position: "relative",
+        zIndex: 3,
+      }}
+    >
       <div
         className="exchange-grid"
         style={{
@@ -1260,6 +1271,10 @@ function CollectionScene() {
       style={{
         background: "var(--c-void)",
         padding: "var(--s-xl) var(--gutter)",
+        position: "relative",
+        zIndex: 2,
+        overflow: "hidden",
+        isolation: "isolate",
       }}
     >
       <div style={{ maxWidth: "var(--max-w)", margin: "0 auto" }}>
@@ -1299,18 +1314,9 @@ function CollectionScene() {
           </MagneticBtn>
         </motion.div>
 
-        {/* Asymmetric 2fr 1fr 1fr — collapses to 1fr 1fr on mobile via .bento-grid */}
-        <div
-          className="bento-grid"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "2fr 1fr 1fr",
-            gridTemplateRows: "1fr 1fr",
-            gap: "clamp(8px, 0.9vw, 13px)",
-            height: "clamp(440px, 56vh, 680px)",
-          }}
-        >
-          <div style={{ gridRow: "1 / 3" }}>
+        {/* Asymmetric 2fr 1fr 1fr — collapses responsively via classes in globals.css */}
+        <div className="bento-grid">
+          <div className="bento-item-large">
             <WatchTiltCard {...WATCHES[0]} delay={0} />
           </div>
           <div>
@@ -1319,7 +1325,7 @@ function CollectionScene() {
           <div>
             <WatchTiltCard {...WATCHES[2]} delay={0.14} />
           </div>
-          <div style={{ gridColumn: "2 / 4" }}>
+          <div className="bento-item-wide">
             <WatchTiltCard {...WATCHES[3]} delay={0.2} />
           </div>
         </div>
@@ -1365,6 +1371,7 @@ function CityScene() {
         display: "flex",
         alignItems: "center",
         background: "#050505",
+        zIndex: 5,
       }}
     >
       <img
@@ -1404,7 +1411,7 @@ function CityScene() {
       />
 
       <div
-        className="grid-2col"
+        className="grid-2col city-scene-content"
         style={{
           position: "relative",
           zIndex: 10,
@@ -1530,7 +1537,14 @@ function LeadCaptureScene() {
   }
 
   return (
-    <section style={{ background: "var(--c-dark)", padding: "var(--s-xl) var(--gutter)" }}>
+    <section
+      style={{
+        background: "var(--c-dark)",
+        padding: "var(--s-xl) var(--gutter)",
+        position: "relative",
+        zIndex: 4,
+      }}
+    >
       <div
         className="grid-2col"
         style={{
@@ -1825,6 +1839,30 @@ export default function Home() {
     requestAnimationFrame(() =>
       requestAnimationFrame(() => ScrollTrigger.refresh()),
     );
+  }, []);
+
+  useEffect(() => {
+    // Refresh ScrollTrigger when window fully loads all assets (images, fonts, stylesheets)
+    const handleLoad = () => {
+      ScrollTrigger.refresh();
+    };
+    window.addEventListener("load", handleLoad);
+    
+    // Refresh ScrollTrigger when DOM is fully settled
+    document.fonts.ready.then(() => {
+      ScrollTrigger.refresh();
+    });
+
+    // Refresh periodically during first few seconds to account for images/lazy media loading
+    const intervals = [300, 700, 1500, 3000, 5000];
+    const timers = intervals.map(delay => setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, delay));
+
+    return () => {
+      window.removeEventListener("load", handleLoad);
+      timers.forEach(t => clearTimeout(t));
+    };
   }, []);
 
   return (

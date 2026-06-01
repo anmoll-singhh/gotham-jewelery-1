@@ -57,97 +57,145 @@ function TheProcess() {
   }, [])
 
   return (
-    <div ref={containerRef} className="h-scroll-container" style={{ overflow: 'hidden', background: 'var(--c-dark)' }}>
-      <div ref={trackRef} className="h-scroll-track" style={{ display: 'flex', width: 'max-content', willChange: 'transform', alignItems: 'stretch' }}>
+    <>
+      {/* DESKTOP VERSION — hidden on mobile */}
+      <div ref={containerRef} className="h-scroll-container hide-mobile" style={{ overflow: 'hidden', background: 'var(--c-dark)' }}>
+        <div ref={trackRef} className="h-scroll-track" style={{ display: 'flex', width: 'max-content', willChange: 'transform', alignItems: 'stretch' }}>
 
-        {/* Intro panel */}
-        <div className="h-scroll-panel h-scroll-panel-text" style={{
-          width:          '50vw',
-          minHeight:      '100vh',
-          display:        'flex',
-          flexDirection:  'column',
-          justifyContent: 'center',
-          padding:        'var(--s-lg) var(--gutter)',
-          flexShrink:      0,
-          borderRight:    '1px solid var(--c-border)',
-        }}>
-          <span style={labelStyle}>The Process</span>
-          <h2 style={{
-            fontFamily: 'var(--f-display)',
-            fontSize:   'var(--t-h2)',
-            color:      'var(--c-white)',
-            fontStyle:  'italic',
-            fontWeight:  400,
-            lineHeight:  1.1,
+          {/* Intro panel */}
+          <div className="h-scroll-panel h-scroll-panel-text" style={{
+            width:          '50vw',
+            minHeight:      '100vh',
+            display:        'flex',
+            flexDirection:  'column',
+            justifyContent: 'center',
+            padding:        'var(--s-lg) var(--gutter)',
+            flexShrink:      0,
+            borderRight:    '1px solid var(--c-border)',
           }}>
-            Three steps between<br />idea and forever.
+            <span style={labelStyle}>The Process</span>
+            <h2 style={{
+              fontFamily: 'var(--f-display)',
+              fontSize:   'var(--t-h2)',
+              color:      'var(--c-white)',
+              fontStyle:  'italic',
+              fontWeight:  400,
+              lineHeight:  1.1,
+            }}>
+              Three steps between<br />idea and forever.
+            </h2>
+          </div>
+
+          {/* Step panels */}
+          {STEPS.map((step) => (
+            <div
+              key={step.num}
+              className="h-scroll-panel h-scroll-panel-text"
+              style={{
+                width:          '45vw',
+                minHeight:      '100vh',
+                display:        'flex',
+                flexDirection:  'column',
+                justifyContent: 'center',
+                padding:        'var(--s-lg) var(--gutter)',
+                flexShrink:      0,
+                borderRight:    '1px solid var(--c-border)',
+              }}
+            >
+              <span style={{
+                fontFamily:   'var(--f-display)',
+                fontSize:     '56px',
+                fontStyle:    'italic',
+                color:        'var(--c-accent)',
+                opacity:       0.12,
+                lineHeight:    1,
+                display:      'block',
+                marginBottom: '36px',
+              }}>
+                {step.num}
+              </span>
+              <h3 style={{
+                fontFamily:   'var(--f-display)',
+                fontSize:     'var(--t-h3)',
+                color:        'var(--c-white)',
+                fontStyle:    'italic',
+                fontWeight:    400,
+                marginBottom: '20px',
+                lineHeight:    1.15,
+              }}>
+                {step.title}
+              </h3>
+              <p style={{
+                fontFamily:   'var(--f-body)',
+                fontSize:     'var(--t-sub)',
+                color:        'var(--c-muted)',
+                marginBottom: '28px',
+                fontWeight:    300,
+                lineHeight:    1.8,
+                maxWidth:     '360px',
+              }}>
+                {step.body}
+              </p>
+              <span style={{
+                fontFamily:    'var(--f-body)',
+                fontSize:      '10px',
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                color:         'var(--c-accent-mid)',
+                lineHeight:     1.8,
+              }}>
+                {step.detail}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* MOBILE VERSION — visible on mobile via CSS class */}
+      <div className="process-mobile-container show-mobile" style={{ background: 'var(--c-dark)' }}>
+        {/* Intro header */}
+        <div className="process-mobile-header">
+          <span style={labelStyle}>The Process</span>
+          <h2
+            style={{
+              fontFamily:    'var(--f-display)',
+              fontSize:      '28px',
+              color:         'var(--c-white)',
+              fontStyle:     'italic',
+              fontWeight:     400,
+              lineHeight:    '1.2',
+              letterSpacing: 'var(--ls-display)',
+              marginBottom:  '16px',
+            }}
+          >
+            Three steps between
+            <br />
+            idea and forever.
           </h2>
         </div>
 
-        {/* Step panels */}
-        {STEPS.map((step) => (
-          <div
-            key={step.num}
-            className="h-scroll-panel h-scroll-panel-text"
-            style={{
-              width:          '45vw',
-              minHeight:      '100vh',
-              display:        'flex',
-              flexDirection:  'column',
-              justifyContent: 'center',
-              padding:        'var(--s-lg) var(--gutter)',
-              flexShrink:      0,
-              borderRight:    '1px solid var(--c-border)',
-            }}
-          >
-            <span style={{
-              fontFamily:   'var(--f-display)',
-              fontSize:     '56px',
-              fontStyle:    'italic',
-              color:        'var(--c-accent)',
-              opacity:       0.12,
-              lineHeight:    1,
-              display:      'block',
-              marginBottom: '36px',
-            }}>
-              {step.num}
-            </span>
-            <h3 style={{
-              fontFamily:   'var(--f-display)',
-              fontSize:     'var(--t-h3)',
-              color:        'var(--c-white)',
-              fontStyle:    'italic',
-              fontWeight:    400,
-              marginBottom: '20px',
-              lineHeight:    1.15,
-            }}>
-              {step.title}
-            </h3>
-            <p style={{
-              fontFamily:   'var(--f-body)',
-              fontSize:     'var(--t-sub)',
-              color:        'var(--c-muted)',
-              marginBottom: '28px',
-              fontWeight:    300,
-              lineHeight:    1.8,
-              maxWidth:     '360px',
-            }}>
-              {step.body}
-            </p>
-            <span style={{
-              fontFamily:    'var(--f-body)',
-              fontSize:      '10px',
-              letterSpacing: '0.2em',
-              textTransform: 'uppercase',
-              color:         'var(--c-accent-mid)',
-              lineHeight:     1.8,
-            }}>
-              {step.detail}
-            </span>
-          </div>
-        ))}
+        {/* Steps Stack */}
+        <div className="process-mobile-stack">
+          {STEPS.map((step) => (
+            <div key={step.num} className="process-mobile-card">
+              <span className="process-mobile-card-num">
+                {step.num}
+              </span>
+              <h3 className="process-mobile-card-title">
+                {step.title}
+              </h3>
+              <p className="process-mobile-card-body">
+                {step.body}
+              </p>
+              <div className="process-mobile-card-divider" />
+              <span className="process-mobile-card-detail">
+                {step.detail}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -173,7 +221,7 @@ function Invitation() {
   }, [])
 
   return (
-    <section ref={ref} style={{
+    <section ref={ref} className="invitation-section" style={{
       position:   'relative',
       overflow:   'hidden',
       minHeight:  '80vh',

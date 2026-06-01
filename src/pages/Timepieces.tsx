@@ -81,45 +81,194 @@ function TheHouses() {
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="h-scroll-container"
-      style={{ overflow: "hidden", background: "var(--c-dark)" }}
-    >
+    <>
+      {/* DESKTOP VERSION — hidden on mobile via CSS class */}
       <div
-        ref={trackRef}
-        className="h-scroll-track"
-        style={{
-          display: "flex",
-          width: "max-content",
-          willChange: "transform",
-        }}
+        ref={containerRef}
+        className="h-scroll-container hide-mobile"
+        style={{ overflow: "hidden", background: "var(--c-dark)" }}
       >
-        {/* Intro panel */}
         <div
-          className="h-scroll-panel h-scroll-panel-text"
+          ref={trackRef}
+          className="h-scroll-track"
           style={{
-            width: "40vw",
-            height: "100vh",
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            padding: "var(--s-lg) var(--gutter)",
-            flexShrink: 0,
-            borderRight: "1px solid var(--c-border)",
+            width: "max-content",
+            willChange: "transform",
           }}
         >
+          {/* Intro panel */}
+          <div
+            className="h-scroll-panel h-scroll-panel-text"
+            style={{
+              width: "40vw",
+              height: "100vh",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              padding: "var(--s-lg) var(--gutter)",
+              flexShrink: 0,
+              borderRight: "1px solid var(--c-border)",
+            }}
+          >
+            <span style={labelStyle}>The Houses</span>
+            <h2
+              style={{
+                fontFamily:    "var(--f-display)",
+                fontSize:      "var(--t-h2)",
+                color:         "var(--c-white)",
+                fontStyle:     "italic",
+                fontWeight:     400,
+                lineHeight:    "var(--lh-display)",
+                letterSpacing: "var(--ls-display)",
+                marginBottom:  "18px",
+              }}
+            >
+              Five names.
+              <br />
+              No compromises.
+            </h2>
+            <p style={{
+              fontFamily:    "var(--f-display)",
+              fontSize:      "clamp(16px, 1.6vw, 22px)",
+              color:         "var(--c-accent)",
+              fontStyle:     "italic",
+              fontWeight:     400,
+              lineHeight:     1.2,
+              marginBottom:  "22px",
+            }}>
+              If it isn't on this list,<br />we don't carry it.
+            </p>
+            <p
+              style={{
+                fontFamily: "var(--f-body)",
+                fontSize:   "var(--t-sub)",
+                color:      "var(--c-muted)",
+                fontWeight:  300,
+                lineHeight:  1.85,
+                maxWidth:   "300px",
+              }}
+            >
+              Every timepiece authenticated. Every seller verified. Every watch
+              inspected to our 14-point standard before it reaches you.
+            </p>
+          </div>
+
+          {/* Brand panels */}
+          {BRANDS.map((brand) => (
+            <div
+              key={brand.name}
+              className="h-scroll-panel"
+              style={{
+                width: "45vw",
+                height: "100vh",
+                position: "relative",
+                overflow: "hidden",
+                flexShrink: 0,
+              }}
+            >
+              <img
+                src={brand.watch}
+                alt={brand.name}
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  filter: "brightness(0.38) saturate(0.85)",
+                  transition: "transform 0.9s var(--ease-out)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.04)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "linear-gradient(to top, rgba(8,8,8,0.97) 0%, rgba(8,8,8,0.25) 60%, rgba(8,8,8,0.08) 100%)",
+                }}
+              />
+
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  padding: "clamp(20px, 4vw, 40px) var(--gutter)",
+                }}
+              >
+                <img
+                  src={brand.img}
+                  alt={brand.name}
+                  style={{
+                    height: "30px",
+                    objectFit: "contain",
+                    filter: "brightness(0) invert(1)",
+                    opacity: 0.7,
+                    marginBottom: "20px",
+                  }}
+                />
+                <span
+                  style={{
+                    display: "block",
+                    ...labelStyle,
+                    marginBottom: "12px",
+                  }}
+                >
+                  {brand.since}
+                </span>
+                <p
+                  style={{
+                    fontFamily: "var(--f-body)",
+                    fontSize: "var(--t-sub)",
+                    color: "var(--c-muted)",
+                    fontWeight: 300,
+                    lineHeight: 1.8,
+                    maxWidth: "380px",
+                    marginBottom: "28px",
+                  }}
+                >
+                  {brand.desc}
+                </p>
+                <Link
+                  to="/timepieces"
+                  className="btn-outline"
+                  style={{
+                    fontSize: "10px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                  }}
+                >
+                  Price on Request →
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* MOBILE VERSION — visible on mobile via CSS class */}
+      <div className="houses-mobile-container show-mobile" style={{ background: "var(--c-dark)" }}>
+        {/* Intro header */}
+        <div className="houses-mobile-header">
           <span style={labelStyle}>The Houses</span>
           <h2
             style={{
               fontFamily:    "var(--f-display)",
-              fontSize:      "var(--t-h2)",
+              fontSize:      "28px",
               color:         "var(--c-white)",
               fontStyle:     "italic",
               fontWeight:     400,
-              lineHeight:    "var(--lh-display)",
+              lineHeight:    "1.2",
               letterSpacing: "var(--ls-display)",
-              marginBottom:  "18px",
+              marginBottom:  "12px",
             }}
           >
             Five names.
@@ -128,23 +277,23 @@ function TheHouses() {
           </h2>
           <p style={{
             fontFamily:    "var(--f-display)",
-            fontSize:      "clamp(16px, 1.6vw, 22px)",
+            fontSize:      "16px",
             color:         "var(--c-accent)",
             fontStyle:     "italic",
             fontWeight:     400,
             lineHeight:     1.2,
-            marginBottom:  "22px",
+            marginBottom:  "14px",
           }}>
             If it isn't on this list,<br />we don't carry it.
           </p>
           <p
             style={{
               fontFamily: "var(--f-body)",
-              fontSize:   "var(--t-sub)",
+              fontSize:   "13px",
               color:      "var(--c-muted)",
               fontWeight:  300,
-              lineHeight:  1.85,
-              maxWidth:   "300px",
+              lineHeight:  1.7,
+              maxWidth:   "380px",
             }}
           >
             Every timepiece authenticated. Every seller verified. Every watch
@@ -152,105 +301,41 @@ function TheHouses() {
           </p>
         </div>
 
-        {/* Brand panels */}
-        {BRANDS.map((brand) => (
-          <div
-            key={brand.name}
-            className="h-scroll-panel"
-            style={{
-              width: "45vw",
-              height: "100vh",
-              position: "relative",
-              overflow: "hidden",
-              flexShrink: 0,
-            }}
-          >
-            <img
-              src={brand.watch}
-              alt={brand.name}
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                filter: "brightness(0.38) saturate(0.85)",
-                transition: "transform 0.9s var(--ease-out)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "scale(1.04)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)";
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(to top, rgba(8,8,8,0.97) 0%, rgba(8,8,8,0.25) 60%, rgba(8,8,8,0.08) 100%)",
-              }}
-            />
-
-            <div
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                right: 0,
-                padding: "clamp(20px, 4vw, 40px) var(--gutter)",
-              }}
-            >
+        {/* Brand carousel */}
+        <div className="houses-mobile-track">
+          {BRANDS.map((brand) => (
+            <div key={brand.name} className="houses-mobile-card">
               <img
-                src={brand.img}
+                src={brand.watch}
                 alt={brand.name}
-                style={{
-                  height: "30px",
-                  objectFit: "contain",
-                  filter: "brightness(0) invert(1)",
-                  opacity: 0.7,
-                  marginBottom: "20px",
-                }}
+                className="houses-mobile-card-bg"
               />
-              <span
-                style={{
-                  display: "block",
-                  ...labelStyle,
-                  marginBottom: "12px",
-                }}
-              >
-                {brand.since}
-              </span>
-              <p
-                style={{
-                  fontFamily: "var(--f-body)",
-                  fontSize: "var(--t-sub)",
-                  color: "var(--c-muted)",
-                  fontWeight: 300,
-                  lineHeight: 1.8,
-                  maxWidth: "380px",
-                  marginBottom: "28px",
-                }}
-              >
-                {brand.desc}
-              </p>
-              <Link
-                to="/timepieces"
-                className="btn-outline"
-                style={{
-                  fontSize: "10px",
-                  display: "inline-flex",
-                  alignItems: "center",
-                }}
-              >
-                Price on Request →
-              </Link>
+              <div className="houses-mobile-card-overlay" />
+              
+              <div className="houses-mobile-card-content">
+                <img
+                  src={brand.img}
+                  alt={brand.name}
+                  className="houses-mobile-card-logo"
+                />
+                <span className="houses-mobile-card-since">
+                  {brand.since}
+                </span>
+                <p className="houses-mobile-card-desc">
+                  {brand.desc}
+                </p>
+                <Link
+                  to={`/timepieces?brand=${encodeURIComponent(brand.name)}`}
+                  className="btn-outline houses-mobile-card-btn"
+                >
+                  Price on Request →
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -360,6 +445,7 @@ function FeaturedWatches({ activeBrand, sectionRef }: { activeBrand: string; sec
               </h2>
             </div>
             <p
+              className="inventory-subtitle"
               style={{
                 fontFamily: "var(--f-body)",
                 fontSize: "12px",
@@ -397,11 +483,12 @@ function FeaturedWatches({ activeBrand, sectionRef }: { activeBrand: string; sec
                     letterSpacing: "var(--ls-label)",
                     textTransform: "uppercase",
                     padding:       "8px 18px",
-                    border:        `1px solid ${isActive ? "var(--c-accent-rich)" : "rgba(28,27,25,0.15)"}`,
-                    color:          isActive ? "var(--c-accent-rich)" : "rgba(28,27,25,0.42)",
-                    background:     isActive ? "rgba(168,134,79,0.08)" : "transparent",
+                    border:        `1px solid ${isActive ? "var(--c-accent-rich)" : "rgba(28, 27, 25, 0.18)"}`,
+                    color:          isActive ? "var(--c-accent-rich)" : "rgba(28, 27, 25, 0.82)",
+                    background:     isActive ? "rgba(168, 134, 79, 0.08)" : "rgba(28, 27, 25, 0.04)",
                     transition:    "all 0.22s var(--ease-ui)",
                     whiteSpace:    "nowrap",
+                    borderRadius:  "2px",
                   }}
                 >
                   {brand}
@@ -412,14 +499,7 @@ function FeaturedWatches({ activeBrand, sectionRef }: { activeBrand: string; sec
         </ScrollReveal>
 
         {hasInventory ? (
-          <div
-            className="grid-3col"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: "clamp(16px, 2vw, 28px)",
-            }}
-          >
+          <div className="grid-3col">
             {filtered.map((watch, i) => (
               <WatchTiltCard
                 key={watch.ref}
@@ -743,22 +823,25 @@ export default function Timepieces() {
             alignItems: "flex-end",
           }}
         >
-          <img
-            ref={heroImgRef}
-            src="/assets/gotham-rolex-sub.jpg"
-            alt="Luxury timepieces — Gotham City Jewelers"
-            loading="eager"
-            style={{
-              position:       "absolute",
-              inset:           0,
-              width:           "100%",
-              height:          "100%",
-              objectFit:      "cover",
-              objectPosition: "center 30%",
-              filter:         "brightness(0.28) saturate(0.7)",
-              willChange:     "transform",
-            }}
-          />
+          <picture style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
+            <source media="(max-width: 767px)" srcSet="/assets/gotham-watch-hero-mobile.png" />
+            <img
+              ref={heroImgRef}
+              src="/assets/gotham-rolex-sub.jpg"
+              alt="Luxury timepieces — Gotham City Jewelers"
+              loading="eager"
+              className="hero-watch-img"
+              style={{
+                position:       "absolute",
+                inset:           0,
+                width:           "100%",
+                height:          "100%",
+                objectFit:      "cover",
+                filter:         "brightness(0.28) saturate(0.7)",
+                willChange:     "transform",
+              }}
+            />
+          </picture>
           {/* Gradient overlay — heavy bottom, light top */}
           <div style={{
             position:   "absolute",

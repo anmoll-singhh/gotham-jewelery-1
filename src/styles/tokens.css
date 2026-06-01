@@ -35,7 +35,7 @@
   --c-text:        #EDE8E0;
   --c-text-dark:   #1C1B19;   /* text on light sections */
   --c-muted:       rgba(237,232,224,0.44);
-  --c-muted-dark:  rgba(28,27,25,0.52);
+  --c-muted-dark:  rgba(28,27,25,0.88);
   --c-accent:      #C5A46E;   /* gold — all CTAs, labels, accents */
   --c-accent-mid:  rgba(197,164,110,0.45);
   --c-accent-light: rgba(197,164,110,0.15);
