@@ -72,6 +72,13 @@ export function WatchCanvas({
   );
   const [loadPct, setLoadPct] = useState(0);
   const [ready, setReady] = useState(false);
+
+  // Stable refs for mode and ready — lets the pin's onUpdate always see fresh values
+  // without needing to recreate the ScrollTrigger when they change.
+  const modeRef = useRef(mode);
+  const readyRef = useRef(ready);
+  useEffect(() => { modeRef.current = mode; }, [mode]);
+  useEffect(() => { readyRef.current = ready; }, [ready]);
   // Entry overlay — masks the raw first frame during pre-pin transition.
   // Fades to transparent over the first 4% of scroll progress (directly via DOM).
   const entryOverlayRef = useRef<HTMLDivElement>(null);
@@ -208,37 +215,40 @@ export function WatchCanvas({
     };
   }, [mode]);
 
-  // ─── Phase 4: ScrollTrigger (runs after ready in either mode) ───────────
+  // ─── Phase 4: ScrollTrigger — created on mount (not gated on `ready`) ──────
+  //
+  // CRITICAL: This pin spacer must exist in the DOM before downstream
+  // ScrollTriggers (e.g. ServicesScene) are initialised so they calculate
+  // their trigger positions against the correct document height. Previously
+  // the pin was deferred until frames finished loading, which caused
+  // ServicesScene's trigger to be calculated ~2340px too early and produced
+  // a large black void between the brand marquee and the services section.
+  //
+  // modeRef / readyRef keep the onUpdate closure fresh without recreating
+  // the trigger when mode or ready change.
   useLayoutEffect(() => {
-    if (!ready) return;
-
     const ctx = gsap.context(() => {
-      // Shared update logic — driven from a single progress number (0→1)
       const doUpdate = (progress: number) => {
-        if (mode === "canvas") {
-          // Just set the index — RAF loop does the drawing
+        const currentMode = modeRef.current;
+        const currentReady = readyRef.current;
+
+        if (currentMode === "canvas" && currentReady) {
           targetFrame.current = Math.min(
             Math.floor(progress * (frames.current.length - 1)),
             frames.current.length - 1,
           );
-        } else if (mode === "video") {
-          // Just update the ref — RAF loop in Phase 3b handles the actual seek
+        } else if (currentMode === "video" && currentReady) {
           const v = videoRef.current;
           if (!v?.duration) return;
           videoTargetTime.current = progress * v.duration;
         }
-        // "static" mode: falls through directly — no frame/video work needed,
-        // but we still must update entry/exit overlays and call onProgress.
-        // Single source of truth — parent text panels driven from here
+        // "static" mode: falls through — no frame/video work needed.
         onProgressRef.current?.(progress);
 
-        // Fade out entry overlay over first 6% of progress.
-        // No CSS transition — direct DOM write keeps it in sync with every scroll tick.
         if (entryOverlayRef.current) {
           const fadeProgress = Math.min(1, progress / 0.06);
           entryOverlayRef.current.style.opacity = String(1 - fadeProgress);
         }
-        // Keep exit overlay transparent so the watch never disappears at the end of scroll
         if (exitOverlayRef.current) {
           exitOverlayRef.current.style.opacity = "0";
         }
@@ -249,18 +259,16 @@ export function WatchCanvas({
         start: "top top",
         end: `+=${scrubLength}`,
         pin: true,
-        // anticipatePin prevents the visual snap when pin activates —
-        // GSAP starts applying fixed positioning slightly early so the
-        // element is already in place before the trigger fires.
         anticipatePin: 1,
-        // Canvas: scrub: true (instant, RAF draws at 60fps — no smoothing needed)
-        // Video:  scrub: 1 (1s smoothing → fewer distinct seek targets → less thrashing)
-        scrub: mode === "canvas" ? true : 1,
+        // scrub:1 works for both video and canvas; the RAF draw loop provides
+        // the per-frame smoothness for canvas mode so no precision is lost.
+        scrub: 1,
         onUpdate: (self) => doUpdate(self.progress),
       });
     }, containerRef);
     return () => ctx.revert();
-  }, [ready, mode, scrubLength]);
+  // Only recreate if scrubLength changes (rare). mode/ready use refs instead.
+  }, [scrubLength]);
 
   return (
     <div

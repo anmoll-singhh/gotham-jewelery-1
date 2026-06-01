@@ -955,6 +955,14 @@ function ServicesScene() {
       const mm = gsap.matchMedia();
       mm.add("(min-width: 768px)", () => {
         const getW = () => trackRef.current!.scrollWidth - window.innerWidth;
+        const setPinSpacerBg = () => {
+          // Ensure the GSAP pin spacer carries the section background so the
+          // area above the section (before the pin activates) is never black.
+          const spacer = wrapRef.current?.parentElement;
+          if (spacer && spacer.className === "pin-spacer") {
+            spacer.style.background = "var(--c-surface)";
+          }
+        };
         gsap.to(trackRef.current, {
           x: () => -getW(),
           ease: "none",
@@ -966,8 +974,11 @@ function ServicesScene() {
             anticipatePin: 1,
             scrub: 1,
             invalidateOnRefresh: true,
+            onRefresh: setPinSpacerBg,
           },
         });
+        // GSAP creates the spacer synchronously — set background right away too.
+        setPinSpacerBg();
       });
     }, wrapRef);
     return () => ctx.revert();

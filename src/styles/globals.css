@@ -396,13 +396,19 @@ button {
   font-weight: 400 !important;
 }
 
-/* GPU compositing on pinned blocks to prevent rapid scroll overlapping and gaps */
+/* GPU compositing on pinned blocks to prevent rapid scroll overlapping and gaps.
+   NOTE: transform-style:preserve-3d + overflow:hidden on .h-scroll-container causes
+   Chrome to skip painting the background before the pin activates (black void bug).
+   Keep will-change:transform for layer promotion; omit the 3d/backface properties. */
 .watch-canvas-wrap,
-.h-scroll-container,
 .hero-scenic-img {
   will-change: transform;
   transform-style: preserve-3d;
   backface-visibility: hidden;
+}
+
+.h-scroll-container {
+  will-change: transform;
 }
 
 .h-scroll-track {
