@@ -67,16 +67,13 @@ function VaultScene() {
   }, []);
 
   return (
-    <>
-      {/* ── Desktop: full scroll-driven canvas ──────────────────────── */}
-      <div className="hide-mobile">
-        <WatchCanvas
-          totalFrames={193}
-          framesPath="/assets/watch-frames-new"
-          videoSrc="/assets/gotham-watch-rotation-new.mp4"
-          scrubLength="260%"
-          onProgress={onProgress}
-        >
+    <WatchCanvas
+      totalFrames={193}
+      framesPath="/assets/watch-frames-new"
+      videoSrc="/assets/gotham-watch-rotation-new.mp4"
+      scrubLength="260%"
+      onProgress={onProgress}
+    >
           {/* Radial vignette */}
           <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 52% 62% at 50% 50%, transparent 0%, rgba(0,0,0,0.82) 100%)" }} />
           {/* Bottom fade */}
@@ -119,29 +116,7 @@ function VaultScene() {
               </MagneticBtn>
             </div>
           </div>
-        </WatchCanvas>
-      </div>
-
-      {/* ── Mobile: static poster ───────────────────────────────────── */}
-      <div className="show-mobile-only" style={{ flexDirection: "column", background: "#000" }}>
-        <div style={{ position: "relative", height: "75vmax", overflow: "hidden" }}>
-          <img src="/assets/watch-frames-new/frame0097.jpg" alt="Luxury timepiece" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", objectPosition: "center", background: "#000" }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 55%)" }} />
-        </div>
-        <div style={{ padding: "var(--s-md) var(--gutter) var(--s-lg)", background: "#000", textAlign: "center" }}>
-          <span style={{ ...labelStyle, textAlign: "center", display: "block" }}>The Vault · Swiss Movement</span>
-          <p style={{ fontFamily: "var(--f-display)", fontSize: "clamp(36px,8vw,52px)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: 0.95, letterSpacing: "var(--ls-display)", marginBottom: "18px" }}>
-            Mechanical.<br />Perfected.
-          </p>
-          <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-body)", color: "rgba(240,234,196,0.36)", fontWeight: 300, lineHeight: 1.8, maxWidth: "280px", margin: "0 auto 32px" }}>
-            Every watch we carry has cleared our 14-point authentication.
-          </p>
-          <MagneticBtn href="/timepieces">
-            <span className="btn-outline">Enter the Vault</span>
-          </MagneticBtn>
-        </div>
-      </div>
-    </>
+    </WatchCanvas>
   );
 }
 
@@ -309,6 +284,7 @@ function TheHouses() {
               <img
                 src={brand.watch}
                 alt={brand.name}
+                loading="lazy"
                 style={{
                   position: "absolute", inset: 0, width: "100%", height: "100%",
                   objectFit: "cover", filter: "brightness(0.30) saturate(0.8)",
@@ -325,6 +301,7 @@ function TheHouses() {
                 <img
                   src={brand.img}
                   alt={brand.name}
+                  loading="lazy"
                   style={{ height: "30px", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.65, marginBottom: "20px" }}
                 />
                 <span style={{ display: "block", ...labelStyle, marginBottom: "12px" }}>{brand.since}</span>
@@ -362,6 +339,7 @@ function TheHouses() {
             <div key={brand.name} style={{ position: "relative", height: "65vw", overflow: "hidden", flexShrink: 0 }}>
               <img
                 src={brand.watch} alt={brand.name}
+                loading="lazy"
                 style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.3) saturate(0.8)" }}
               />
               <div style={{
@@ -369,7 +347,7 @@ function TheHouses() {
                 background: "linear-gradient(to top, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.1) 70%, transparent 100%)",
               }} />
               <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "24px var(--gutter)" }}>
-                <img src={brand.img} alt={brand.name} style={{ height: "22px", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.6, marginBottom: "10px" }} />
+                <img src={brand.img} alt={brand.name} loading="lazy" style={{ height: "22px", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.6, marginBottom: "10px" }} />
                 <p style={{ fontFamily: "var(--f-body)", fontSize: "12px", color: "rgba(240,234,196,0.42)", fontWeight: 300, lineHeight: 1.7, maxWidth: "280px" }}>{brand.desc}</p>
               </div>
             </div>
@@ -521,6 +499,7 @@ function ExchangeCTA() {
         ref={imgRef}
         src="/assets/gotham-sell-trade.jpg"
         alt="Sell or trade your luxury watch"
+        loading="lazy"
         style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.25) saturate(0.7)", willChange: "transform" }}
       />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.55) 100%)" }} />

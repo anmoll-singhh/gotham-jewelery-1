@@ -123,7 +123,9 @@ export function WatchCanvas({
 
   // ─── Phase 2b: Video fallback / static mode — just mark ready ───────────
   useEffect(() => {
-    if (mode === "video" || mode === "static") setReady(true);
+    if (mode !== "video" && mode !== "static") return;
+    const raf = requestAnimationFrame(() => setReady(true));
+    return () => cancelAnimationFrame(raf);
   }, [mode]);
 
   // ─── Phase 3a: Canvas RAF render loop ───────────────────────────────────
@@ -241,10 +243,7 @@ export function WatchCanvas({
           const fadeProgress = Math.min(1, progress / 0.06);
           entryOverlayRef.current.style.opacity = String(1 - fadeProgress);
         }
-        if (exitOverlayRef.current) {
-          const exitFade = Math.max(0, Math.min(1, (progress - 0.94) / 0.06));
-          exitOverlayRef.current.style.opacity = String(exitFade);
-        }
+        // Exit overlay intentionally kept at 0 — last frame stays visible as section scrolls out
       };
 
       ScrollTrigger.create({

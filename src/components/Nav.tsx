@@ -34,7 +34,10 @@ export function Nav() {
   const location = useLocation();
   const ctxRef   = useRef<gsap.Context | null>(null);
 
-  useLayoutEffect(() => { setMenuOpen(false); }, [location]);
+  useLayoutEffect(() => {
+    const raf = requestAnimationFrame(() => setMenuOpen(false));
+    return () => cancelAnimationFrame(raf);
+  }, [location]);
 
   useLayoutEffect(() => {
     ctxRef.current = gsap.context(() => {
@@ -79,7 +82,8 @@ export function Nav() {
             onError={e => {
               const el = e.currentTarget as HTMLImageElement;
               el.style.display = "none";
-              (el.nextSibling as HTMLElement | null)?.style && ((el.nextSibling as HTMLElement).style.display = "block");
+              const next = el.nextSibling as HTMLElement | null;
+              if (next?.style) next.style.display = "block";
             }}
           />
           <span style={{ display: "none", fontFamily: "var(--f-label)", fontSize: "11px", letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--c-accent)" }}>GCJ</span>

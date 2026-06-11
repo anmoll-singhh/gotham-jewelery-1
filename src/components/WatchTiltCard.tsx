@@ -69,6 +69,7 @@ export function WatchTiltCard({ img, name, ref_, brand, delay = 0 }: WatchTiltCa
         <img
           src={img}
           alt={name}
+          loading="lazy"
           className="watch-tilt-card-img"
           style={{
             width:      '100%',

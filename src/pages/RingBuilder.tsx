@@ -104,7 +104,7 @@ function TheProcess() {
             >
               <span style={{
                 fontFamily:   'var(--f-display)',
-                fontSize:     '56px',
+                fontSize:     'clamp(36px, 4.5vw, 56px)',
                 fontStyle:    'italic',
                 color:        'var(--c-accent)',
                 opacity:       0.12,
@@ -233,6 +233,7 @@ function Invitation() {
         ref={imgRef}
         src="/assets/macro-diamond.png"
         alt="Diamond detail"
+        loading="lazy"
         style={{
           position:       'absolute',
           inset:           0,

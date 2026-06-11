@@ -83,6 +83,7 @@ function TheCraft() {
                   <img
                     src={phase.img}
                     alt={phase.title}
+                    loading="lazy"
                     style={{
                       width:      '100%',
                       height:     '100%',

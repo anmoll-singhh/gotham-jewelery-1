@@ -243,6 +243,7 @@ function StoneJourneyScene() {
         ref={imgRef}
         src="/assets/gotham-diamond-macro.jpg"
         alt="" aria-hidden="true"
+        loading="lazy"
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", filter: "brightness(0.12) saturate(0.5)", transition: "filter 0.1s linear", willChange: "filter" }}
         onError={e => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
       />
@@ -411,16 +412,13 @@ function NightRevealScene() {
   }, []);
 
   return (
-    <>
-      {/* Desktop: frame-sequence canvas */}
-      <div className="hide-mobile">
-        <WatchCanvas
-          totalFrames={193}
-          framesPath="/assets/nyc-reveal-frames"
-          videoSrc="/assets/gotham-nyc-reveal.mp4"
-          scrubLength="280%"
-          onProgress={onProgress}
-        >
+    <WatchCanvas
+      totalFrames={193}
+      framesPath="/assets/nyc-reveal-frames"
+      videoSrc="/assets/gotham-nyc-reveal.mp4"
+      scrubLength="280%"
+      onProgress={onProgress}
+    >
           <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 75% 85% at 50% 50%, transparent 0%, rgba(0,0,0,0.50) 100%)" }} />
           <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 52%)" }} />
 
@@ -441,29 +439,7 @@ function NightRevealScene() {
             <MagneticBtn href="/timepieces"><span className="btn-primary">Enter the Vault</span></MagneticBtn>
             <MagneticBtn href="/ring-builder"><span className="btn-outline">Design Your Ring</span></MagneticBtn>
           </div>
-        </WatchCanvas>
-      </div>
-
-      {/* Mobile: autoplay video */}
-      <div className="show-mobile-only" style={{ flexDirection: "column", position: "relative", overflow: "hidden", minHeight: "85vmax", background: "#000" }}>
-        <video autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.44)" }}>
-          <source src="/assets/gotham-nyc-reveal.mp4" type="video/mp4" />
-        </video>
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.92) 0%, transparent 60%)" }} />
-        <div style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", minHeight: "85vmax", padding: "var(--s-lg) var(--gutter) var(--s-md)", textAlign: "center" }}>
-          <motion.div initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}>
-            <span style={{ ...lbl, display: "block", textAlign: "center", marginBottom: "16px" }}>The Collector's Standard</span>
-            <p style={{ fontFamily: "var(--f-display)", fontSize: "clamp(38px,9vw,56px)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: 0.92, letterSpacing: "var(--ls-display)", marginBottom: "32px" }}>
-              New York.<br />The Standard.
-            </p>
-            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center" }}>
-              <MagneticBtn href="/timepieces"><span className="btn-primary">Enter the Vault</span></MagneticBtn>
-              <MagneticBtn href="/ring-builder"><span className="btn-outline">Design Your Ring</span></MagneticBtn>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </>
+    </WatchCanvas>
   );
 }
 
@@ -543,10 +519,10 @@ function StoreScene() {
 
       {/* Layer 1: Exterior */}
       <div ref={layer1Ref} style={{ position: "absolute", inset: 0, willChange: "opacity, transform" }}>
-        <video autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.72)" }}>
+        <video className="hide-mobile" autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.72)" }}>
           <source src="/assets/gotham-showroom-walk.mp4" type="video/mp4" />
         </video>
-        <img src="/assets/gotham-store-interior-1.jpg" alt="" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.70)" }} />
+        <img src="/assets/gotham-store-interior-1.jpg" alt="" aria-hidden="true" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.70)" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.10) 50%, transparent 100%)" }} />
         <div ref={text1Ref} style={textBox}>
           <span style={lbl}>23 West 47th Street · Suite 402</span>
@@ -560,8 +536,8 @@ function StoreScene() {
       </div>
 
       {/* Layer 2: Display Cases */}
-      <div ref={layer2Ref} style={{ position: "absolute", inset: 0, willChange: "opacity, transform" }}>
-        <img src="/assets/gotham-store-interior-2.jpg" alt="Jewelry display cases" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.50) saturate(0.65)" }}
+      <div ref={layer2Ref} style={{ position: "absolute", inset: 0, willChange: "opacity, transform", opacity: 0 }}>
+        <img src="/assets/gotham-store-interior-2.jpg" alt="Jewelry display cases" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.50) saturate(0.65)" }}
           onError={e => { (e.currentTarget as HTMLImageElement).src = "/assets/gotham-hf-flatlay.png"; }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.12) 55%, transparent 100%)" }} />
         <div ref={text2Ref} style={textBox}>
@@ -577,8 +553,8 @@ function StoreScene() {
       </div>
 
       {/* Layer 3: The Consultation — single CTA: Call */}
-      <div ref={layer3Ref} style={{ position: "absolute", inset: 0, willChange: "opacity, transform" }}>
-        <img src="/assets/gotham-diamond-macro.jpg" alt="Private consultation" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.60)" }} />
+      <div ref={layer3Ref} style={{ position: "absolute", inset: 0, willChange: "opacity, transform", opacity: 0 }}>
+        <img src="/assets/gotham-diamond-macro.jpg" alt="Private consultation" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.60)" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.1) 60%, transparent 100%)" }} />
         <div ref={text3Ref} style={{ ...textBox, maxWidth: "600px" }}>
           <span style={lbl}>Private Consultation · By Appointment</span>
@@ -747,7 +723,7 @@ function CityScene() {
 
   return (
     <section ref={ref} style={{ position: "relative", overflow: "hidden", minHeight: "72vh", display: "flex", alignItems: "center", background: "var(--bg-void-grad)", zIndex: 5 }}>
-      <img ref={imgRef} src="/assets/gotham-newyork.jpg" alt="Manhattan" style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.18) saturate(0.28)", willChange: "transform" }} />
+      <img ref={imgRef} src="/assets/gotham-newyork.jpg" alt="Manhattan" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.18) saturate(0.28)", willChange: "transform" }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.06) 100%)" }} />
 
       <div style={{ position: "absolute", top: "14%", bottom: "14%", left: "var(--gutter)", width: "1px", background: "linear-gradient(to bottom, transparent, rgba(201,168,76,0.48) 30%, rgba(201,168,76,0.48) 70%, transparent)" }} />

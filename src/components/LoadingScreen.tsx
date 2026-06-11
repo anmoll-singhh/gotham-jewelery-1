@@ -113,7 +113,10 @@ function ProgressBar({ phase }: { phase: Phase }) {
   const t0Ref = useRef<number>(0)
 
   useEffect(() => {
-    if (phase === 'splitting' || phase === 'gone') { setPct(100); return }
+    if (phase === 'splitting' || phase === 'gone') {
+      const raf = requestAnimationFrame(() => setPct(100));
+      return () => cancelAnimationFrame(raf);
+    }
     t0Ref.current = performance.now()
     const total = DRAW_MS + PAUSE_MS
     const tick = (now: number) => {
