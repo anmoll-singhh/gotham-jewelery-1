@@ -390,7 +390,7 @@ export default function CustomJewelry() {
             position:   'relative',
             height:     '100dvh',
             overflow:   'hidden',
-            background: '#080808',
+            background: 'var(--c-void)',
             display:    'flex',
             alignItems: 'flex-end',
           }}
@@ -414,7 +414,7 @@ export default function CustomJewelry() {
           <div style={{
             position:   'absolute',
             inset:       0,
-            background:  'linear-gradient(to top, rgba(8,8,8,0.85) 0%, rgba(8,8,8,0.3) 35%, transparent 100%)',
+            background:  'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 35%, transparent 100%)',
           }} />
 
           <div style={{
@@ -453,7 +453,7 @@ export default function CustomJewelry() {
             <p style={{
               fontFamily:    'var(--f-body)',
               fontSize:      'var(--t-sub)',
-              color:         'rgba(240,235,227,0.38)',
+              color:         'rgba(240,234,196,0.38)',
               maxWidth:      '440px',
               fontWeight:     300,
               lineHeight:     1.9,

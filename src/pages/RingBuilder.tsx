@@ -152,7 +152,7 @@ function TheProcess() {
       </div>
 
       {/* MOBILE VERSION — visible on mobile via CSS class */}
-      <div className="process-mobile-container show-mobile" style={{ background: 'var(--c-dark)' }}>
+      <div className="process-mobile-container show-mobile-only" style={{ background: 'var(--c-dark)' }}>
         {/* Intro header */}
         <div className="process-mobile-header">
           <span style={labelStyle}>The Process</span>
@@ -227,7 +227,7 @@ function Invitation() {
       minHeight:  '80vh',
       display:    'flex',
       alignItems: 'center',
-      background: '#080808',
+      background: 'var(--c-void)',
     }}>
       <img
         ref={imgRef}
@@ -247,7 +247,7 @@ function Invitation() {
       <div style={{
         position:   'absolute',
         inset:       0,
-        background:  'linear-gradient(135deg, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.45) 100%)',
+        background:  'linear-gradient(135deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.45) 100%)',
       }} />
 
       <div style={{
@@ -348,7 +348,7 @@ export default function RingBuilder() {
             position:   'relative',
             height:     '100dvh',
             overflow:   'hidden',
-            background: '#080808',
+            background: 'var(--c-void)',
             display:    'flex',
             alignItems: 'flex-end',
           }}
@@ -372,7 +372,7 @@ export default function RingBuilder() {
           <div style={{
             position:   'absolute',
             inset:       0,
-            background:  'linear-gradient(to top, rgba(8,8,8,0.85) 0%, rgba(8,8,8,0.3) 35%, transparent 100%)',
+            background:  'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 35%, transparent 100%)',
           }} />
 
           <div style={{
@@ -411,7 +411,7 @@ export default function RingBuilder() {
             <p style={{
               fontFamily:    'var(--f-body)',
               fontSize:      'var(--t-sub)',
-              color:         'rgba(240,235,227,0.38)',
+              color:         'rgba(240,234,196,0.38)',
               maxWidth:      '440px',
               fontWeight:     300,
               lineHeight:     1.9,

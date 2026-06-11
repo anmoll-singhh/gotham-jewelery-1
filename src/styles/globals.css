@@ -121,7 +121,7 @@ ol {
 }
 
 .btn-primary:hover {
-  background: rgba(197, 164, 110, 0.12);
+  background: rgba(201, 168, 76, 0.12);
   border-color: var(--c-accent);
   color: var(--c-accent);
 }
@@ -154,7 +154,7 @@ ol {
 }
 
 .btn-outline:hover {
-  border-color: rgba(197, 164, 110, 0.55);
+  border-color: rgba(201, 168, 76, 0.55);
   color: var(--c-accent);
 }
 
@@ -232,7 +232,7 @@ button {
 
 /* ─── Selection ──────────────────────────────────────────────────── */
 ::selection {
-  background: rgba(197, 164, 110, 0.25);
+  background: rgba(201, 168, 76, 0.25);
   color: var(--c-white);
 }
 
@@ -392,8 +392,27 @@ button {
 
 /* Services card body text readability on all screens */
 .services-card p {
-  color: rgba(28, 27, 25, 0.85) !important;
+  color: rgba(50, 61, 34, 0.80) !important;
   font-weight: 400 !important;
+}
+
+/* ── Show / hide by viewport ─────────────────────────────────────── */
+.hide-mobile {
+  display: block;
+}
+
+.show-mobile-only {
+  display: none !important;
+}
+
+@media (max-width: 767px) {
+  .hide-mobile {
+    display: none !important;
+  }
+
+  .show-mobile-only {
+    display: flex !important;
+  }
 }
 
 /* GPU compositing on pinned blocks to prevent rapid scroll overlapping and gaps.
@@ -475,7 +494,7 @@ button {
     margin: 0 auto 32px auto !important;
     width: calc(100% - 2 * var(--gutter)) !important;
     background: var(--c-surface-2) !important;
-    border: 1px solid rgba(197, 164, 110, 0.22) !important;
+    border: 1px solid rgba(201, 168, 76, 0.22) !important;
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55) !important;
     border-radius: 4px !important;
     overflow: hidden !important;
@@ -669,7 +688,7 @@ button {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     padding: clamp(18px, 4vw, 24px);
-    border: 1px solid rgba(197, 164, 110, 0.18);
+    border: 1px solid rgba(201, 168, 76, 0.18);
   }
 
   .vault-panel-1 span,
@@ -939,7 +958,7 @@ button {
     position: relative !important;
     border-radius: 4px !important;
     overflow: hidden !important;
-    border: 1px solid rgba(197, 164, 110, 0.15) !important;
+    border: 1px solid rgba(201, 168, 76, 0.15) !important;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5) !important;
   }
 
@@ -1050,7 +1069,7 @@ button {
 
   .process-mobile-card {
     background: rgba(255, 255, 255, 0.02) !important;
-    border: 1px solid rgba(197, 164, 110, 0.12) !important;
+    border: 1px solid rgba(201, 168, 76, 0.12) !important;
     padding: 24px !important;
     border-radius: 4px !important;
     position: relative !important;
@@ -1086,7 +1105,7 @@ button {
   .process-mobile-card-body {
     font-family: var(--f-body) !important;
     font-size: 13px !important;
-    color: rgba(240, 235, 227, 0.72) !important;
+    color: rgba(240, 234, 196, 0.60) !important;
     font-weight: 300 !important;
     line-height: 1.65 !important;
     margin-bottom: 18px !important;
@@ -1096,7 +1115,7 @@ button {
   .process-mobile-card-divider {
     height: 1px !important;
     width: 100% !important;
-    background: linear-gradient(to right, rgba(197, 164, 110, 0.15), transparent) !important;
+    background: linear-gradient(to right, rgba(201, 168, 76, 0.15), transparent) !important;
     margin-bottom: 12px !important;
   }
 

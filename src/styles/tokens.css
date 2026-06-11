@@ -1,79 +1,79 @@
 /*
  * GOTHAM CITY JEWELERS — Design Token System
  * ─────────────────────────────────────────────────────────────────────────────
+ * TYPOGRAPHY STACK (Brand Book specified)
+ *  --f-display  Cormorant Garamond  Ultra-refined French-cut serif. Extreme
+ *               thin strokes in italic. Used by Hermès, Cartier digital.
+ *               At 120px italic hairlines dissolve into dark bg — couture typo.
  *
- * TYPOGRAPHY STACK
- *  --f-display  Bodoni Moda    Didone. Extreme thick/thin. Optical size axis.
- *               Italic form is the money shot — thin strokes near-disappear
- *               at 100px+ on dark backgrounds. Van Cleef / Vogue Italia DNA.
+ *  --f-body     Josefin Sans        Geometric sans. Pairs perfectly with
+ *               Cormorant. Light 300 weight for body, 400 for UI, 600 for CTAs.
  *
- *  --f-body     Satoshi        Fontshare geometric sans. Clean, zero personality
- *               (good). 300–700 weights. Pairs perfectly with Bodoni Moda.
+ *  --f-label    Josefin Sans        Same family uppercase + wide tracking.
+ *               Reads like engraved metal at 9px.
  *
- *  --f-label    Clash Display  Fontshare geometric capitals. At 9–10px with
- *               0.4em tracking it reads like stone-carved building inscription.
- *               Perfect for "THE VAULT · SWISS MOVEMENT" label treatments.
- *
- * SIZE SCALE (per brief: hero max 140px, h1 max 96px)
- *  Deliberately dramatic but restrained. Bodoni Moda at 100–140px italic on
- *  #080808 is the closest you get to a printed Vogue spread in a browser.
+ * COLOUR PALETTE (Brand Book — Page 7)
+ *  Primary:   Deep Olive #323D22 · Olive Grove #4D5C33
+ *  Secondary: Aged Gold #C9A84C · Harvest Cream #F0EAC4 · Parchment #F7F0E0
+ *  "Black anchors every surface. Gold commands every accent. White carries every word."
  */
 
 :root {
 
   /* ── Fonts ──────────────────────────────────────────────────────────────── */
-  --f-display: 'Italiana', 'Bodoni Moda', Georgia, serif;
-  --f-body:    'Jost', 'DM Sans', system-ui, sans-serif;
-  --f-label:   'Cinzel', 'Jost', system-ui, sans-serif;
+  --f-display: 'Cormorant Garamond', Georgia, serif;
+  --f-body:    'Josefin Sans', system-ui, sans-serif;
+  --f-label:   'Josefin Sans', system-ui, sans-serif;
 
   /* ── Palette ─────────────────────────────────────────────────────────────── */
-  --c-void:        #080808;   /* hero backgrounds — off-black, not pure */
-  --c-dark:        #111110;   /* raised surface */
-  --c-surface:     #F5F2EE;   /* warm cream — light sections */
-  --c-surface-2:   #EDEAE5;   /* slightly darker cream */
-  --c-white:       #EDE8E0;   /* off-white text */
-  --c-text:        #EDE8E0;
-  --c-text-dark:   #1C1B19;   /* text on light sections */
-  --c-muted:       rgba(237,232,224,0.44);
-  --c-muted-dark:  rgba(28,27,25,0.88);
-  --c-accent:      #C5A46E;   /* gold — all CTAs, labels, accents */
-  --c-accent-mid:  rgba(197,164,110,0.45);
-  --c-accent-light: rgba(197,164,110,0.15);
-  --c-accent-rich: #A8864F;   /* deeper gold for light sections */
-  --c-border:      rgba(197,164,110,0.08);
+  --c-void:         #0f1a0a;   /* deep forest olive — brand darkness, visibly green */
+  --c-dark:         #1a2910;   /* Deep Olive — primary dark surface */
+  --c-mid:          #2e3a1e;   /* Olive Grove — raised surface, card backgrounds */
+  --c-surface:      #F7F0E0;   /* Parchment — cream light sections */
+  --c-surface-2:    #F0EAC4;   /* Harvest Cream — slightly warmer cream */
+  --c-white:        #F0EAC4;   /* Harvest Cream — primary "white" text on dark bg */
+  --c-text:         #F0EAC4;   /* Harvest Cream */
+  --c-text-dark:    #1e2414;   /* near-black olive — text on light sections */
+  --c-muted:        rgba(240,234,196,0.44);
+  --c-muted-light:  rgba(240,234,196,0.28);
+  --c-muted-dark:   rgba(30,36,20,0.82);
+  --c-accent:       #C9A84C;   /* Aged Gold — all CTAs, labels, accents */
+  --c-accent-mid:   rgba(201,168,76,0.45);
+  --c-accent-light: rgba(201,168,76,0.15);
+  --c-accent-rich:  #A88830;   /* deeper gold for use on light/cream sections */
+  --c-border:       rgba(201,168,76,0.10);
+  --c-border-light: rgba(201,168,76,0.20);
+
+  /* ── Gradient section backgrounds ─────────────────────────────────────────── */
+  --bg-dark-grad: linear-gradient(160deg, #1d2b11 0%, #0b1207 100%);
+  --bg-void-grad: linear-gradient(170deg, #111d0c 0%, #080d06 50%, #0d1809 100%);
 
   /* ── Typography — Display Scale ─────────────────────────────────────────── */
-  /*
-   * Per brief: hero = clamp(64px, 8vw, 140px).
-   * Bodoni Moda italic at these sizes with tight tracking = luxury editorial.
-   * Mobile sizes are handled via the media query below.
-   */
-  --t-hero:  clamp(56px, 8vw,  140px);   /* brief spec: 64→140px, pulled back slightly for balance */
-  --t-h1:    clamp(40px, 6.5vw, 96px);   /* major section headers */
-  --t-h2:    clamp(28px, 4.5vw, 64px);   /* sub-headers */
-  --t-h3:    clamp(22px, 3vw,   44px);   /* card / panel headers */
-  --t-sub:   clamp(13px, 1.05vw, 15px);  /* subtitles, body-adjacent */
+  --t-hero:  clamp(56px, 8vw,  136px);
+  --t-h1:    clamp(40px, 6.5vw, 96px);
+  --t-h2:    clamp(28px, 4.5vw, 64px);
+  --t-h3:    clamp(22px, 3vw,   44px);
+  --t-sub:   clamp(13px, 1.05vw, 15px);
   --t-body:  13.5px;
 
   /* ── Letter-spacing ──────────────────────────────────────────────────────── */
-  --ls-display:  -0.03em;     /* tight — Didone reads best compressed */
-  --ls-heading:  -0.025em;
-  --ls-body:      0.008em;
-  --ls-cta:       0.38em;     /* wide — Clash Display CTA treatment */
-  --ls-label:     0.42em;     /* very wide — stone-carved label feel */
+  --ls-display:  -0.02em;
+  --ls-heading:  -0.018em;
+  --ls-body:      0.01em;
+  --ls-cta:       0.32em;
+  --ls-label:     0.38em;
 
   /* ── Line-heights ────────────────────────────────────────────────────────── */
-  --lh-display:  0.95;        /* Cormorant Garamond italic at 100px+ — hairline
-                                 strokes need a touch of room. 0.92 clips descenders. */
+  --lh-display:  0.95;
   --lh-heading:  1.06;
-  --lh-body:     1.82;        /* More breathing room — minimal luxury needs air */
+  --lh-body:     1.82;
 
   /* ── Spacing ─────────────────────────────────────────────────────────────── */
   --s-xs:  10px;
   --s-sm:  22px;
   --s-md:  44px;
-  --s-lg:  72px;              /* tightened for perfect layout pacing */
-  --s-xl:  100px;             /* tightened to eliminate vertical empty voids */
+  --s-lg:  72px;
+  --s-xl:  100px;
 
   /* ── Layout ──────────────────────────────────────────────────────────────── */
   --max-w:  1320px;
@@ -85,7 +85,7 @@
   --ease-silk: cubic-bezier(0.37, 0, 0.63, 1);
 }
 
-/* ── Tablet range (768–1023px) ────────────────────────────────────────────── */
+/* ── Tablet (768–1023px) ──────────────────────────────────────────────────── */
 @media (min-width: 768px) and (max-width: 1023px) {
   :root {
     --t-hero:  clamp(44px, 7vw,   80px);
@@ -96,7 +96,7 @@
   }
 }
 
-/* ── Mobile overrides ─────────────────────────────────────────────────────── */
+/* ── Mobile ───────────────────────────────────────────────────────────────── */
 @media (max-width: 767px) {
   :root {
     --t-hero:  clamp(32px, 8.5vw,  52px);
