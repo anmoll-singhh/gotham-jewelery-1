@@ -34,7 +34,7 @@ const PHASES = [
 
 function TheCraft() {
   return (
-    <section style={{ background: 'var(--c-void)', padding: 'var(--s-xl) var(--gutter)' }}>
+    <section style={{ background: 'var(--bg-void-grad)', padding: 'var(--s-xl) var(--gutter)' }}>
       <div style={{ maxWidth: 'var(--max-w)', margin: '0 auto' }}>
         <ScrollReveal>
           <span style={labelStyle}>The Craft</span>
@@ -110,7 +110,7 @@ function TheCraft() {
 
                 {/* Text */}
                 <div style={{
-                  background:     'var(--c-dark)',
+                  background:     'var(--bg-dark-grad)',
                   padding:        'clamp(32px, 6vw, 64px) var(--gutter)',
                   display:        'flex',
                   flexDirection:  'column',
@@ -178,7 +178,7 @@ function BeginSection() {
   }
 
   return (
-    <section style={{ background: 'var(--c-dark)', padding: 'var(--s-xl) var(--gutter)' }}>
+    <section style={{ background: 'var(--bg-dark-grad)', padding: 'var(--s-xl) var(--gutter)' }}>
       <div className="grid-2col" style={{
         maxWidth:            'var(--max-w)',
         margin:              '0 auto',
@@ -239,7 +239,7 @@ function BeginSection() {
         {/* Right — inquiry form */}
         <ScrollReveal delay={0.14}>
           <div style={{
-            background: 'var(--c-void)',
+            background: 'var(--bg-void-grad)',
             border:     '1px solid var(--c-border)',
             padding:    'var(--s-md)',
           }}>
@@ -390,7 +390,7 @@ export default function CustomJewelry() {
             position:   'relative',
             height:     '100dvh',
             overflow:   'hidden',
-            background: 'var(--c-void)',
+            background: 'var(--bg-void-grad)',
             display:    'flex',
             alignItems: 'flex-end',
           }}

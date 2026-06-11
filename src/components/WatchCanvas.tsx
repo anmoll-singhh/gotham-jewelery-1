@@ -56,8 +56,6 @@ export function WatchCanvas({
   const frames = useRef<HTMLImageElement[]>([]);
   const targetFrame = useRef(0);
   const drawnFrame = useRef(-1);
-  // displayFrame is a float used for smooth interpolation between integer frames
-  const displayFrame = useRef(0);
   const rafId = useRef(0);
   // Video fallback: RAF loop reads from this ref, never from ScrollTrigger directly
   const videoTargetTime = useRef(0);
@@ -145,12 +143,9 @@ export function WatchCanvas({
     window.addEventListener("resize", resize);
 
     const draw = () => {
-      // Smoothly interpolate a floating display frame towards the integer target
-      const target = targetFrame.current;
-      displayFrame.current += (target - displayFrame.current) * 0.12; // lerp factor
       const rounded = Math.max(
         0,
-        Math.min(Math.round(displayFrame.current), frames.current.length - 1),
+        Math.min(Math.round(targetFrame.current), frames.current.length - 1),
       );
       if (rounded !== drawnFrame.current) {
         const img = frames.current[rounded];
@@ -233,10 +228,7 @@ export function WatchCanvas({
         const currentReady = readyRef.current;
 
         if (currentMode === "canvas" && currentReady) {
-          targetFrame.current = Math.min(
-            Math.floor(progress * (frames.current.length - 1)),
-            frames.current.length - 1,
-          );
+          targetFrame.current = Math.round(progress * (frames.current.length - 1));
         } else if (currentMode === "video" && currentReady) {
           const v = videoRef.current;
           if (!v?.duration) return;
@@ -250,7 +242,8 @@ export function WatchCanvas({
           entryOverlayRef.current.style.opacity = String(1 - fadeProgress);
         }
         if (exitOverlayRef.current) {
-          exitOverlayRef.current.style.opacity = "0";
+          const exitFade = Math.max(0, Math.min(1, (progress - 0.94) / 0.06));
+          exitOverlayRef.current.style.opacity = String(exitFade);
         }
       };
 

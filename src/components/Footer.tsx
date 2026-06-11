@@ -21,7 +21,7 @@ export function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer style={{ background: 'var(--c-void)', borderTop: '1px solid rgba(201,168,76,0.10)' }}>
+    <footer style={{ background: 'var(--bg-void-grad)', borderTop: '1px solid rgba(201,168,76,0.10)' }}>
 
       {/* Upper — big statement */}
       <div style={{ maxWidth: 'var(--max-w)', margin: '0 auto', padding: 'var(--s-lg) var(--gutter) var(--s-md)' }}>

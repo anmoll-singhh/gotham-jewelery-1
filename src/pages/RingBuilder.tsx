@@ -59,7 +59,7 @@ function TheProcess() {
   return (
     <>
       {/* DESKTOP VERSION — hidden on mobile */}
-      <div ref={containerRef} className="h-scroll-container hide-mobile" style={{ overflow: 'hidden', background: 'var(--c-dark)' }}>
+      <div ref={containerRef} className="h-scroll-container hide-mobile" style={{ overflow: 'hidden', background: 'var(--bg-dark-grad)' }}>
         <div ref={trackRef} className="h-scroll-track" style={{ display: 'flex', width: 'max-content', willChange: 'transform', alignItems: 'stretch' }}>
 
           {/* Intro panel */}
@@ -152,7 +152,7 @@ function TheProcess() {
       </div>
 
       {/* MOBILE VERSION — visible on mobile via CSS class */}
-      <div className="process-mobile-container show-mobile-only" style={{ background: 'var(--c-dark)' }}>
+      <div className="process-mobile-container show-mobile-only" style={{ background: 'var(--bg-dark-grad)' }}>
         {/* Intro header */}
         <div className="process-mobile-header">
           <span style={labelStyle}>The Process</span>
@@ -227,7 +227,7 @@ function Invitation() {
       minHeight:  '80vh',
       display:    'flex',
       alignItems: 'center',
-      background: 'var(--c-void)',
+      background: 'var(--bg-void-grad)',
     }}>
       <img
         ref={imgRef}
@@ -348,7 +348,7 @@ export default function RingBuilder() {
             position:   'relative',
             height:     '100dvh',
             overflow:   'hidden',
-            background: 'var(--c-void)',
+            background: 'var(--bg-void-grad)',
             display:    'flex',
             alignItems: 'flex-end',
           }}

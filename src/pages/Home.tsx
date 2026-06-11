@@ -100,12 +100,12 @@ function HeroScene({ live }: { live: boolean }) {
 
       {HERO_SLIDES.map((s, i) => (
         <div key={i} style={{ position: "absolute", inset: 0, opacity: i === slide ? 1 : 0, transition: "opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)", pointerEvents: "none" }}>
-          <img src={s.img} alt="" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.30) saturate(0.50) contrast(1.1)" }} />
+          <img src={s.img} alt="" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.50) saturate(0.65) contrast(1.05)" }} />
         </div>
       ))}
 
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, #000 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0.12) 70%, transparent 100%)" }} />
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to right, rgba(0,0,0,0.76) 0%, transparent 55%)" }} />
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, #000 0%, rgba(0,0,0,0.40) 38%, rgba(0,0,0,0.08) 70%, transparent 100%)" }} />
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to right, rgba(0,0,0,0.60) 0%, transparent 55%)" }} />
 
       <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "var(--gutter)", paddingBottom: "clamp(24px, 5vh, 56px)", zIndex: 10, maxWidth: "1100px" }}>
         <AnimatePresence mode="wait">
@@ -415,7 +415,7 @@ function NightRevealScene() {
       {/* Desktop: frame-sequence canvas */}
       <div className="hide-mobile">
         <WatchCanvas
-          totalFrames={241}
+          totalFrames={193}
           framesPath="/assets/nyc-reveal-frames"
           videoSrc="/assets/gotham-nyc-reveal.mp4"
           scrubLength="280%"

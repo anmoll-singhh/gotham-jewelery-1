@@ -71,7 +71,7 @@ function VaultScene() {
       {/* ── Desktop: full scroll-driven canvas ──────────────────────── */}
       <div className="hide-mobile">
         <WatchCanvas
-          totalFrames={241}
+          totalFrames={193}
           framesPath="/assets/watch-frames-new"
           videoSrc="/assets/gotham-watch-rotation-new.mp4"
           scrubLength="260%"
@@ -125,7 +125,7 @@ function VaultScene() {
       {/* ── Mobile: static poster ───────────────────────────────────── */}
       <div className="show-mobile-only" style={{ flexDirection: "column", background: "#000" }}>
         <div style={{ position: "relative", height: "75vmax", overflow: "hidden" }}>
-          <img src="/assets/watch-frames-new/frame0121.jpg" alt="Luxury timepiece" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", objectPosition: "center", background: "#000" }} />
+          <img src="/assets/watch-frames-new/frame0097.jpg" alt="Luxury timepiece" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", objectPosition: "center", background: "#000" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 55%)" }} />
         </div>
         <div style={{ padding: "var(--s-md) var(--gutter) var(--s-lg)", background: "#000", textAlign: "center" }}>
@@ -161,7 +161,7 @@ function ProvenanceStats() {
     <section style={{ background: "var(--bg-void-grad)", padding: "var(--s-xl) var(--gutter)" }}>
       <div style={{ maxWidth: "var(--max-w)", margin: "0 auto" }}>
         {/* 4-stat row */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", borderTop: "1px solid rgba(201,168,76,0.12)", borderBottom: "1px solid rgba(201,168,76,0.12)" }}>
+        <div className="provenance-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", borderTop: "1px solid rgba(201,168,76,0.12)", borderBottom: "1px solid rgba(201,168,76,0.12)" }}>
           {PROVENANCE.map((s, i) => (
             <motion.div key={s.num} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: [0.16,1,0.3,1], delay: i * 0.08 }}
               style={{ padding: "clamp(28px,4vh,52px) clamp(16px,2.5vw,36px)", borderLeft: i > 0 ? "1px solid rgba(201,168,76,0.08)" : "none" }}>
@@ -615,13 +615,13 @@ export default function Timepieces() {
           {/* Crossfading background slides */}
           {VAULT_SLIDES.map((s, i) => (
             <div key={i} style={{ position: "absolute", inset: 0, opacity: i === heroSlide ? 1 : 0, transition: "opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)", pointerEvents: "none" }}>
-              <img src={s.img} alt="" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.25) saturate(0.60) contrast(1.05)" }} />
+              <img src={s.img} alt="" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.50) saturate(0.75) contrast(1.05)" }} />
             </div>
           ))}
 
           {/* Gradient overlays */}
-          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, #000 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0.12) 70%, transparent 100%)" }} />
-          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to right, rgba(0,0,0,0.76) 0%, transparent 55%)" }} />
+          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, #000 0%, rgba(0,0,0,0.40) 38%, rgba(0,0,0,0.08) 70%, transparent 100%)" }} />
+          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to right, rgba(0,0,0,0.60) 0%, transparent 55%)" }} />
 
           {/* Animated text content */}
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "var(--gutter)", paddingBottom: "clamp(28px, 5vh, 56px)", zIndex: 10, maxWidth: "1100px" }}>
