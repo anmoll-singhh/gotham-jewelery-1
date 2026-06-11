@@ -250,10 +250,10 @@ function StoneJourneyScene() {
         src="/assets/gotham-diamond-macro.jpg"
         alt="" aria-hidden="true"
         loading="lazy"
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", filter: "brightness(0.12) saturate(0.5)", transition: "filter 0.1s linear", willChange: "filter" }}
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", filter: "brightness(0.22) saturate(0.5)", transition: "filter 0.1s linear", willChange: "filter" }}
         onError={e => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
       />
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 50% 50%, transparent 0%, rgba(0,0,0,0.88) 100%)" }} />
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 50% 50%, transparent 0%, rgba(0,0,0,0.62) 100%)" }} />
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, var(--c-void) 0%, transparent 30%)" }} />
 
       {/* Progress bar */}
@@ -576,23 +576,37 @@ function StoreScene() {
         </div>
       </div>
 
-      {/* Mobile fallback */}
-      <div className="show-mobile-only" style={{ display: "none", flexDirection: "column", position: "relative", zIndex: 10 }}>
+      {/* Mobile fallback — horizontal snap scroll, 88vw cards peek the next */}
+      <div
+        className="show-mobile-only store-mobile-scroll"
+        style={{
+          display: "none", flexDirection: "row",
+          overflowX: "auto", overflowY: "hidden",
+          scrollSnapType: "x mandatory",
+          position: "relative", zIndex: 10,
+          scrollbarWidth: "none",
+        }}
+      >
         {[
           { img: "/assets/gotham-store-interior-1.jpg", label: "23 W 47th Street · Manhattan",    title: "Step inside.",              body: "Monday – Friday, 9am to 5pm. Walk-ins welcome.", cta: null },
           { img: "/assets/gotham-store-interior-2.jpg", label: "The Collection",                   title: "Every piece authenticated.", body: "Rolex, Patek, AP, Cartier, RM — each cleared our 14-point inspection.", cta: { label: "View Timepieces", href: "/timepieces" } },
           { img: "/assets/gotham-diamond-macro.jpg",    label: "Private Consultation",             title: "Begin with a conversation.", body: "Same-day response. No pressure. No minimums.", cta: { label: "Call +1 917 757 0314", href: "tel:+19177570314" } },
         ].map((s, i) => (
-          <div key={i} style={{ position: "relative", minHeight: "70vh", overflow: "hidden" }}>
-            <img src={s.img} alt="" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.4) saturate(0.6)" }} onError={e => { (e.currentTarget as HTMLImageElement).src = "/assets/gotham-newyork.jpg"; }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 55%)" }} />
-            <div style={{ position: "relative", zIndex: 10, padding: "var(--s-xl) var(--gutter) var(--s-md)", display: "flex", flexDirection: "column", justifyContent: "flex-end", minHeight: "70vh" }}>
-              <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}>
-                <span style={lbl}>{s.label}</span>
-                <h3 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h2)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", marginBottom: "12px" }}>{s.title}</h3>
-                <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-body)", color: "rgba(240,234,196,0.72)", fontWeight: 300, lineHeight: 1.82, marginBottom: s.cta ? "24px" : "0" }}>{s.body}</p>
-                {s.cta && <MagneticBtn href={s.cta.href}><span className="btn-outline">{s.cta.label}</span></MagneticBtn>}
-              </motion.div>
+          <div key={i} style={{
+            position: "relative",
+            width: "88vw", height: "75vh",
+            flexShrink: 0,
+            scrollSnapAlign: "start",
+            overflow: "hidden",
+            borderRight: i < 2 ? "1px solid rgba(201,168,76,0.10)" : "none",
+          }}>
+            <img src={s.img} alt="" aria-hidden="true" loading={i === 0 ? "eager" : "lazy"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.42) saturate(0.65)" }} onError={e => { (e.currentTarget as HTMLImageElement).src = "/assets/gotham-newyork.jpg"; }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)" }} />
+            <div style={{ position: "relative", zIndex: 10, padding: "var(--gutter)", height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+              <span style={lbl}>{s.label}</span>
+              <h3 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h2)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", marginBottom: "10px" }}>{s.title}</h3>
+              <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-body)", color: "rgba(240,234,196,0.72)", fontWeight: 300, lineHeight: 1.75, marginBottom: s.cta ? "20px" : "0" }}>{s.body}</p>
+              {s.cta && <MagneticBtn href={s.cta.href}><span className="btn-outline">{s.cta.label}</span></MagneticBtn>}
             </div>
           </div>
         ))}

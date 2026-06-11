@@ -1176,8 +1176,9 @@ button {
     display: none !important;
   }
 
-  /* StoreScene mobile panels: give each panel breathing room */
-  .store-scene-section .show-mobile-only > div {
-    min-height: 75vh;
-  }
+}
+
+/* ── Store mobile horizontal scroll: hide native scrollbar ─── */
+.store-mobile-scroll::-webkit-scrollbar {
+  display: none;
 }
