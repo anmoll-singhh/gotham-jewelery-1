@@ -134,11 +134,19 @@ export function WatchCanvas({
     const canvas = canvasRef.current!;
 
     const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
+      const rawDpr = window.devicePixelRatio || 1;
+      // Landscape frames (1280×720) must be height-scaled to cover portrait phones.
+      // At DPR=3 that's a 3.5× upscale → severe blur. Cap DPR=1 in portrait so
+      // frames downscale into the canvas instead of being stretched up.
+      // On landscape (desktop) allow up to 2× for crisp canvas edges.
+      const isPortrait = canvas.offsetHeight > canvas.offsetWidth;
+      const dpr = isPortrait ? 1 : Math.min(rawDpr, 2);
       canvas.width = canvas.offsetWidth * dpr;
       canvas.height = canvas.offsetHeight * dpr;
       const ctx = canvas.getContext("2d")!;
       ctx.scale(dpr, dpr);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
       drawnFrame.current = -1; // force redraw after resize
     };
     resize();
@@ -153,6 +161,8 @@ export function WatchCanvas({
         const img = frames.current[rounded];
         if (img?.complete && img.naturalWidth > 0) {
           const ctx = canvas.getContext("2d")!;
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
           const cw = canvas.offsetWidth;
           const ch = canvas.offsetHeight;
           const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);

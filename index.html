@@ -58,27 +58,23 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
   <!--
-      TYPOGRAPHY SYSTEM — Gotham City Jewelers
-      ─────────────────────────────────────────
-      Display:  Cormorant Garamond — ultra-refined French-cut serif. Extreme
-                                     thin strokes in italic. Used by Hermès,
-                                     Cartier digital, and high-jewel houses.
-                                     At 120px italic the hairlines dissolve into
-                                     the dark background — true couture typography.
-      Body:     Jost               — precision geometric sans. Not a default AI
-                                     pick. Clean, architectural, reads beautifully
-                                     at 13px. Pairs perfectly with Cormorant.
-      Labels:   Jost               — same family, uppercase + wide tracking.
-                                     Reads like engraved metal at 9px.
+      TYPOGRAPHY SYSTEM — Gotham City Jewelers (Brand Book pg. 7)
+      ─────────────────────────────────────────────────────────────
+      Display:  Cormorant Garamond — ultra-refined French-cut serif.
+                Extreme thin strokes in italic. Used by Hermès, Cartier.
+                --f-display in tokens.css
+      Body:     Josefin Sans       — precision geometric sans-serif.
+                Light 300 for body, 400 UI, 600 CTAs. Engraved metal at 9px.
+                --f-body / --f-label in tokens.css
     -->
 
-  <!-- Watch canvas: preload first frame so the canvas never shows blank on scroll entry -->
-  <link rel="preload" as="image" href="/assets/watch-frames/frame0001.jpg" />
-  <link rel="preload" as="image" href="/assets/watch-frames/frame0002.jpg" />
-  <link rel="preload" as="image" href="/assets/watch-frames/frame0003.jpg" />
+  <!-- Hero images: preload the first slide so it paints instantly -->
+  <link rel="preload" as="image" href="/assets/gotham-hero-diamond-ring.jpg" fetchpriority="high" />
+  <link rel="prefetch" as="image" href="/assets/gotham-store-interior-1.jpg" />
+  <link rel="prefetch" as="image" href="/assets/editorial-wrist.jpg" />
 
   <!-- Google Fonts — Cormorant Garamond (display) + Josefin Sans (body/labels) -->
-  <!-- Brand Book specified: Cormorant Garamond for headings, Josefin Sans for body -->
+  <!-- Brand Book specified: Cormorant Garamond for headings, Josefin Sans for body/labels -->
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Josefin+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 </head>
 

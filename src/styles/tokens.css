@@ -34,7 +34,7 @@
   --c-white:        #F0EAC4;   /* Harvest Cream — primary "white" text on dark bg */
   --c-text:         #F0EAC4;   /* Harvest Cream */
   --c-text-dark:    #1e2414;   /* near-black olive — text on light sections */
-  --c-muted:        rgba(240,234,196,0.44);
+  --c-muted:        rgba(240,234,196,0.64);
   --c-muted-light:  rgba(240,234,196,0.28);
   --c-muted-dark:   rgba(30,36,20,0.82);
   --c-accent:       #C9A84C;   /* Aged Gold — all CTAs, labels, accents */
@@ -53,8 +53,8 @@
   --t-h1:    clamp(40px, 6.5vw, 96px);
   --t-h2:    clamp(28px, 4.5vw, 64px);
   --t-h3:    clamp(22px, 3vw,   44px);
-  --t-sub:   clamp(13px, 1.05vw, 15px);
-  --t-body:  13.5px;
+  --t-sub:   clamp(14px, 1.05vw, 15.5px);
+  --t-body:  14px;
 
   /* ── Letter-spacing ──────────────────────────────────────────────────────── */
   --ls-display:  -0.02em;
@@ -103,7 +103,8 @@
     --t-h1:    clamp(26px, 7vw,    40px);
     --t-h2:    clamp(20px, 5.5vw,  30px);
     --t-h3:    clamp(18px, 4.5vw,  24px);
-    --t-sub:   13px;
+    --t-sub:   14px;
+    --t-body:  14px;
     --s-lg:    56px;
     --s-xl:    72px;
     --gutter:  20px;

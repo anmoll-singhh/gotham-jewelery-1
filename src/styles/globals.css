@@ -1151,3 +1151,33 @@ button {
     padding: var(--s-lg) 0 !important;
   }
 }
+
+/* ── StoreScene: expand to full stacked height on mobile ──────────── */
+@media (max-width: 767px) {
+  .store-scene-section {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Contact form: collapse to 1-col */
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--s-md) !important;
+  }
+
+  /* City address: collapse to 1-col */
+  .city-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--s-sm) !important;
+  }
+
+  /* CityScene left vertical rule: hide on single-col layout */
+  .city-scene-rule {
+    display: none !important;
+  }
+
+  /* StoreScene mobile panels: give each panel breathing room */
+  .store-scene-section .show-mobile-only > div {
+    min-height: 75vh;
+  }
+}

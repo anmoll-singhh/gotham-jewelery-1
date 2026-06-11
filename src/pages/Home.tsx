@@ -59,7 +59,7 @@ let _loaderShown = false;
 // ═══════════════════════════════════════════════════════════════════════════════
 const HERO_SLIDES = [
   {
-    img:   "/assets/gotham-hero-diamond-ring.png",
+    img:   "/assets/gotham-hero-diamond-ring.jpg",
     pos:   "center 40%",
     label: "Manhattan Diamond District · Est. 47th Street",
     h1a:   "Where every stone",
@@ -75,7 +75,7 @@ const HERO_SLIDES = [
     sub:   "New York's most trusted name in diamonds and certified timepieces.",
   },
   {
-    img:   "/assets/editorial-wrist.png",
+    img:   "/assets/editorial-wrist.jpg",
     pos:   "center center",
     label: "Certified Timepieces · The Vault",
     h1a:   "Authenticated.",
@@ -100,7 +100,13 @@ function HeroScene({ live }: { live: boolean }) {
 
       {HERO_SLIDES.map((s, i) => (
         <div key={i} style={{ position: "absolute", inset: 0, opacity: i === slide ? 1 : 0, transition: "opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)", pointerEvents: "none" }}>
-          <img src={s.img} alt="" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.50) saturate(0.65) contrast(1.05)" }} />
+          <img
+            src={s.img}
+            alt="" aria-hidden="true"
+            fetchPriority={i === 0 ? "high" : "low"}
+            loading={i === 0 ? "eager" : "lazy"}
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.50) saturate(0.65) contrast(1.05)" }}
+          />
         </div>
       ))}
 
@@ -122,7 +128,7 @@ function HeroScene({ live }: { live: boolean }) {
                 {current.h1a}<br />{current.h1b}
               </h1>
             )}
-            <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.42)", fontWeight: 300, lineHeight: 1.9, maxWidth: "340px", marginBottom: "40px", letterSpacing: "0.012em" }}>
+            <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.72)", fontWeight: 300, lineHeight: 1.9, maxWidth: "340px", marginBottom: "40px", letterSpacing: "0.012em" }}>
               {current.sub}
             </p>
           </motion.div>
@@ -233,7 +239,7 @@ function StoneJourneyScene() {
   };
   const stageBody: React.CSSProperties = {
     fontFamily: "var(--f-body)", fontSize: "var(--t-body)",
-    color: "rgba(240,234,196,0.40)", fontWeight: 300,
+    color: "rgba(240,234,196,0.70)", fontWeight: 300,
     lineHeight: 1.85, maxWidth: "300px", marginTop: "22px", letterSpacing: "0.012em",
   };
 
@@ -507,7 +513,7 @@ function StoreScene() {
   };
 
   return (
-    <section ref={sectionRef} style={{ position: "relative", height: "100dvh", overflow: "hidden", background: "var(--bg-void-grad)" }}>
+    <section ref={sectionRef} className="store-scene-section" style={{ position: "relative", height: "100dvh", overflow: "hidden", background: "var(--bg-void-grad)" }}>
       {/* Progress bar */}
       <div className="hide-mobile" style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "1px", background: "rgba(201,168,76,0.10)", zIndex: 30 }}>
         <div ref={progressRef} style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "100%", background: "var(--c-accent)", willChange: "transform" }} />
@@ -517,8 +523,8 @@ function StoreScene() {
         <span style={{ fontFamily: "var(--f-label)", fontSize: "8px", letterSpacing: "0.35em", textTransform: "uppercase", color: "rgba(201,168,76,0.35)" }}>Step Inside</span>
       </div>
 
-      {/* Layer 1: Exterior */}
-      <div ref={layer1Ref} style={{ position: "absolute", inset: 0, willChange: "opacity, transform" }}>
+      {/* Layer 1: Exterior — desktop only; mobile fallback renders its own images */}
+      <div ref={layer1Ref} className="hide-mobile" style={{ position: "absolute", inset: 0, willChange: "opacity, transform" }}>
         <video className="hide-mobile" autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.72)" }}>
           <source src="/assets/gotham-showroom-walk.mp4" type="video/mp4" />
         </video>
@@ -529,7 +535,7 @@ function StoreScene() {
           <h2 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h1)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", letterSpacing: "var(--ls-display)", marginBottom: "16px" }}>
             Step inside.
           </h2>
-          <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.45)", fontWeight: 300, lineHeight: 1.82 }}>
+          <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.72)", fontWeight: 300, lineHeight: 1.82 }}>
             Mon – Fri, 9am – 5pm.
           </p>
         </div>
@@ -545,7 +551,7 @@ function StoreScene() {
           <h2 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h1)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", letterSpacing: "var(--ls-display)", marginBottom: "16px" }}>
             Every piece under<br />our loupe first.
           </h2>
-          <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.45)", fontWeight: 300, lineHeight: 1.82, marginBottom: "28px" }}>
+          <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.72)", fontWeight: 300, lineHeight: 1.82, marginBottom: "28px" }}>
             Rolex. Patek. AP. Cartier. RM.<br />Authenticated before it reaches the case.
           </p>
           <MagneticBtn href="/timepieces"><span className="btn-outline">View Timepieces</span></MagneticBtn>
@@ -561,7 +567,7 @@ function StoreScene() {
           <h2 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h1)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", letterSpacing: "var(--ls-display)", marginBottom: "16px" }}>
             It starts with<br />a conversation.
           </h2>
-          <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.45)", fontWeight: 300, lineHeight: 1.82, marginBottom: "32px" }}>
+          <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.72)", fontWeight: 300, lineHeight: 1.82, marginBottom: "32px" }}>
             Same-day response. No pressure. No minimums.
           </p>
           <MagneticBtn href="tel:+19177570314">
@@ -584,7 +590,7 @@ function StoreScene() {
               <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}>
                 <span style={lbl}>{s.label}</span>
                 <h3 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h2)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", marginBottom: "12px" }}>{s.title}</h3>
-                <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-body)", color: "rgba(240,234,196,0.45)", fontWeight: 300, lineHeight: 1.82, marginBottom: s.cta ? "24px" : "0" }}>{s.body}</p>
+                <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-body)", color: "rgba(240,234,196,0.72)", fontWeight: 300, lineHeight: 1.82, marginBottom: s.cta ? "24px" : "0" }}>{s.body}</p>
                 {s.cta && <MagneticBtn href={s.cta.href}><span className="btn-outline">{s.cta.label}</span></MagneticBtn>}
               </motion.div>
             </div>
@@ -631,7 +637,7 @@ function LeadCaptureScene() {
   const fieldLabel: React.CSSProperties = {
     display: "block", fontFamily: "var(--f-label)", fontSize: "8px",
     letterSpacing: "0.32em", textTransform: "uppercase",
-    color: "rgba(201,168,76,0.52)", marginBottom: "10px",
+    color: "rgba(201,168,76,0.78)", marginBottom: "10px",
   };
   const onFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     e.currentTarget.style.borderBottomColor = "rgba(201,168,76,0.55)";
@@ -654,11 +660,11 @@ function LeadCaptureScene() {
               <span style={{ width: "24px", height: "1px", background: "var(--c-accent)", display: "inline-block", flexShrink: 0 }} />
               +1 917 757 0314
             </a>
-            <a href="mailto:sales@gothamcityjewelers.com" style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.32)", fontWeight: 300, letterSpacing: "0.02em", display: "flex", alignItems: "center", gap: "14px" }}>
+            <a href="mailto:sales@gothamcityjewelers.com" style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.60)", fontWeight: 300, letterSpacing: "0.02em", display: "flex", alignItems: "center", gap: "14px" }}>
               <span style={{ width: "24px", height: "1px", background: "rgba(240,234,196,0.18)", display: "inline-block", flexShrink: 0 }} />
               sales@gothamcityjewelers.com
             </a>
-            <p style={{ fontFamily: "var(--f-body)", fontSize: "12px", color: "rgba(240,234,196,0.22)", fontWeight: 300, lineHeight: 1.8, maxWidth: "280px", marginTop: "4px" }}>
+            <p style={{ fontFamily: "var(--f-body)", fontSize: "12px", color: "rgba(240,234,196,0.48)", fontWeight: 300, lineHeight: 1.8, maxWidth: "280px", marginTop: "4px" }}>
               Same-day response. No pressure, no minimums, no timelines until you're ready.
             </p>
           </div>
@@ -726,7 +732,7 @@ function CityScene() {
       <img ref={imgRef} src="/assets/gotham-newyork.jpg" alt="Manhattan" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.18) saturate(0.28)", willChange: "transform" }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.06) 100%)" }} />
 
-      <div style={{ position: "absolute", top: "14%", bottom: "14%", left: "var(--gutter)", width: "1px", background: "linear-gradient(to bottom, transparent, rgba(201,168,76,0.48) 30%, rgba(201,168,76,0.48) 70%, transparent)" }} />
+      <div className="city-scene-rule" style={{ position: "absolute", top: "14%", bottom: "14%", left: "var(--gutter)", width: "1px", background: "linear-gradient(to bottom, transparent, rgba(201,168,76,0.48) 30%, rgba(201,168,76,0.48) 70%, transparent)" }} />
 
       <div style={{ position: "relative", zIndex: 10, maxWidth: "var(--max-w)", width: "100%", margin: "0 auto", padding: "var(--s-xl) var(--gutter)", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--s-lg)", alignItems: "center" }} className="city-grid">
         <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}>
@@ -738,8 +744,8 @@ function CityScene() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 1.0, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}>
-          <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "var(--c-muted)", marginBottom: "6px", fontWeight: 300, lineHeight: 1.82 }}>Suite 402, Manhattan, New York 10036.</p>
-          <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "var(--c-muted)", fontWeight: 300, lineHeight: 1.82 }}>
+          <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.72)", marginBottom: "6px", fontWeight: 300, lineHeight: 1.82 }}>Suite 402, Manhattan, New York 10036.</p>
+          <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.72)", fontWeight: 300, lineHeight: 1.82 }}>
             Monday through Friday, 9am to 5pm.<br />Appointments preferred. Walk-ins welcome.
           </p>
         </motion.div>

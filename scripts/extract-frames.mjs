@@ -39,7 +39,7 @@ const ROOT      = join(__dirname, '..')
 const VIDEO_SRC  = join(ROOT, 'public', 'assets', 'watch-reveal-ap.mp4')
 const FRAMES_DIR = join(ROOT, 'public', 'assets', 'watch-frames')
 const FPS        = 24         // frames per second (5s video → 120 frames)
-const WIDTH      = 1280       // output width (height auto-calculated, keeps AR)
+const WIDTH      = 1920       // output width — 1920 ensures no upscaling on DPR-2 desktops
 const QUALITY    = 3          // JPEG quality 1–31: lower = better (2–4 is ideal)
 // ─────────────────────────────────────────────────────────────────────────
 
