@@ -118,7 +118,7 @@ function VaultScene() {
           </div>
 
           {/* P3 — CTA */}
-          <div style={{ position: "absolute", bottom: "var(--s-sm)", left: "50%", transform: "translateX(-50%)", zIndex: 10 }}>
+          <div className="vault-p3-wrap" style={{ position: "absolute", bottom: "var(--s-sm)", left: "50%", transform: "translateX(-50%)", zIndex: 10 }}>
             <div ref={p3} style={{ textAlign: "center" }}>
               <p className="vault-brand-list" style={{ fontFamily: "var(--f-label)", fontSize: "9px", letterSpacing: "var(--ls-label)", textTransform: "uppercase", color: "rgba(201,168,76,0.5)", marginBottom: "24px", whiteSpace: "nowrap" }}>
                 Rolex · Patek Philippe · Audemars Piguet · Cartier · Richard Mille
@@ -563,10 +563,10 @@ function ExchangeCTA() {
 // VAULT HERO SLIDES  — real inventory, 4 brands
 // ─────────────────────────────────────────────────────────────────────────────
 const VAULT_SLIDES = [
-  { img: "/assets/gotham-banner-rolex.webp",  pos: "center center", label: "Rolex · Submariner Date",      ref_: "Ref. 126610LN · In Stock",          h1a: "The one they",  h1b: "all copy.",       sub: "Oystersteel. Ceramic bezel. 300m water resistance. Authenticated." },
-  { img: "/assets/gotham-banner-patek.webp",  pos: "center center", label: "Patek Philippe · Nautilus",    ref_: "Ref. 5711/1A · Price on Request",    h1a: "You never",     h1b: "own it.",         sub: "Integrated bracelet. 8-day power reserve. You hold it for the next generation." },
-  { img: "/assets/gotham-banner-ap.webp",     pos: "center center", label: "Audemars Piguet · Royal Oak",  ref_: "Ref. 77350ST · Available",           h1a: "It changed",    h1b: "everything.",     sub: "Gérald Genta. 1972. Grande Tapisserie. Still unmatched." },
-  { img: "/assets/gotham-hf-flatlay.webp",    pos: "center center", label: "Cartier · Santos Chronograph", ref_: "Ref. W2SA0008 · Available",          h1a: "The first",     h1b: "wristwatch.",     sub: "Built for Santos-Dumont in 1904. The most elegant piece in any room." },
+  { img: "/assets/gotham-banner-rolex.webp",  mobileImg: "/assets/gotham-mobile-rolex.webp",   pos: "center center", label: "Rolex · Submariner Date",      ref_: "Ref. 126610LN · In Stock",          h1a: "The one they",  h1b: "all copy.",       sub: "Oystersteel. Ceramic bezel. 300m water resistance. Authenticated." },
+  { img: "/assets/gotham-banner-patek.webp",  mobileImg: "/assets/gotham-mobile-patek.webp",   pos: "center center", label: "Patek Philippe · Nautilus",    ref_: "Ref. 5711/1A · Price on Request",    h1a: "You never",     h1b: "own it.",         sub: "Integrated bracelet. 8-day power reserve. You hold it for the next generation." },
+  { img: "/assets/gotham-banner-ap.webp",     mobileImg: "/assets/gotham-mobile-ap.webp",      pos: "center center", label: "Audemars Piguet · Royal Oak",  ref_: "Ref. 77350ST · Available",           h1a: "It changed",    h1b: "everything.",     sub: "Gérald Genta. 1972. Grande Tapisserie. Still unmatched." },
+  { img: "/assets/gotham-hf-flatlay.webp",    mobileImg: "/assets/gotham-mobile-cartier.webp", pos: "center center", label: "Cartier · Santos Chronograph", ref_: "Ref. W2SA0008 · Available",          h1a: "The first",     h1b: "wristwatch.",     sub: "Built for Santos-Dumont in 1904. The most elegant piece in any room." },
 ] as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -606,7 +606,11 @@ export default function Timepieces() {
           {/* Crossfading background slides */}
           {VAULT_SLIDES.map((s, i) => (
             <div key={i} style={{ position: "absolute", inset: 0, opacity: i === heroSlide ? 1 : 0, transition: "opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)", pointerEvents: "none" }}>
-              <img src={s.img} alt="" aria-hidden="true" className="vault-hero-img" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.45) saturate(0.80) contrast(1.08)" }} />
+              {/* <picture> serves portrait AI-generated shots on mobile, landscape banners on desktop */}
+              <picture style={{ position: "absolute", inset: 0, display: "block" }}>
+                <source media="(max-width: 767px)" srcSet={s.mobileImg} type="image/webp" />
+                <img src={s.img} alt="" aria-hidden="true" className="vault-hero-img" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.45) saturate(0.80) contrast(1.08)" }} />
+              </picture>
             </div>
           ))}
 

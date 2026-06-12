@@ -637,8 +637,6 @@ function StoreScene() {
           scrollSnapType: "x mandatory",
           position: "relative", zIndex: 10,
           scrollbarWidth: "none",
-          padding: "0 var(--gutter)",
-          gap: "12px",
         }}
       >
         {[
@@ -648,12 +646,10 @@ function StoreScene() {
         ].map((s, i) => (
           <div key={i} style={{
             position: "relative",
-            width: "82vw", height: "72vh",
+            width: "100vw", height: "78vh",
             flexShrink: 0,
             scrollSnapAlign: "start",
             overflow: "hidden",
-            borderRadius: "6px",
-            boxShadow: "0 12px 48px rgba(0,0,0,0.72), 0 2px 8px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(201,168,76,0.12)",
           }}>
             <Pic src={s.img} alt="" aria-hidden="true" loading={i === 0 ? "eager" : "lazy"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.42) saturate(0.65)" }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)" }} />

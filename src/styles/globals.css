@@ -1293,24 +1293,39 @@ html {
   }
 }
 
-/* ── Timepieces hero: landscape banner images on mobile portrait ─────
-   Raise brightness slightly on mobile (smaller, dimmer screens need it).
-   50% 30% shows the upper-center area where watches sit in editorial shots. */
+/* ── Timepieces hero: portrait AI images on mobile ───────────────────
+   The <picture> element serves purpose-shot portrait images on mobile, so
+   object-position resets to center. Brightness raised — editorial shots
+   are already moody and need less darkening than the landscape banners. */
 @media (max-width: 767px) {
   .vault-hero-img {
-    object-position: 50% 30% !important;
-    filter: brightness(0.62) saturate(0.80) contrast(1.08) !important;
+    object-position: center center !important;
+    filter: brightness(0.60) saturate(0.85) contrast(1.05) !important;
   }
   .vault-hero-desc {
     display: none !important;
   }
-  /* Brand list in VaultScene: wrap on mobile so it doesn't overflow the canvas. */
+  /* ── VaultScene P3 CTA: full-width frosted card on mobile ─────────── */
+  .vault-p3-wrap {
+    left: var(--gutter) !important;
+    right: var(--gutter) !important;
+    transform: none !important;
+    bottom: clamp(24px, 5vh, 48px) !important;
+  }
   .vault-brand-list {
     white-space: normal !important;
-    max-width: 80vw;
-  }
-  /* Store snap cards: trailing padding so the last card isn't flush against the edge. */
-  .store-mobile-scroll {
-    padding-right: var(--gutter) !important;
+    font-size: 10px !important;
+    letter-spacing: 0.22em !important;
+    line-height: 2.1 !important;
+    color: rgba(201, 168, 76, 0.95) !important;
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.9) !important;
+    background: rgba(4, 4, 4, 0.72) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(201, 168, 76, 0.22) !important;
+    border-radius: 3px !important;
+    padding: 14px 20px !important;
+    margin-bottom: 16px !important;
+    max-width: 100% !important;
   }
 }
