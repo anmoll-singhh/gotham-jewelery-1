@@ -96,7 +96,7 @@ function HeroScene({ live }: { live: boolean }) {
   const current = HERO_SLIDES[slide];
 
   return (
-    <div style={{ position: "relative", height: "100dvh", overflow: "hidden", background: "#000" }}>
+    <div className="hero-scene" style={{ position: "relative", overflow: "hidden", background: "#000" }}>
       <AnimatePresence>{!live && <HeroSkeleton key="sk" />}</AnimatePresence>
 
       {HERO_SLIDES.map((s, i) => (
@@ -114,7 +114,7 @@ function HeroScene({ live }: { live: boolean }) {
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, #000 0%, rgba(0,0,0,0.40) 38%, rgba(0,0,0,0.08) 70%, transparent 100%)" }} />
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to right, rgba(0,0,0,0.60) 0%, transparent 55%)" }} />
 
-      <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", justifyContent: "center", padding: "var(--gutter)", paddingTop: "clamp(80px, 10vh, 120px)", paddingBottom: "clamp(60px, 8vh, 100px)", zIndex: 10, maxWidth: "1100px" }}>
+      <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "var(--gutter)", paddingTop: "clamp(80px, 10vh, 120px)", paddingBottom: "clamp(60px, 8vh, 100px)", zIndex: 10, maxWidth: "1100px" }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={slide}
@@ -637,6 +637,8 @@ function StoreScene() {
           scrollSnapType: "x mandatory",
           position: "relative", zIndex: 10,
           scrollbarWidth: "none",
+          padding: "0 var(--gutter)",
+          gap: "12px",
         }}
       >
         {[
@@ -646,11 +648,12 @@ function StoreScene() {
         ].map((s, i) => (
           <div key={i} style={{
             position: "relative",
-            width: "88vw", height: "75vh",
+            width: "82vw", height: "72vh",
             flexShrink: 0,
             scrollSnapAlign: "start",
             overflow: "hidden",
-            borderRight: i < 2 ? "1px solid rgba(201,168,76,0.10)" : "none",
+            borderRadius: "6px",
+            boxShadow: "0 12px 48px rgba(0,0,0,0.72), 0 2px 8px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(201,168,76,0.12)",
           }}>
             <Pic src={s.img} alt="" aria-hidden="true" loading={i === 0 ? "eager" : "lazy"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.42) saturate(0.65)" }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)" }} />

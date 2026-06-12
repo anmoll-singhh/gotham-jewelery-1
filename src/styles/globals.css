@@ -1279,32 +1279,38 @@ html {
   background: #080808;
 }
 
-/* ── Timepieces hero height ──────────────────────────────────────────
-   dvh on desktop (fills including any chrome), svh on mobile so the hero
-   never exceeds the visible viewport when iOS Safari shows its address bar. */
-.vault-hero {
+/* ── Full-screen hero sections ───────────────────────────────────────
+   dvh on desktop, svh on mobile. svh = "small viewport" = always the
+   visible area, so iOS Safari's address bar doesn't push content out. */
+.vault-hero,
+.hero-scene {
   height: 100dvh;
 }
 @media (max-width: 767px) {
-  .vault-hero {
+  .vault-hero,
+  .hero-scene {
     height: 100svh;
   }
 }
 
 /* ── Timepieces hero: landscape banner images on mobile portrait ─────
-   50% 30% shows the upper-center area where watch faces typically sit in
-   landscape editorial photography. Description hidden to prevent overflow. */
+   Raise brightness slightly on mobile (smaller, dimmer screens need it).
+   50% 30% shows the upper-center area where watches sit in editorial shots. */
 @media (max-width: 767px) {
   .vault-hero-img {
     object-position: 50% 30% !important;
+    filter: brightness(0.62) saturate(0.80) contrast(1.08) !important;
   }
   .vault-hero-desc {
     display: none !important;
   }
-  /* Brand list in VaultScene is nowrap by design on desktop — wrap it on
-     mobile so it doesn't overflow the sticky canvas. */
+  /* Brand list in VaultScene: wrap on mobile so it doesn't overflow the canvas. */
   .vault-brand-list {
     white-space: normal !important;
     max-width: 80vw;
+  }
+  /* Store snap cards: trailing padding so the last card isn't flush against the edge. */
+  .store-mobile-scroll {
+    padding-right: var(--gutter) !important;
   }
 }

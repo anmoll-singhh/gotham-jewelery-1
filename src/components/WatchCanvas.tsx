@@ -307,12 +307,14 @@ export function WatchCanvas({
         />
 
         {/* ── Overlay content (text, CTAs) ────────────────────── */}
+        {/* Always rendered — GSAP drives each element's opacity via onProgress.
+            The entry overlay (zIndex:5) covers the canvas while loading; text
+            elements start at GSAP opacity:0 and animate in on scroll regardless
+            of whether all frames have finished preloading. */}
         {children && (
           <div style={{
             position: "relative", zIndex: 10, height: "100%",
-            opacity: ready ? 1 : 0,
             pointerEvents: ready ? "auto" : "none",
-            transition: "opacity 0.25s ease",
           }}>
             {children}
           </div>

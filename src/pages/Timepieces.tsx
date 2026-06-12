@@ -474,7 +474,7 @@ function FeaturedWatches({ activeBrand, sectionRef }: { activeBrand: string; sec
         {hasInventory && (
           <ScrollReveal>
             <div style={{ textAlign: "center", paddingTop: "var(--s-lg)" }}>
-              <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-body)", color: "var(--c-muted-dark)", marginBottom: "28px", fontWeight: 300, lineHeight: 1.82 }}>
+              <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-body)", color: "var(--c-text-dark)", marginBottom: "28px", fontWeight: 300, lineHeight: 1.82 }}>
                 Full inventory available by appointment. Wire transfer accepted.
               </p>
               <MagneticBtn href="tel:+19177570314">
