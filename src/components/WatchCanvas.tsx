@@ -64,6 +64,12 @@ export function WatchCanvas({
 
   // ─── Phase 1: Probe for frames ───────────────────────────────────
   useEffect(() => {
+    // Mobile check: skip frame preloading to save bandwidth and prevent black screen
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
+      setMode("static");
+      return;
+    }
+
     // Safety: if probe hangs (CDN cold start, slow network), fall to static after 4s.
     const timeout = setTimeout(() => {
       if (modeRef.current === "detecting") setMode("static");

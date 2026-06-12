@@ -351,18 +351,23 @@ const QUOTE_LINES = [
 ] as const;
 
 function QuotePanel() {
-  const vp = { once: true, amount: 0.5 } as const;
+  // amount:0 — fire as soon as any pixel enters the viewport.
+  // The section no longer has overflow:hidden (moved to a clip wrapper around the
+  // decorative mark) so the IO sees elements at their real layout position.
+  const vp = { once: true, amount: 0 } as const;
 
   return (
-    <section style={{ background: "var(--c-surface)", padding: "clamp(80px,16vh,144px) var(--gutter)", textAlign: "center", position: "relative", overflow: "hidden" }}>
+    <section style={{ background: "var(--c-surface)", padding: "clamp(80px,16vh,144px) var(--gutter)", textAlign: "center", position: "relative" }}>
 
-      {/* Giant ghosted decorative quote mark */}
-      <div aria-hidden="true" style={{
-        position: "absolute", top: "-0.12em", left: "calc(var(--gutter) - 0.06em)",
-        fontFamily: "var(--f-display)", fontSize: "clamp(180px, 32vw, 400px)",
-        color: "rgba(50,61,34,0.055)", lineHeight: 1, fontWeight: 700, fontStyle: "italic",
-        userSelect: "none", pointerEvents: "none", zIndex: 0,
-      }}>&ldquo;</div>
+      {/* Clip wrapper — contains the giant quote mark within section bounds */}
+      <div aria-hidden="true" style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 0 }}>
+        <div style={{
+          position: "absolute", top: "-0.12em", left: "calc(var(--gutter) - 0.06em)",
+          fontFamily: "var(--f-display)", fontSize: "clamp(180px, 32vw, 400px)",
+          color: "rgba(50,61,34,0.055)", lineHeight: 1, fontWeight: 700, fontStyle: "italic",
+          userSelect: "none",
+        }}>&ldquo;</div>
+      </div>
 
       <div style={{ maxWidth: "900px", margin: "0 auto", position: "relative", zIndex: 1 }}>
 
@@ -373,37 +378,36 @@ function QuotePanel() {
           style={{ height: "1px", background: "linear-gradient(to right, transparent, var(--c-accent-rich) 40%, var(--c-accent-rich) 60%, transparent)", transformOrigin: "left", marginBottom: "clamp(48px,7vh,72px)" }}
         />
 
-        {/* Quote — each line wipes upward from a clip wrapper */}
+        {/* Quote lines — opacity+y so IO fires regardless of parent overflow context */}
         <div style={{ marginBottom: "clamp(36px,5vh,52px)" }}>
           {QUOTE_LINES.map((line, i) => (
-            <div key={i} style={{ overflow: "hidden", lineHeight: 1.15 }}>
-              <motion.p
-                initial={{ y: "108%" }}
-                whileInView={{ y: "0%" }}
-                viewport={vp}
-                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: i * 0.14 }}
-                style={{
-                  fontFamily:    "var(--f-display)",
-                  fontSize:      "clamp(28px, 4.4vw, 62px)",
-                  color:         i === 2 ? "var(--c-accent-rich)" : "var(--c-text-dark)",
-                  fontStyle:     "italic",
-                  fontWeight:    400,
-                  lineHeight:    1.22,
-                  letterSpacing: "var(--ls-display)",
-                  margin:        0,
-                  paddingBottom: "0.06em",
-                }}
-              >
-                {i === 0 ? "“" : ""}{line}{i === 2 ? "”" : ""}
-              </motion.p>
-            </div>
+            <motion.p
+              key={i}
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={vp}
+              transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: i * 0.13 }}
+              style={{
+                fontFamily:    "var(--f-display)",
+                fontSize:      "clamp(28px, 4.4vw, 62px)",
+                color:         i === 2 ? "var(--c-accent-rich)" : "var(--c-text-dark)",
+                fontStyle:     "italic",
+                fontWeight:    400,
+                lineHeight:    1.22,
+                letterSpacing: "var(--ls-display)",
+                margin:        0,
+                paddingBottom: "0.06em",
+              }}
+            >
+              {i === 0 && "\u201c"}{line}{i === 2 && "\u201d"}
+            </motion.p>
           ))}
         </div>
 
         {/* Attribution */}
         <motion.div
           initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={vp}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.52 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.42 }}
           style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "11px" }}
         >
           <div style={{ width: "30px", height: "1px", background: "var(--c-accent-rich)", opacity: 0.55 }} />
