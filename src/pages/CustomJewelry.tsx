@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react'
+﻿import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { Nav, Footer, MagneticBtn, ScrollReveal } from '@/components'
 
@@ -16,19 +16,19 @@ const PHASES = [
     num:   '01',
     title: 'Discovery',
     body:  `We start with a conversation — not a catalog. Tell us what you want to say with the piece. Who it's for. What it should feel like. We listen before we design.`,
-    img:   '/assets/lifestyle-image.png',
+    img:   '/assets/lifestyle-image.webp',
   },
   {
     num:   '02',
     title: 'Design',
     body:  'Our team creates detailed sketches and 3D renderings until the piece looks exactly right. You see it before a single gram of metal is touched.',
-    img:   '/assets/hero-image.png',
+    img:   '/assets/hero-image.webp',
   },
   {
     num:   '03',
     title: 'Creation',
     body:  `Cast, set, polished — by hand, in New York. Pieces leave our studio only when they meet our standard. That's not a policy. It's a requirement.`,
-    img:   '/assets/macro-diamond.png',
+    img:   '/assets/macro-diamond.webp',
   },
 ]
 
@@ -398,7 +398,7 @@ export default function CustomJewelry() {
         >
           <img
             ref={imgRef}
-            src="/assets/lifestyle-image.png"
+            src="/assets/lifestyle-image.webp"
             alt="Custom fine jewelry — Manhattan"
             loading="eager"
             style={{

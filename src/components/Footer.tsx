@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+﻿import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
 const NAV = [
@@ -37,7 +37,7 @@ export function Footer() {
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16,1,0.3,1] }}
             >
-              <img src="/assets/gotham-logo.png" alt="Gotham City Jewelers"
+              <img src="/assets/gotham-logo.webp" alt="Gotham City Jewelers"
                 style={{ height: '38px', width: 'auto', marginBottom: '28px', filter: 'invert(1) brightness(0.85)', opacity: 0.88 }}
                 onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
               />

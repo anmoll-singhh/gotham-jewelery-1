@@ -86,10 +86,18 @@ export function WatchCanvas({
 
   // ─── Phase 1: Detect whether frames exist ───────────────────────────────
   useEffect(() => {
+    // Safety valve: if the probe hangs (CDN cold-start, slow network) for > 4s,
+    // drop to video mode so the section never stays black indefinitely.
+    const fallbackTimer = setTimeout(() => {
+      if (modeRef.current === "detecting") setMode("video");
+    }, 4000);
+
     const probe = new Image();
-    probe.onload = () => setMode("canvas");
-    probe.onerror = () => setMode("video");
+    probe.onload = () => { clearTimeout(fallbackTimer); setMode("canvas"); };
+    probe.onerror = () => { clearTimeout(fallbackTimer); setMode("video"); };
     probe.src = `${framesPath}/frame0001.jpg`;
+
+    return () => clearTimeout(fallbackTimer);
   }, [framesPath]);
 
   // ─── Phase 2a: Canvas mode — preload all frames ─────────────────────────
@@ -310,6 +318,7 @@ export function WatchCanvas({
           ref={videoRef}
           src={videoSrc}
           muted
+          autoPlay
           playsInline
           preload="auto"
           style={{
@@ -321,6 +330,7 @@ export function WatchCanvas({
             zIndex: 2,
             background: "#000",
           }}
+          onError={() => setMode("static")}
         />
       )}
 
@@ -388,9 +398,19 @@ export function WatchCanvas({
         </div>
       )}
 
-      {/* ── Detecting overlay ─────────────────────────────────── */}
+      {/* ── Detecting: show first frame as poster so section is never fully black */}
       {mode === "detecting" && (
-        <div style={{ position: "absolute", inset: 0, background: "#000" }} />
+        <img
+          src={`${framesPath}/frame0001.jpg`}
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: "absolute", inset: 0,
+            width: "100%", height: "100%",
+            objectFit: "contain", objectPosition: "center",
+            zIndex: 2, background: "#000",
+          }}
+        />
       )}
 
       {/* ── Entry overlay — masks raw first frame during pre-pin scroll-in ─── */}

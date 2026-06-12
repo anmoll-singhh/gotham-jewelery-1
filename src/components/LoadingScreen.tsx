@@ -1,4 +1,4 @@
-/**
+﻿/**
  * LoadingScreen — Cinematic bat SVG drawing → split reveal for Gotham City Jewelers.
  *
  * Sequence:
@@ -217,7 +217,7 @@ function PanelInner({ phase, side }: { phase: Phase; side: 'left' | 'right' }) {
         }}
       >
         <img
-          src="/assets/gotham-logo.png" alt="Gotham City Jewelers"
+          src="/assets/gotham-logo.webp" alt="Gotham City Jewelers"
           style={{ height: 'clamp(22px, 2.6vw, 38px)', width: 'auto', filter: 'invert(1) brightness(0.86)', opacity: 0.8 }}
           onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
         />

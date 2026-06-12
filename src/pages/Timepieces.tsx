@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useEffect, useCallback, useState } from "react";
+﻿import { useLayoutEffect, useRef, useEffect, useCallback, useState } from "react";
 import gsap from "gsap";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useSearchParams } from "react-router-dom";
@@ -165,36 +165,36 @@ const BRANDS = [
     name:  "Rolex",
     since: "Est. 1905",
     desc:  "The standard every other watch is measured against. Set in 1905 and never lowered. Every reference authenticated before it leaves our hands.",
-    img:   "/assets/gotham-brand-rolex.png",
-    watch: "/assets/gotham-rolex-sub.jpg",
+    img:   "/assets/gotham-brand-rolex.webp",
+    watch: "/assets/gotham-rolex-sub.webp",
   },
   {
     name:  "Audemars Piguet",
     since: "Est. 1875",
     desc:  "The Royal Oak didn't just change watchmaking — it ended an era. Our AP inventory is sourced exclusively from verified private collectors.",
-    img:   "/assets/gotham-brand-ap.png",
-    watch: "/assets/gotham-ap-product.jpg",
+    img:   "/assets/gotham-brand-ap.webp",
+    watch: "/assets/gotham-ap-product.webp",
   },
   {
     name:  "Patek Philippe",
     since: "Est. 1839",
     desc:  "You never actually own a Patek Philippe. You merely look after it for the next generation. We look after it before it reaches you.",
-    img:   "/assets/gotham-brand-patek.png",
-    watch: "/assets/gotham-patek-nautilus.jpg",
+    img:   "/assets/gotham-brand-patek.webp",
+    watch: "/assets/gotham-patek-nautilus.webp",
   },
   {
     name:  "Cartier",
     since: "Est. 1847",
     desc:  "The jeweler of kings. The king of jewelers. Santos, Tank, Panthère — every piece certified, every provenance verified.",
-    img:   "/assets/gotham-brand-cartier.png",
-    watch: "/assets/gotham-cartier-1.jpg",
+    img:   "/assets/gotham-brand-cartier.webp",
+    watch: "/assets/gotham-cartier-1.webp",
   },
   {
     name:  "Richard Mille",
     since: "Est. 2001",
     desc:  "Where Formula 1 meets haute horology. The most technically demanding watches ever made — and the rarest. Limited production. No exceptions.",
-    img:   "/assets/gotham-brand-rm.png",
-    watch: "/assets/gotham-banner-rm.jpg",
+    img:   "/assets/gotham-brand-rm.webp",
+    watch: "/assets/gotham-banner-rm.webp",
   },
 ];
 
@@ -362,14 +362,14 @@ function TheHouses() {
 // SCENE 5: FEATURED WATCHES — Cream grid
 // ─────────────────────────────────────────────────────────────────────────────
 const WATCHES = [
-  { name: "Submariner Date",      ref: "126610LN",    img: "/assets/gotham-rolex-sub.jpg",        brand: "Rolex"             },
-  { name: "Nautilus 5711",        ref: "5711/1A",     img: "/assets/gotham-patek-nautilus.jpg",   brand: "Patek Philippe"    },
-  { name: "Santos Chronograph",   ref: "W2SA0008",    img: "/assets/gotham-cartier-1.jpg",        brand: "Cartier"           },
-  { name: "Royal Oak 33mm",       ref: "77350ST",     img: "/assets/gotham-ap-product.jpg",       brand: "Audemars Piguet"   },
-  { name: "Submariner Date Gold", ref: "126618LN",    img: "/assets/gotham-rolex-sub-gold.jpg",   brand: "Rolex"             },
-  { name: "Datejust 41",          ref: "126334",      img: "/assets/gotham-rolex-datejust.jpg",   brand: "Rolex"             },
-  { name: "GMT-Master II Sprite", ref: "126720VTNR",  img: "/assets/gotham-rolex-gmt.jpg",        brand: "Rolex"             },
-  { name: "Datejust 36 Rosé",     ref: "126281RBR",   img: "/assets/gotham-rolex-rainbow.jpg",    brand: "Rolex"             },
+  { name: "Submariner Date",      ref: "126610LN",    img: "/assets/gotham-rolex-sub.webp",        brand: "Rolex"             },
+  { name: "Nautilus 5711",        ref: "5711/1A",     img: "/assets/gotham-patek-nautilus.webp",   brand: "Patek Philippe"    },
+  { name: "Santos Chronograph",   ref: "W2SA0008",    img: "/assets/gotham-cartier-1.webp",        brand: "Cartier"           },
+  { name: "Royal Oak 33mm",       ref: "77350ST",     img: "/assets/gotham-ap-product.webp",       brand: "Audemars Piguet"   },
+  { name: "Submariner Date Gold", ref: "126618LN",    img: "/assets/gotham-rolex-sub-gold.webp",   brand: "Rolex"             },
+  { name: "Datejust 41",          ref: "126334",      img: "/assets/gotham-rolex-datejust.webp",   brand: "Rolex"             },
+  { name: "GMT-Master II Sprite", ref: "126720VTNR",  img: "/assets/gotham-rolex-gmt.webp",        brand: "Rolex"             },
+  { name: "Datejust 36 Rosé",     ref: "126281RBR",   img: "/assets/gotham-rolex-rainbow.webp",    brand: "Rolex"             },
 ];
 
 const FILTER_BRANDS = ["All", "Rolex", "Audemars Piguet", "Patek Philippe", "Cartier", "Richard Mille", "Vacheron Constantin"];
@@ -497,7 +497,7 @@ function ExchangeCTA() {
     <section ref={ref} style={{ position: "relative", overflow: "hidden", minHeight: "75vh", display: "flex", alignItems: "center", background: "var(--bg-void-grad)" }}>
       <img
         ref={imgRef}
-        src="/assets/gotham-sell-trade.jpg"
+        src="/assets/gotham-sell-trade.webp"
         alt="Sell or trade your luxury watch"
         loading="lazy"
         style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.25) saturate(0.7)", willChange: "transform" }}
@@ -551,10 +551,10 @@ function ExchangeCTA() {
 // VAULT HERO SLIDES  — real inventory, 4 brands
 // ─────────────────────────────────────────────────────────────────────────────
 const VAULT_SLIDES = [
-  { img: "/assets/gotham-rolex-sub.jpg",      pos: "center center", label: "Rolex · Submariner Date",      ref_: "Ref. 126610LN · In Stock",          h1a: "The one they",  h1b: "all copy.",       sub: "Oystersteel. Ceramic bezel. 300m water resistance. Authenticated." },
-  { img: "/assets/gotham-patek-nautilus.jpg", pos: "center center", label: "Patek Philippe · Nautilus",    ref_: "Ref. 5711/1A · Price on Request",    h1a: "You never",     h1b: "own it.",         sub: "Integrated bracelet. 8-day power reserve. You hold it for the next generation." },
-  { img: "/assets/gotham-ap-product.jpg",     pos: "center center", label: "Audemars Piguet · Royal Oak",  ref_: "Ref. 77350ST · Available",           h1a: "It changed",    h1b: "everything.",     sub: "Gérald Genta. 1972. Grande Tapisserie. Still unmatched." },
-  { img: "/assets/gotham-cartier-1.jpg",      pos: "center center", label: "Cartier · Santos Chronograph", ref_: "Ref. W2SA0008 · Available",          h1a: "The first",     h1b: "wristwatch.",     sub: "Built for Santos-Dumont in 1904. The most elegant piece in any room." },
+  { img: "/assets/gotham-rolex-sub.webp",      pos: "center center", label: "Rolex · Submariner Date",      ref_: "Ref. 126610LN · In Stock",          h1a: "The one they",  h1b: "all copy.",       sub: "Oystersteel. Ceramic bezel. 300m water resistance. Authenticated." },
+  { img: "/assets/gotham-patek-nautilus.webp", pos: "center center", label: "Patek Philippe · Nautilus",    ref_: "Ref. 5711/1A · Price on Request",    h1a: "You never",     h1b: "own it.",         sub: "Integrated bracelet. 8-day power reserve. You hold it for the next generation." },
+  { img: "/assets/gotham-ap-product.webp",     pos: "center center", label: "Audemars Piguet · Royal Oak",  ref_: "Ref. 77350ST · Available",           h1a: "It changed",    h1b: "everything.",     sub: "Gérald Genta. 1972. Grande Tapisserie. Still unmatched." },
+  { img: "/assets/gotham-cartier-1.webp",      pos: "center center", label: "Cartier · Santos Chronograph", ref_: "Ref. W2SA0008 · Available",          h1a: "The first",     h1b: "wristwatch.",     sub: "Built for Santos-Dumont in 1904. The most elegant piece in any room." },
 ] as const;
 
 // ─────────────────────────────────────────────────────────────────────────────

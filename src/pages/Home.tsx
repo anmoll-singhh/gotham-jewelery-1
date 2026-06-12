@@ -1,4 +1,4 @@
-/**
+﻿/**
  * HOME — Gotham City Jewelers
  *
  * Sequence
@@ -59,7 +59,7 @@ let _loaderShown = false;
 // ═══════════════════════════════════════════════════════════════════════════════
 const HERO_SLIDES = [
   {
-    img:   "/assets/gotham-hero-diamond-ring.jpg",
+    img:   "/assets/gotham-hero-diamond-ring.webp",
     pos:   "center 40%",
     label: "Manhattan Diamond District · Est. 47th Street",
     h1a:   "Where every stone",
@@ -67,7 +67,7 @@ const HERO_SLIDES = [
     sub:   "GIA-certified. Custom-built. Nothing made until you say yes.",
   },
   {
-    img:   "/assets/gotham-store-interior-1.jpg",
+    img:   "/assets/gotham-store-interior-1.webp",
     pos:   "center 30%",
     label: "23 West 47th Street · Suite 402",
     h1a:   "Forty years.",
@@ -75,7 +75,7 @@ const HERO_SLIDES = [
     sub:   "New York's most trusted name in diamonds and certified timepieces.",
   },
   {
-    img:   "/assets/editorial-wrist.jpg",
+    img:   "/assets/editorial-wrist.webp",
     pos:   "center center",
     label: "Certified Timepieces · The Vault",
     h1a:   "Authenticated.",
@@ -113,7 +113,7 @@ function HeroScene({ live }: { live: boolean }) {
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, #000 0%, rgba(0,0,0,0.40) 38%, rgba(0,0,0,0.08) 70%, transparent 100%)" }} />
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to right, rgba(0,0,0,0.60) 0%, transparent 55%)" }} />
 
-      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "var(--gutter)", paddingBottom: "clamp(24px, 5vh, 56px)", zIndex: 10, maxWidth: "1100px" }}>
+      <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", justifyContent: "center", padding: "var(--gutter)", paddingTop: "clamp(80px, 10vh, 120px)", paddingBottom: "clamp(60px, 8vh, 100px)", zIndex: 10, maxWidth: "1100px" }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={slide}
@@ -247,7 +247,7 @@ function StoneJourneyScene() {
     <section ref={wrapRef} style={{ position: "relative", height: "100dvh", overflow: "hidden", background: "var(--bg-dark-grad)" }}>
       <img
         ref={imgRef}
-        src="/assets/gotham-diamond-macro.jpg"
+        src="/assets/gotham-diamond-macro.webp"
         alt="" aria-hidden="true"
         loading="lazy"
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", filter: "brightness(0.22) saturate(0.5)", transition: "filter 0.1s linear", willChange: "filter" }}
@@ -528,7 +528,7 @@ function StoreScene() {
         <video className="hide-mobile" autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.72)" }}>
           <source src="/assets/gotham-showroom-walk.mp4" type="video/mp4" />
         </video>
-        <img src="/assets/gotham-store-interior-1.jpg" alt="" aria-hidden="true" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.70)" }} />
+        <img src="/assets/gotham-store-interior-1.webp" alt="" aria-hidden="true" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.70)" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.10) 50%, transparent 100%)" }} />
         <div ref={text1Ref} style={textBox}>
           <span style={lbl}>23 West 47th Street · Suite 402</span>
@@ -543,8 +543,8 @@ function StoreScene() {
 
       {/* Layer 2: Display Cases */}
       <div ref={layer2Ref} style={{ position: "absolute", inset: 0, willChange: "opacity, transform", opacity: 0 }}>
-        <img src="/assets/gotham-store-interior-2.jpg" alt="Jewelry display cases" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.50) saturate(0.65)" }}
-          onError={e => { (e.currentTarget as HTMLImageElement).src = "/assets/gotham-hf-flatlay.png"; }} />
+        <img src="/assets/gotham-store-interior-2.webp" alt="Jewelry display cases" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.50) saturate(0.65)" }}
+          onError={e => { (e.currentTarget as HTMLImageElement).src = "/assets/gotham-hf-flatlay.webp"; }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.12) 55%, transparent 100%)" }} />
         <div ref={text2Ref} style={textBox}>
           <span style={lbl}>The Collection · Price on Request</span>
@@ -560,7 +560,7 @@ function StoreScene() {
 
       {/* Layer 3: The Consultation — single CTA: Call */}
       <div ref={layer3Ref} style={{ position: "absolute", inset: 0, willChange: "opacity, transform", opacity: 0 }}>
-        <img src="/assets/gotham-diamond-macro.jpg" alt="Private consultation" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.60)" }} />
+        <img src="/assets/gotham-diamond-macro.webp" alt="Private consultation" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.60)" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.1) 60%, transparent 100%)" }} />
         <div ref={text3Ref} style={{ ...textBox, maxWidth: "600px" }}>
           <span style={lbl}>Private Consultation · By Appointment</span>
@@ -588,9 +588,9 @@ function StoreScene() {
         }}
       >
         {[
-          { img: "/assets/gotham-store-interior-1.jpg", label: "23 W 47th Street · Manhattan",    title: "Step inside.",              body: "Monday – Friday, 9am to 5pm. Walk-ins welcome.", cta: null },
-          { img: "/assets/gotham-store-interior-2.jpg", label: "The Collection",                   title: "Every piece authenticated.", body: "Rolex, Patek, AP, Cartier, RM — each cleared our 14-point inspection.", cta: { label: "View Timepieces", href: "/timepieces" } },
-          { img: "/assets/gotham-diamond-macro.jpg",    label: "Private Consultation",             title: "Begin with a conversation.", body: "Same-day response. No pressure. No minimums.", cta: { label: "Call +1 917 757 0314", href: "tel:+19177570314" } },
+          { img: "/assets/gotham-store-interior-1.webp", label: "23 W 47th Street · Manhattan",    title: "Step inside.",              body: "Monday – Friday, 9am to 5pm. Walk-ins welcome.", cta: null },
+          { img: "/assets/gotham-store-interior-2.webp", label: "The Collection",                   title: "Every piece authenticated.", body: "Rolex, Patek, AP, Cartier, RM — each cleared our 14-point inspection.", cta: { label: "View Timepieces", href: "/timepieces" } },
+          { img: "/assets/gotham-diamond-macro.webp",    label: "Private Consultation",             title: "Begin with a conversation.", body: "Same-day response. No pressure. No minimums.", cta: { label: "Call +1 917 757 0314", href: "tel:+19177570314" } },
         ].map((s, i) => (
           <div key={i} style={{
             position: "relative",
@@ -600,7 +600,7 @@ function StoreScene() {
             overflow: "hidden",
             borderRight: i < 2 ? "1px solid rgba(201,168,76,0.10)" : "none",
           }}>
-            <img src={s.img} alt="" aria-hidden="true" loading={i === 0 ? "eager" : "lazy"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.42) saturate(0.65)" }} onError={e => { (e.currentTarget as HTMLImageElement).src = "/assets/gotham-newyork.jpg"; }} />
+            <img src={s.img} alt="" aria-hidden="true" loading={i === 0 ? "eager" : "lazy"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.42) saturate(0.65)" }} onError={e => { (e.currentTarget as HTMLImageElement).src = "/assets/gotham-newyork.webp"; }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)" }} />
             <div style={{ position: "relative", zIndex: 10, padding: "var(--gutter)", height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
               <span style={lbl}>{s.label}</span>
@@ -743,7 +743,7 @@ function CityScene() {
 
   return (
     <section ref={ref} style={{ position: "relative", overflow: "hidden", minHeight: "72vh", display: "flex", alignItems: "center", background: "var(--bg-void-grad)", zIndex: 5 }}>
-      <img ref={imgRef} src="/assets/gotham-newyork.jpg" alt="Manhattan" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.18) saturate(0.28)", willChange: "transform" }} />
+      <img ref={imgRef} src="/assets/gotham-newyork.webp" alt="Manhattan" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.18) saturate(0.28)", willChange: "transform" }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.06) 100%)" }} />
 
       <div className="city-scene-rule" style={{ position: "absolute", top: "14%", bottom: "14%", left: "var(--gutter)", width: "1px", background: "linear-gradient(to bottom, transparent, rgba(201,168,76,0.48) 30%, rgba(201,168,76,0.48) 70%, transparent)" }} />

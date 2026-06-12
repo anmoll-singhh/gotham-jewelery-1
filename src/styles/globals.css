@@ -1182,3 +1182,57 @@ button {
 .store-mobile-scroll::-webkit-scrollbar {
   display: none;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SAFARI / CROSS-BROWSER COMPATIBILITY
+   Fixes for iOS Safari 15+, Safari 16+ desktop, and Firefox.
+═══════════════════════════════════════════════════════════════════ */
+
+/* Prevent iOS Safari rubber-band overscroll from desyncing Lenis + GSAP pins.
+   Lenis takes over scroll entirely; native overscroll causes double-scroll events. */
+html, body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
+}
+
+/* iOS Safari ignores overflow: hidden on body for scroll. Lenis adds
+   this class to html when smooth scroll is active — reinforce it. */
+html.lenis {
+  height: auto;
+}
+html.lenis body {
+  height: auto;
+}
+
+/* Ensure backdrop-filter works on Safari (requires -webkit- prefix) */
+[style*="backdrop-filter"],
+[style*="backdropFilter"] {
+  -webkit-backdrop-filter: var(--webkit-bdfilter, blur(20px));
+}
+
+/* GPU-accelerate all pinned GSAP sections to prevent compositing flicker on Safari */
+.gsap-pin-spacer + * {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Safari fix: `position: fixed` inside a transform context breaks on iOS.
+   Force canvas/video elements inside WatchCanvas to their own GPU layer. */
+.watch-canvas-wrap canvas,
+.watch-canvas-wrap video,
+.watch-canvas-wrap img {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Show/hide mobile-only utility (used by store horizontal scroll) */
+.show-mobile-only {
+  display: none !important;
+}
+@media (max-width: 767px) {
+  .show-mobile-only {
+    display: flex !important;
+  }
+}

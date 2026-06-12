@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react'
+﻿import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { Nav, Footer, MagneticBtn, ScrollReveal } from '@/components'
 
@@ -231,7 +231,7 @@ function Invitation() {
     }}>
       <img
         ref={imgRef}
-        src="/assets/macro-diamond.png"
+        src="/assets/macro-diamond.webp"
         alt="Diamond detail"
         loading="lazy"
         style={{
@@ -356,7 +356,7 @@ export default function RingBuilder() {
         >
           <img
             ref={imgRef}
-            src="/assets/macro-diamond.png"
+            src="/assets/macro-diamond.webp"
             alt="Diamond macro detail"
             loading="eager"
             style={{

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+﻿import { useLayoutEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -76,7 +76,7 @@ export function Nav() {
         {/* Logo */}
         <Link to="/" style={{ display: "flex", alignItems: "center", flexShrink: 0 }} aria-label="Gotham City Jewelers — Home">
           <img
-            src="/assets/gotham-logo.png"
+            src="/assets/gotham-logo.webp"
             alt="Gotham City Jewelers"
             style={{ height: "30px", width: "auto", display: "block", filter: "brightness(0) invert(1)", opacity: 0.9 }}
             onError={e => {
