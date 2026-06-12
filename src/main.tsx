@@ -22,14 +22,15 @@ ScrollTrigger.config({
 })
 
 // Lenis smooth scroll — desktop only.
-// On touch-only devices Lenis intercepts touchmove but (with smoothTouch:false default)
-// doesn't drive native scroll, which completely blocks scrolling on mobile.
-const hasFinePointer = window.matchMedia('(pointer: fine)').matches
+// pointer:coarse = touch screen is the primary input (phone/tablet).
+// On those devices Lenis intercepts touchmove events but can't drive native
+// scroll, completely blocking scrolling. Skip Lenis; use native + passive listener.
+const isTouchPrimary = window.matchMedia('(pointer: coarse)').matches
 
 type LenisInstance = InstanceType<typeof Lenis>
 let lenis: LenisInstance | null = null
 
-if (hasFinePointer) {
+if (!isTouchPrimary) {
   lenis = new Lenis()
   lenis.on('scroll', ScrollTrigger.update)
   gsap.ticker.add((time) => { lenis!.raf(time * 1000) })

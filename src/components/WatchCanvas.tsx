@@ -164,10 +164,11 @@ export function WatchCanvas({
     };
   }, [mode, ready]);
 
-  // ─── Phase 4: ScrollTrigger — created on mount ───────────────────
-  // CRITICAL: pin spacer must exist before downstream triggers are created
-  // (ServicesScene etc.). modeRef/readyRef keep closure fresh without
-  // recreating the trigger when mode/ready change.
+  // ─── Phase 4: ScrollTrigger — desktop pin only ───────────────────
+  // CRITICAL: pin spacer must exist before downstream triggers are created.
+  // modeRef/readyRef keep closures fresh without recreating the trigger.
+  // On mobile (pointer:coarse) we skip the pin entirely so native touch
+  // scroll is never blocked.
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const doUpdate = (progress: number) => {
@@ -182,15 +183,23 @@ export function WatchCanvas({
         }
       };
 
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: "top top",
-        end: `+=${scrubLength}`,
-        pin: true,
-        anticipatePin: 1,
-        scrub: 1,
-        onUpdate: (self) => doUpdate(self.progress),
+      const mm = gsap.matchMedia();
+
+      // Desktop: pinned scroll-driven animation
+      mm.add("(min-width: 768px)", () => {
+        ScrollTrigger.create({
+          trigger: containerRef.current,
+          start: "top top",
+          end: `+=${scrubLength}`,
+          pin: true,
+          anticipatePin: 1,
+          scrub: 0.5,
+          onUpdate: (self) => doUpdate(self.progress),
+        });
       });
+
+      // Mobile: no pin — native touch scroll is unobstructed.
+      // Static poster shows; pin spacer is never injected.
     }, containerRef);
     return () => ctx.revert();
   }, [scrubLength]);
