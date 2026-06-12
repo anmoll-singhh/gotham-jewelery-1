@@ -28,6 +28,7 @@ import {
   MagneticBtn,
   HeroSkeleton,
   LoadingScreen,
+  Pic,
 } from "@/components";
 import { WatchCanvas } from "@/components/WatchCanvas";
 
@@ -100,7 +101,7 @@ function HeroScene({ live }: { live: boolean }) {
 
       {HERO_SLIDES.map((s, i) => (
         <div key={i} style={{ position: "absolute", inset: 0, opacity: i === slide ? 1 : 0, transition: "opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)", pointerEvents: "none" }}>
-          <img
+          <Pic
             src={s.img}
             alt="" aria-hidden="true"
             fetchPriority={i === 0 ? "high" : "low"}
@@ -245,13 +246,12 @@ function StoneJourneyScene() {
 
   return (
     <section ref={wrapRef} style={{ position: "relative", height: "100dvh", overflow: "hidden", background: "var(--bg-dark-grad)" }}>
-      <img
+      <Pic
         ref={imgRef}
         src="/assets/gotham-diamond-macro.webp"
         alt="" aria-hidden="true"
         loading="lazy"
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", filter: "brightness(0.22) saturate(0.5)", transition: "filter 0.1s linear", willChange: "filter" }}
-        onError={e => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
       />
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 50% 50%, transparent 0%, rgba(0,0,0,0.62) 100%)" }} />
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, var(--c-void) 0%, transparent 30%)" }} />
@@ -421,7 +421,6 @@ function NightRevealScene() {
     <WatchCanvas
       totalFrames={193}
       framesPath="/assets/nyc-reveal-frames"
-      videoSrc="/assets/gotham-nyc-reveal.mp4"
       scrubLength="280%"
       onProgress={onProgress}
     >
@@ -528,7 +527,7 @@ function StoreScene() {
         <video className="hide-mobile" autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.72)" }}>
           <source src="/assets/gotham-showroom-walk.mp4" type="video/mp4" />
         </video>
-        <img src="/assets/gotham-store-interior-1.webp" alt="" aria-hidden="true" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.70)" }} />
+        <Pic src="/assets/gotham-store-interior-1.webp" alt="" aria-hidden="true" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.70)" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.10) 50%, transparent 100%)" }} />
         <div ref={text1Ref} style={textBox}>
           <span style={lbl}>23 West 47th Street · Suite 402</span>
@@ -543,8 +542,7 @@ function StoreScene() {
 
       {/* Layer 2: Display Cases */}
       <div ref={layer2Ref} style={{ position: "absolute", inset: 0, willChange: "opacity, transform", opacity: 0 }}>
-        <img src="/assets/gotham-store-interior-2.webp" alt="Jewelry display cases" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.50) saturate(0.65)" }}
-          onError={e => { (e.currentTarget as HTMLImageElement).src = "/assets/gotham-hf-flatlay.webp"; }} />
+        <Pic src="/assets/gotham-store-interior-2.webp" alt="Jewelry display cases" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.50) saturate(0.65)" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.12) 55%, transparent 100%)" }} />
         <div ref={text2Ref} style={textBox}>
           <span style={lbl}>The Collection · Price on Request</span>
@@ -560,7 +558,7 @@ function StoreScene() {
 
       {/* Layer 3: The Consultation — single CTA: Call */}
       <div ref={layer3Ref} style={{ position: "absolute", inset: 0, willChange: "opacity, transform", opacity: 0 }}>
-        <img src="/assets/gotham-diamond-macro.webp" alt="Private consultation" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.60)" }} />
+        <Pic src="/assets/gotham-diamond-macro.webp" alt="Private consultation" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.60)" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.1) 60%, transparent 100%)" }} />
         <div ref={text3Ref} style={{ ...textBox, maxWidth: "600px" }}>
           <span style={lbl}>Private Consultation · By Appointment</span>
@@ -600,7 +598,7 @@ function StoreScene() {
             overflow: "hidden",
             borderRight: i < 2 ? "1px solid rgba(201,168,76,0.10)" : "none",
           }}>
-            <img src={s.img} alt="" aria-hidden="true" loading={i === 0 ? "eager" : "lazy"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.42) saturate(0.65)" }} onError={e => { (e.currentTarget as HTMLImageElement).src = "/assets/gotham-newyork.webp"; }} />
+            <Pic src={s.img} alt="" aria-hidden="true" loading={i === 0 ? "eager" : "lazy"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.42) saturate(0.65)" }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)" }} />
             <div style={{ position: "relative", zIndex: 10, padding: "var(--gutter)", height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
               <span style={lbl}>{s.label}</span>
@@ -743,7 +741,7 @@ function CityScene() {
 
   return (
     <section ref={ref} style={{ position: "relative", overflow: "hidden", minHeight: "72vh", display: "flex", alignItems: "center", background: "var(--bg-void-grad)", zIndex: 5 }}>
-      <img ref={imgRef} src="/assets/gotham-newyork.webp" alt="Manhattan" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.18) saturate(0.28)", willChange: "transform" }} />
+      <Pic ref={imgRef} src="/assets/gotham-newyork.webp" alt="Manhattan" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.18) saturate(0.28)", willChange: "transform" }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.06) 100%)" }} />
 
       <div className="city-scene-rule" style={{ position: "absolute", top: "14%", bottom: "14%", left: "var(--gutter)", width: "1px", background: "linear-gradient(to bottom, transparent, rgba(201,168,76,0.48) 30%, rgba(201,168,76,0.48) 70%, transparent)" }} />

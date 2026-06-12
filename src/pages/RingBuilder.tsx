@@ -1,6 +1,6 @@
 ﻿import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
-import { Nav, Footer, MagneticBtn, ScrollReveal } from '@/components'
+import { Nav, Footer, MagneticBtn, Pic, ScrollReveal } from '@/components'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SCENE 2: THE PROCESS — 3-step horizontal scroll
@@ -354,7 +354,7 @@ export default function RingBuilder() {
             alignItems: 'flex-end',
           }}
         >
-          <img
+          <Pic
             ref={imgRef}
             src="/assets/macro-diamond.webp"
             alt="Diamond macro detail"

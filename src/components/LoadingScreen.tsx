@@ -219,7 +219,11 @@ function PanelInner({ phase, side }: { phase: Phase; side: 'left' | 'right' }) {
         <img
           src="/assets/gotham-logo.webp" alt="Gotham City Jewelers"
           style={{ height: 'clamp(22px, 2.6vw, 38px)', width: 'auto', filter: 'invert(1) brightness(0.86)', opacity: 0.8 }}
-          onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+          onError={e => {
+            const el = e.currentTarget as HTMLImageElement;
+            if (el.src.includes('.webp')) { el.src = el.src.replace('.webp', '.png'); return; }
+            el.style.display = 'none';
+          }}
         />
         <p style={{
           fontFamily: 'var(--f-label)', fontSize: '8px', letterSpacing: '0.44em',

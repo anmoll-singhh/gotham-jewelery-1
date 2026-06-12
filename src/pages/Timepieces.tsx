@@ -6,6 +6,7 @@ import {
   Nav,
   Footer,
   MagneticBtn,
+  Pic,
   ScrollReveal,
   WatchTiltCard,
   WatchCanvas,
@@ -70,7 +71,6 @@ function VaultScene() {
     <WatchCanvas
       totalFrames={193}
       framesPath="/assets/watch-frames-new"
-      videoSrc="/assets/gotham-watch-rotation-new.mp4"
       scrubLength="260%"
       onProgress={onProgress}
     >
@@ -495,7 +495,7 @@ function ExchangeCTA() {
 
   return (
     <section ref={ref} style={{ position: "relative", overflow: "hidden", minHeight: "75vh", display: "flex", alignItems: "center", background: "var(--bg-void-grad)" }}>
-      <img
+      <Pic
         ref={imgRef}
         src="/assets/gotham-sell-trade.webp"
         alt="Sell or trade your luxury watch"

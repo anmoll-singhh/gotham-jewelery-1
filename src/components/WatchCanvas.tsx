@@ -2,19 +2,13 @@
  * WatchCanvas — Apple-style scroll-driven frame sequence player.
  *
  * HOW IT WORKS (same technique Apple uses for iPhone/MacBook animations):
- *  1. Decode every video frame as a static JPEG upfront (one-time load cost)
- *  2. A requestAnimationFrame loop draws the current frame to <canvas>
- *  3. ScrollTrigger sets a target frame index via onUpdate — no decoding happens
- *  4. Result: butter-smooth 60fps scrubbing, zero video decoder lag
+ *  1. Probe frame0001.jpg. If it loads → canvas mode. If it 404s → static mode.
+ *  2. Canvas mode: preload every frame as an Image, RAF loop draws current frame.
+ *  3. Static mode: show frame0061.jpg as a poster (no scroll animation).
+ *  4. ScrollTrigger pins the section and sets targetFrame via onUpdate.
  *
- * VIDEO FALLBACK (when frames not extracted):
- *  - RAF-throttled seeking: only one fastSeek() per animation frame (60fps max)
- *  - 40ms minimum threshold between seeks: prevents decoder thrashing
- *  - scrub: 1 on ScrollTrigger adds smoothing, reducing distinct time values
- *
- * SETUP — run once to extract frames from video:
- *  node scripts/extract-frames.mjs
- *  (requires FFmpeg: winget install Gyan.FFmpeg  OR  brew install ffmpeg)
+ * NO VIDEO FALLBACK — avoids auto-playing background video on all devices.
+ * Run  node scripts/extract-frames.mjs  once to generate the JPEG frames.
  */
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -22,85 +16,68 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 interface WatchCanvasProps {
-  /** Total number of extracted frames (default: 120 = 5s @ 24fps) */
+  /** Total number of extracted frames (default: 193 = ~8s @ 24fps) */
   totalFrames?: number;
   /** Path to frames directory, no trailing slash */
   framesPath?: string;
-  /** Fallback video src if frames aren't available */
-  videoSrc?: string;
   /** Scroll distance for the pinned scene */
   scrubLength?: string;
   children?: React.ReactNode;
   /**
    * Called on every ScrollTrigger tick with the current progress (0→1).
-   * Use this to drive overlay text/animations from a SINGLE ScrollTrigger
-   * instead of creating a competing pinned trigger on a parent element.
+   * Use this to drive overlay text/animations from a SINGLE ScrollTrigger.
    */
   onProgress?: (progress: number) => void;
 }
 
-const DEFAULT_FRAMES = 120;
+const DEFAULT_FRAMES = 193;
 const DEFAULT_PATH = "/assets/watch-frames";
 
 export function WatchCanvas({
   totalFrames = DEFAULT_FRAMES,
   framesPath = DEFAULT_PATH,
-  videoSrc = "/assets/watch-reveal-ap.mp4",
   scrubLength = "500%",
   children,
   onProgress,
 }: WatchCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const frames = useRef<HTMLImageElement[]>([]);
   const targetFrame = useRef(0);
   const drawnFrame = useRef(-1);
   const rafId = useRef(0);
-  // Video fallback: RAF loop reads from this ref, never from ScrollTrigger directly
-  const videoTargetTime = useRef(0);
-  // Stable ref so ScrollTrigger closure never captures a stale onProgress
-  const onProgressRef = useRef(onProgress);
-  useEffect(() => {
-    onProgressRef.current = onProgress;
-  }, [onProgress]);
 
-  const [mode, setMode] = useState<"detecting" | "canvas" | "video" | "static">(
-    "detecting",
-  );
+  const onProgressRef = useRef(onProgress);
+  useEffect(() => { onProgressRef.current = onProgress; }, [onProgress]);
+
+  const [mode, setMode] = useState<"detecting" | "canvas" | "static">("detecting");
   const [loadPct, setLoadPct] = useState(0);
   const [ready, setReady] = useState(false);
 
-  // Stable refs for mode and ready — lets the pin's onUpdate always see fresh values
-  // without needing to recreate the ScrollTrigger when they change.
   const modeRef = useRef(mode);
   const readyRef = useRef(ready);
   useEffect(() => { modeRef.current = mode; }, [mode]);
   useEffect(() => { readyRef.current = ready; }, [ready]);
-  // Entry overlay — masks the raw first frame during pre-pin transition.
-  // Fades to transparent over the first 4% of scroll progress (directly via DOM).
+
   const entryOverlayRef = useRef<HTMLDivElement>(null);
-  // Exit overlay — masks the raw last frame during post-pin scroll-out.
-  // Fades to opaque over the last 4% of scroll progress (directly via DOM).
   const exitOverlayRef = useRef<HTMLDivElement>(null);
 
-  // ─── Phase 1: Detect whether frames exist ───────────────────────────────
+  // ─── Phase 1: Probe for frames ───────────────────────────────────
   useEffect(() => {
-    // Safety valve: if the probe hangs (CDN cold-start, slow network) for > 4s,
-    // drop to video mode so the section never stays black indefinitely.
-    const fallbackTimer = setTimeout(() => {
-      if (modeRef.current === "detecting") setMode("video");
+    // Safety: if probe hangs (CDN cold start, slow network), fall to static after 4s.
+    const timeout = setTimeout(() => {
+      if (modeRef.current === "detecting") setMode("static");
     }, 4000);
 
     const probe = new Image();
-    probe.onload = () => { clearTimeout(fallbackTimer); setMode("canvas"); };
-    probe.onerror = () => { clearTimeout(fallbackTimer); setMode("video"); };
+    probe.onload = () => { clearTimeout(timeout); setMode("canvas"); };
+    probe.onerror = () => { clearTimeout(timeout); setMode("static"); };
     probe.src = `${framesPath}/frame0001.jpg`;
 
-    return () => clearTimeout(fallbackTimer);
+    return () => clearTimeout(timeout);
   }, [framesPath]);
 
-  // ─── Phase 2a: Canvas mode — preload all frames ─────────────────────────
+  // ─── Phase 2a: Canvas mode — preload all frames ──────────────────
   useEffect(() => {
     if (mode !== "canvas") return;
 
@@ -119,34 +96,30 @@ export function WatchCanvas({
         }
       };
       img.onload = onDone;
-      img.onerror = onDone; // skip missing frames gracefully
+      img.onerror = onDone;
       img.src = `${framesPath}/frame${String(idx + 1).padStart(4, "0")}.jpg`;
       imgs[idx] = img;
     }
 
-    return () => {
-      frames.current = [];
-    };
+    return () => { frames.current = []; };
   }, [mode, totalFrames, framesPath]);
 
-  // ─── Phase 2b: Video fallback / static mode — just mark ready ───────────
+  // ─── Phase 2b: Static mode — mark ready immediately ─────────────
   useEffect(() => {
-    if (mode !== "video" && mode !== "static") return;
+    if (mode !== "static") return;
     const raf = requestAnimationFrame(() => setReady(true));
     return () => cancelAnimationFrame(raf);
   }, [mode]);
 
-  // ─── Phase 3a: Canvas RAF render loop ───────────────────────────────────
+  // ─── Phase 3: Canvas RAF render loop ────────────────────────────
   useEffect(() => {
     if (mode !== "canvas" || !ready) return;
     const canvas = canvasRef.current!;
 
     const resize = () => {
       const rawDpr = window.devicePixelRatio || 1;
-      // Landscape frames (1280×720) must be height-scaled to cover portrait phones.
-      // At DPR=3 that's a 3.5× upscale → severe blur. Cap DPR=1 in portrait so
-      // frames downscale into the canvas instead of being stretched up.
-      // On landscape (desktop) allow up to 2× for crisp canvas edges.
+      // Portrait phones: landscape frames (1920×1080) would be stretched 3.5× at DPR=3.
+      // Cap DPR=1 in portrait so frames scale DOWN into the canvas rather than up.
       const isPortrait = canvas.offsetHeight > canvas.offsetWidth;
       const dpr = isPortrait ? 1 : Math.min(rawDpr, 2);
       canvas.width = canvas.offsetWidth * dpr;
@@ -155,7 +128,7 @@ export function WatchCanvas({
       ctx.scale(dpr, dpr);
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
-      drawnFrame.current = -1; // force redraw after resize
+      drawnFrame.current = -1;
     };
     resize();
     window.addEventListener("resize", resize);
@@ -191,77 +164,22 @@ export function WatchCanvas({
     };
   }, [mode, ready]);
 
-  // ─── Phase 3b: Video fallback — RAF-throttled seeking ───────────────────
-  // KEY FIX: ScrollTrigger fires on every scroll tick (100+ times/sec).
-  // Calling fastSeek() that often thrashes the video decoder → lag.
-  // This RAF loop caps seeks at 60fps AND only seeks if target moved >40ms.
-  useEffect(() => {
-    if (mode !== "video") return;
-    const v = videoRef.current;
-    if (!v) return;
-
-    // Kill any auto-play
-    const stop = () => {
-      v.pause();
-      v.playbackRate = 0;
-    };
-    v.addEventListener("canplay", stop);
-    v.addEventListener("play", stop);
-
-    let lastSeeked = -1;
-    let loop: number;
-
-    const tick = () => {
-      const target = videoTargetTime.current;
-      // Only seek when video is ready AND target has moved enough to matter
-      if (v.readyState >= 2 && Math.abs(target - lastSeeked) > 0.04) {
-        if (typeof v.fastSeek === "function") v.fastSeek(target);
-        else v.currentTime = target;
-        lastSeeked = target;
-      }
-      loop = requestAnimationFrame(tick);
-    };
-    loop = requestAnimationFrame(tick);
-
-    return () => {
-      cancelAnimationFrame(loop);
-      v.removeEventListener("canplay", stop);
-      v.removeEventListener("play", stop);
-    };
-  }, [mode]);
-
-  // ─── Phase 4: ScrollTrigger — created on mount (not gated on `ready`) ──────
-  //
-  // CRITICAL: This pin spacer must exist in the DOM before downstream
-  // ScrollTriggers (e.g. ServicesScene) are initialised so they calculate
-  // their trigger positions against the correct document height. Previously
-  // the pin was deferred until frames finished loading, which caused
-  // ServicesScene's trigger to be calculated ~2340px too early and produced
-  // a large black void between the brand marquee and the services section.
-  //
-  // modeRef / readyRef keep the onUpdate closure fresh without recreating
-  // the trigger when mode or ready change.
+  // ─── Phase 4: ScrollTrigger — created on mount ───────────────────
+  // CRITICAL: pin spacer must exist before downstream triggers are created
+  // (ServicesScene etc.). modeRef/readyRef keep closure fresh without
+  // recreating the trigger when mode/ready change.
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const doUpdate = (progress: number) => {
-        const currentMode = modeRef.current;
-        const currentReady = readyRef.current;
-
-        if (currentMode === "canvas" && currentReady) {
+        if (modeRef.current === "canvas" && readyRef.current) {
           targetFrame.current = Math.round(progress * (frames.current.length - 1));
-        } else if (currentMode === "video" && currentReady) {
-          const v = videoRef.current;
-          if (!v?.duration) return;
-          videoTargetTime.current = progress * v.duration;
         }
-        // "static" mode: falls through — no frame/video work needed.
         onProgressRef.current?.(progress);
 
         if (entryOverlayRef.current) {
           const fadeProgress = Math.min(1, progress / 0.06);
           entryOverlayRef.current.style.opacity = String(1 - fadeProgress);
         }
-        // Exit overlay intentionally kept at 0 — last frame stays visible as section scrolls out
       };
 
       ScrollTrigger.create({
@@ -270,14 +188,11 @@ export function WatchCanvas({
         end: `+=${scrubLength}`,
         pin: true,
         anticipatePin: 1,
-        // scrub:1 works for both video and canvas; the RAF draw loop provides
-        // the per-frame smoothness for canvas mode so no precision is lost.
         scrub: 1,
         onUpdate: (self) => doUpdate(self.progress),
       });
     }, containerRef);
     return () => ctx.revert();
-  // Only recreate if scrubLength changes (rare). mode/ready use refs instead.
   }, [scrubLength]);
 
   return (
@@ -286,9 +201,6 @@ export function WatchCanvas({
       className="watch-canvas-wrap"
       style={{
         position: "relative",
-        // zIndex: 20 creates a root-level stacking context so that ServicesScene's
-        // anticipatePin (which briefly sets position:fixed on later DOM elements)
-        // can never render on top of the watch canvas while it is pinned.
         zIndex: 20,
         height: "100vh",
         background: "#000",
@@ -312,33 +224,14 @@ export function WatchCanvas({
         />
       )}
 
-      {/* ── Video (fallback mode) ─────────────────────────────── */}
-      {mode === "video" && (
-        <video
-          ref={videoRef}
-          src={videoSrc}
-          muted
-          autoPlay
-          playsInline
-          preload="auto"
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            zIndex: 2,
-            background: "#000",
-          }}
-          onError={() => setMode("static")}
-        />
-      )}
-
-      {/* ── Static poster (mobile — avoids 121-frame / video load) ── */}
-      {mode === "static" && (
+      {/* ── Static poster (frames unavailable) ───────────────── */}
+      {(mode === "detecting" || mode === "static") && (
         <img
-          src={`${framesPath}/frame0061.jpg`}
-          alt="Swiss timepiece"
+          src={mode === "detecting"
+            ? `${framesPath}/frame0001.jpg`
+            : `${framesPath}/frame0061.jpg`}
+          alt=""
+          aria-hidden="true"
           style={{
             position: "absolute",
             inset: 0,
@@ -365,97 +258,59 @@ export function WatchCanvas({
           }}
         >
           <div style={{ textAlign: "center" }}>
-            <div
-              style={{
-                width: "180px",
-                height: "1px",
-                background: "rgba(197,164,110,0.15)",
-                marginBottom: "14px",
-                margin: "0 auto 14px",
-              }}
-            >
-              <div
-                style={{
-                  height: "100%",
-                  width: `${loadPct}%`,
-                  background: "var(--c-accent)",
-                  transition: "width 0.1s linear",
-                }}
-              />
+            <div style={{
+              width: "180px", height: "1px",
+              background: "rgba(197,164,110,0.15)",
+              margin: "0 auto 14px",
+            }}>
+              <div style={{
+                height: "100%",
+                width: `${loadPct}%`,
+                background: "var(--c-accent)",
+                transition: "width 0.1s linear",
+              }} />
             </div>
-            <p
-              style={{
-                fontFamily: "var(--f-body)",
-                fontSize: "9px",
-                letterSpacing: "0.32em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.22)",
-              }}
-            >
+            <p style={{
+              fontFamily: "var(--f-body)",
+              fontSize: "9px",
+              letterSpacing: "0.32em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.22)",
+            }}>
               Loading · {loadPct}%
             </p>
           </div>
         </div>
       )}
 
-      {/* ── Detecting: show first frame as poster so section is never fully black */}
-      {mode === "detecting" && (
-        <img
-          src={`${framesPath}/frame0001.jpg`}
-          alt=""
-          aria-hidden="true"
-          style={{
-            position: "absolute", inset: 0,
-            width: "100%", height: "100%",
-            objectFit: "contain", objectPosition: "center",
-            zIndex: 2, background: "#000",
-          }}
-        />
-      )}
-
-      {/* ── Entry overlay — masks raw first frame during pre-pin scroll-in ─── */}
-      {/* Starts fully opaque (#000), fades out over first 6% of scroll progress  */}
-      {/* NO CSS transition — JS (doUpdate) drives opacity directly every tick.   */}
-      {/* A CSS transition would add 180ms lag and cause the ghost frame to flash. */}
+      {/* ── Entry overlay — fades from #000 over first 6% of progress ── */}
       <div
         ref={entryOverlayRef}
         style={{
-          position: "absolute",
-          inset: 0,
+          position: "absolute", inset: 0,
           background: "#000",
-          zIndex: 5,
-          pointerEvents: "none",
-          opacity: 1,
+          zIndex: 5, pointerEvents: "none", opacity: 1,
         }}
       />
 
-      {/* ── Exit overlay — masks last frame during post-pin scroll-out ────── */}
-      {/* Fades IN from 80% → 98% progress. NO CSS transition — must be instant. */}
-      {/* With transition, the overlay lags and ServicesScene bleeds through.    */}
+      {/* ── Exit overlay ─────────────────────────────────────── */}
       <div
         ref={exitOverlayRef}
         style={{
-          position: "absolute",
-          inset: 0,
+          position: "absolute", inset: 0,
           background: "#000",
-          zIndex: 6,
-          pointerEvents: "none",
-          opacity: 0,
+          zIndex: 6, pointerEvents: "none", opacity: 0,
         }}
       />
 
-      {/* ── Overlay content (text, CTAs) — mount always so GSAP refs are available */}
+      {/* ── Overlay content (text, CTAs) ─────────────────────── */}
       {children && (
-        <div
-          style={{
-            position: "relative",
-            zIndex: 10,
-            height: "100%",
-            opacity: ready ? 1 : 0,
-            pointerEvents: ready ? "auto" : "none",
-            transition: "opacity 0.25s ease",
-          }}
-        >
+        <div style={{
+          position: "relative", zIndex: 10, height: "100%",
+          opacity: ready ? 1 : 0,
+          pointerEvents: ready ? "auto" : "none",
+          transition: "opacity 0.25s ease",
+        }}>
           {children}
         </div>
       )}

@@ -1,6 +1,6 @@
 ﻿import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
-import { Nav, Footer, MagneticBtn, ScrollReveal } from '@/components'
+import { Nav, Footer, MagneticBtn, Pic, ScrollReveal } from '@/components'
 
 // ── Shared visually-hidden label style (WCAG 2.1 AA)
 const srOnly: React.CSSProperties = {
@@ -80,7 +80,7 @@ function TheCraft() {
                   aspectRatio: '4/3',
                   direction:   'ltr',
                 }}>
-                  <img
+                  <Pic
                     src={phase.img}
                     alt={phase.title}
                     loading="lazy"
@@ -396,7 +396,7 @@ export default function CustomJewelry() {
             alignItems: 'flex-end',
           }}
         >
-          <img
+          <Pic
             ref={imgRef}
             src="/assets/lifestyle-image.webp"
             alt="Custom fine jewelry — Manhattan"

@@ -1,4 +1,5 @@
 // Barrel — import all components from '@/components'
+export { Pic }           from './Pic'
 export { Nav }           from './Nav'
 export { Footer }        from './Footer'
 export { SplitText }     from './SplitText'

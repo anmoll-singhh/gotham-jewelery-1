@@ -81,6 +81,9 @@ export function Nav() {
             style={{ height: "30px", width: "auto", display: "block", filter: "brightness(0) invert(1)", opacity: 0.9 }}
             onError={e => {
               const el = e.currentTarget as HTMLImageElement;
+              // webp not supported → try original PNG
+              if (el.src.includes('.webp')) { el.src = el.src.replace('.webp', '.png'); return; }
+              // PNG also missing → show text fallback
               el.style.display = "none";
               const next = el.nextSibling as HTMLElement | null;
               if (next?.style) next.style.display = "block";

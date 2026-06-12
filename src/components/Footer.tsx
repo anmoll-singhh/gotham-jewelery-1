@@ -39,7 +39,11 @@ export function Footer() {
             >
               <img src="/assets/gotham-logo.webp" alt="Gotham City Jewelers"
                 style={{ height: '38px', width: 'auto', marginBottom: '28px', filter: 'invert(1) brightness(0.85)', opacity: 0.88 }}
-                onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+                onError={e => {
+                  const el = e.currentTarget as HTMLImageElement;
+                  if (el.src.includes('.webp')) { el.src = el.src.replace('.webp', '.png'); return; }
+                  el.style.display = 'none';
+                }}
               />
               <p style={{
                 fontFamily: 'var(--f-display)',
