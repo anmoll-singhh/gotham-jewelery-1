@@ -199,7 +199,11 @@ export function WatchCanvas({
       });
 
       // Mobile: no pin — native touch scroll is unobstructed.
-      // Static poster shows; pin spacer is never injected.
+      // Clear the entry overlay immediately so the static poster is visible
+      // (on desktop the overlay fades via doUpdate; on mobile doUpdate never fires).
+      mm.add("(max-width: 767px)", () => {
+        if (entryOverlayRef.current) entryOverlayRef.current.style.opacity = "0";
+      });
     }, containerRef);
     return () => ctx.revert();
   }, [scrubLength]);
