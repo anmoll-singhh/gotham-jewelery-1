@@ -473,22 +473,30 @@ function NightRevealScene() {
           <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 75% 85% at 50% 50%, transparent 0%, rgba(0,0,0,0.50) 100%)" }} />
           <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 52%)" }} />
 
-          <div ref={text1Ref} style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", textAlign: "center", zIndex: 10, willChange: "opacity, transform", pointerEvents: "none" }}>
-            <p style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-hero)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: 0.9, letterSpacing: "var(--ls-display)" }}>
-              New York.
-            </p>
+          {/* Flex centering on outer div means GSAP never touches the centering offset.
+              Inner ref div is what GSAP animates (y, opacity only — no conflicting transform). */}
+          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none", zIndex: 10 }}>
+            <div ref={text1Ref} style={{ textAlign: "center", willChange: "opacity, transform", padding: "0 clamp(16px,5vw,40px)" }}>
+              <p style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-hero)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: 0.9, letterSpacing: "var(--ls-display)" }}>
+                New York.
+              </p>
+            </div>
           </div>
 
-          <div ref={text2Ref} style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", textAlign: "center", zIndex: 10, willChange: "opacity, transform", pointerEvents: "none" }}>
-            <span style={{ ...lbl, display: "block", textAlign: "center", marginBottom: "16px" }}>The Collector's Standard</span>
-            <p style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-hero)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: 0.9, letterSpacing: "var(--ls-display)" }}>
-              The Standard.
-            </p>
+          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none", zIndex: 10 }}>
+            <div ref={text2Ref} style={{ textAlign: "center", willChange: "opacity, transform", padding: "0 clamp(16px,5vw,40px)" }}>
+              <span style={{ ...lbl, display: "block", textAlign: "center", marginBottom: "16px" }}>The Collector's Standard</span>
+              <p style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-hero)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: 0.9, letterSpacing: "var(--ls-display)" }}>
+                The Standard.
+              </p>
+            </div>
           </div>
 
-          <div ref={ctaRef} style={{ position: "absolute", bottom: "clamp(48px,9vh,88px)", left: "50%", transform: "translateX(-50%)", zIndex: 10, display: "flex", gap: "14px", flexWrap: "wrap", justifyContent: "center", willChange: "opacity, transform" }}>
-            <MagneticBtn href="/timepieces"><span className="btn-primary">Enter the Vault</span></MagneticBtn>
-            <MagneticBtn href="/ring-builder"><span className="btn-outline">Design Your Ring</span></MagneticBtn>
+          <div style={{ position: "absolute", bottom: "clamp(48px,9vh,88px)", left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 10 }}>
+            <div ref={ctaRef} style={{ display: "flex", gap: "14px", flexWrap: "wrap", justifyContent: "center", willChange: "opacity, transform" }}>
+              <MagneticBtn href="/timepieces"><span className="btn-primary">Enter the Vault</span></MagneticBtn>
+              <MagneticBtn href="/ring-builder"><span className="btn-outline">Design Your Ring</span></MagneticBtn>
+            </div>
           </div>
     </WatchCanvas>
   );

@@ -1279,16 +1279,32 @@ html {
   background: #080808;
 }
 
+/* ── Timepieces hero height ──────────────────────────────────────────
+   dvh on desktop (fills including any chrome), svh on mobile so the hero
+   never exceeds the visible viewport when iOS Safari shows its address bar. */
+.vault-hero {
+  height: 100dvh;
+}
+@media (max-width: 767px) {
+  .vault-hero {
+    height: 100svh;
+  }
+}
+
 /* ── Timepieces hero: landscape banner images on mobile portrait ─────
-   objectFit:cover with center/center crops out the watch face on narrow
-   screens. Shift the focal point slightly left + up to keep it visible.
-   The description paragraph is also hidden to prevent text overflow on
-   small viewports — the h1 + CTA are sufficient. */
+   50% 30% shows the upper-center area where watch faces typically sit in
+   landscape editorial photography. Description hidden to prevent overflow. */
 @media (max-width: 767px) {
   .vault-hero-img {
-    object-position: 35% 40% !important;
+    object-position: 50% 30% !important;
   }
   .vault-hero-desc {
     display: none !important;
+  }
+  /* Brand list in VaultScene is nowrap by design on desktop — wrap it on
+     mobile so it doesn't overflow the sticky canvas. */
+  .vault-brand-list {
+    white-space: normal !important;
+    max-width: 80vw;
   }
 }

@@ -601,7 +601,7 @@ export default function Timepieces() {
       <main>
 
         {/* ══ S1: HERO SLIDER — 4 inventory watches ════════════════════ */}
-        <div ref={heroRef} style={{ position: "relative", height: "100dvh", overflow: "hidden", background: "#000" }}>
+        <div ref={heroRef} className="vault-hero" style={{ position: "relative", overflow: "hidden", background: "#000" }}>
 
           {/* Crossfading background slides */}
           {VAULT_SLIDES.map((s, i) => (
