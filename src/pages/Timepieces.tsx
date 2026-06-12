@@ -43,8 +43,19 @@ function VaultScene() {
   const p2Wrap = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    gsap.set([p1.current, p2.current, p3.current], { opacity: 0, y: 70, immediateRender: true });
-    gsap.set([p1Wrap.current, p2Wrap.current], { opacity: 0, pointerEvents: "none", immediateRender: true });
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 768px)", () => {
+      // Desktop: all panels start hidden and are driven by onProgress scroll callback
+      gsap.set([p1.current, p2.current, p3.current], { opacity: 0, y: 70, immediateRender: true });
+      gsap.set([p1Wrap.current, p2Wrap.current], { opacity: 0, pointerEvents: "none", immediateRender: true });
+    });
+    mm.add("(max-width: 767px)", () => {
+      // Mobile: no ScrollTrigger fires, so show CTA immediately; keep side panels hidden
+      // (they'd stack on top of each other at the same absolute position)
+      gsap.set([p1Wrap.current, p2Wrap.current], { opacity: 0, pointerEvents: "none", immediateRender: true });
+      gsap.set(p3.current, { opacity: 1, y: 0, immediateRender: true });
+    });
+    return () => mm.revert();
   }, []);
 
   const onProgress = useCallback((prog: number) => {

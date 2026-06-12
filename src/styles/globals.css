@@ -676,28 +676,11 @@ button {
     height: 100dvh !important;
   }
 
+  /* Vault panels are hidden on mobile (both sit at the same absolute position
+     and would overlap). Only the p3 CTA block is shown on mobile. */
   .vault-panel-1,
   .vault-panel-2 {
-    left: var(--gutter) !important;
-    right: var(--gutter) !important;
-    top: auto !important;
-    bottom: clamp(64px, 11vh, 110px) !important;
-    transform: none !important;
-    max-width: 100% !important;
-    text-align: center !important;
-    background: rgba(0, 0, 0, 0.72);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    padding: clamp(18px, 4vw, 24px);
-    border: 1px solid rgba(201, 168, 76, 0.18);
-  }
-
-  .vault-panel-1 span,
-  .vault-panel-2 span {
-    text-align: center !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    display: block !important;
+    display: none !important;
   }
 
   .vault-brand-list {
@@ -1150,6 +1133,17 @@ button {
   .invitation-section {
     min-height: auto !important;
     padding: var(--s-lg) 0 !important;
+  }
+}
+
+/* ── StoneJourneyScene: expand beyond 100dvh on mobile ────────────── */
+/* The desktop version is scroll-pinned at height:100dvh. On mobile the
+   whileInView stack of 3 panels + CTA can easily exceed 100dvh, so we
+   must release the height lock and let the section grow naturally.     */
+@media (max-width: 767px) {
+  .stone-journey-section {
+    height: auto !important;
+    overflow: visible !important;
   }
 }
 

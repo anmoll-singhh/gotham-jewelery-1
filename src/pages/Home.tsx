@@ -245,7 +245,7 @@ function StoneJourneyScene() {
   };
 
   return (
-    <section ref={wrapRef} style={{ position: "relative", height: "100dvh", overflow: "hidden", background: "var(--bg-dark-grad)" }}>
+    <section ref={wrapRef} className="stone-journey-section" style={{ position: "relative", height: "100dvh", overflow: "hidden", background: "var(--bg-dark-grad)" }}>
       <Pic
         ref={imgRef}
         src="/assets/gotham-diamond-macro.webp"
@@ -434,7 +434,18 @@ function NightRevealScene() {
   const ctaRef   = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    gsap.set([text1Ref.current, text2Ref.current, ctaRef.current], { opacity: 0, y: 44, immediateRender: true });
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 768px)", () => {
+      // Desktop: all overlays start hidden and are driven by onProgress scroll callback
+      gsap.set([text1Ref.current, text2Ref.current, ctaRef.current], { opacity: 0, y: 44, immediateRender: true });
+    });
+    mm.add("(max-width: 767px)", () => {
+      // Mobile: no ScrollTrigger fires. Hide "New York." (text1 and text2 are both at top:50%
+      // so showing both simultaneously causes overlap). Show The Standard. label + CTAs.
+      gsap.set(text1Ref.current, { opacity: 0, immediateRender: true });
+      gsap.set([text2Ref.current, ctaRef.current], { opacity: 1, y: 0, immediateRender: true });
+    });
+    return () => mm.revert();
   }, []);
 
   const onProgress = useCallback((p: number) => {
