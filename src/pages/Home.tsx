@@ -444,10 +444,8 @@ function NightRevealScene() {
       gsap.set([text1Ref.current, text2Ref.current, ctaRef.current], { opacity: 0, y: 44, immediateRender: true });
     });
     mm.add("(max-width: 767px)", () => {
-      // Mobile: no ScrollTrigger fires. Hide "New York." (text1 and text2 are both at top:50%
-      // so showing both simultaneously causes overlap). Show The Standard. label + CTAs.
-      gsap.set(text1Ref.current, { opacity: 0, immediateRender: true });
-      gsap.set([text2Ref.current, ctaRef.current], { opacity: 1, y: 0, immediateRender: true });
+      // Mobile: WatchCanvas sticky scroll-listener drives onProgress, so all start hidden.
+      gsap.set([text1Ref.current, text2Ref.current, ctaRef.current], { opacity: 0, y: 44, immediateRender: true });
     });
     return () => mm.revert();
   }, []);

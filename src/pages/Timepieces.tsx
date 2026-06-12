@@ -50,10 +50,11 @@ function VaultScene() {
       gsap.set([p1Wrap.current, p2Wrap.current], { opacity: 0, pointerEvents: "none", immediateRender: true });
     });
     mm.add("(max-width: 767px)", () => {
-      // Mobile: no ScrollTrigger fires, so show CTA immediately; keep side panels hidden
-      // (they'd stack on top of each other at the same absolute position)
+      // Mobile: WatchCanvas sticky scroll-listener drives onProgress.
+      // Side panels stay hidden (they'd overlap at the same absolute position on mobile).
+      // P3 starts hidden and animates in via onProgress at 82%+ scroll.
       gsap.set([p1Wrap.current, p2Wrap.current], { opacity: 0, pointerEvents: "none", immediateRender: true });
-      gsap.set(p3.current, { opacity: 1, y: 0, immediateRender: true });
+      gsap.set(p3.current, { opacity: 0, y: 60, immediateRender: true });
     });
     return () => mm.revert();
   }, []);
@@ -605,7 +606,7 @@ export default function Timepieces() {
           {/* Crossfading background slides */}
           {VAULT_SLIDES.map((s, i) => (
             <div key={i} style={{ position: "absolute", inset: 0, opacity: i === heroSlide ? 1 : 0, transition: "opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)", pointerEvents: "none" }}>
-              <img src={s.img} alt="" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.45) saturate(0.80) contrast(1.08)" }} />
+              <img src={s.img} alt="" aria-hidden="true" className="vault-hero-img" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.45) saturate(0.80) contrast(1.08)" }} />
             </div>
           ))}
 
@@ -623,12 +624,12 @@ export default function Timepieces() {
                 exit={{ opacity: 0, y: -14 }}
                 transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
               >
-                <span style={{ ...labelStyle, marginBottom: "6px", display: "block" }}>{VAULT_SLIDES[heroSlide].label}</span>
-                <span style={{ ...labelStyle, opacity: 0.45, marginBottom: "24px", display: "block" }}>{VAULT_SLIDES[heroSlide].ref_}</span>
-                <h1 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-hero)", color: "var(--c-white)", lineHeight: "var(--lh-display)", fontStyle: "italic", fontWeight: 400, letterSpacing: "var(--ls-display)", maxWidth: "900px", marginBottom: "24px" }}>
+                <span style={{ ...labelStyle, marginBottom: "4px", display: "block" }}>{VAULT_SLIDES[heroSlide].label}</span>
+                <span style={{ ...labelStyle, opacity: 0.45, marginBottom: "clamp(12px,2.5vh,24px)", display: "block" }}>{VAULT_SLIDES[heroSlide].ref_}</span>
+                <h1 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-hero)", color: "var(--c-white)", lineHeight: "var(--lh-display)", fontStyle: "italic", fontWeight: 400, letterSpacing: "var(--ls-display)", maxWidth: "900px", marginBottom: "clamp(16px,2.5vh,24px)" }}>
                   {VAULT_SLIDES[heroSlide].h1a}<br />{VAULT_SLIDES[heroSlide].h1b}
                 </h1>
-                <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.42)", fontWeight: 300, lineHeight: 1.9, maxWidth: "380px", marginBottom: "40px" }}>
+                <p className="vault-hero-desc" style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.42)", fontWeight: 300, lineHeight: 1.9, maxWidth: "380px", marginBottom: "clamp(24px,4vh,40px)" }}>
                   {VAULT_SLIDES[heroSlide].sub}
                 </p>
               </motion.div>
