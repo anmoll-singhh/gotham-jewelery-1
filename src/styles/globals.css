@@ -12,8 +12,9 @@
 
 html {
   scroll-behavior: auto;
-  /* Lenis owns smooth scroll */
-  overflow-x: hidden;
+  /* DO NOT set overflow-x here — iOS Safari uses html as scroll root
+     when html has any non-visible overflow, breaking page scroll entirely.
+     Body handles horizontal clipping. */
   max-width: 100%;
 }
 
@@ -1188,11 +1189,11 @@ button {
    Fixes for iOS Safari 15+, Safari 16+ desktop, and Firefox.
 ═══════════════════════════════════════════════════════════════════ */
 
-/* Prevent iOS Safari rubber-band overscroll from desyncing Lenis + GSAP pins.
-   Lenis takes over scroll entirely; native overscroll causes double-scroll events. */
+/* Prevent iOS rubber-band overscroll from desyncing GSAP pins. */
 html, body {
   overscroll-behavior: none;
-  -webkit-overflow-scrolling: auto;
+  /* -webkit-overflow-scrolling intentionally omitted — 'auto' disables iOS
+     momentum scroll; deprecated on iOS 16+ and harmful on earlier versions. */
 }
 
 /* iOS Safari ignores overflow: hidden on body for scroll. Lenis adds
@@ -1235,4 +1236,49 @@ html.lenis body {
   .show-mobile-only {
     display: flex !important;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   GOTHAM SCROLLBAR — thin gold on void
+   Webkit (Chrome/Safari/Edge) + Firefox fallback
+═══════════════════════════════════════════════════════════════════ */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201,168,76,0.55) #080808;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080808;
+  border-left: 1px solid rgba(201,168,76,0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    rgba(201,168,76,0.18) 0%,
+    rgba(201,168,76,0.60) 30%,
+    #C9A84C 50%,
+    rgba(201,168,76,0.60) 70%,
+    rgba(201,168,76,0.18) 100%
+  );
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(201,168,76,0.35) 0%,
+    #C9A84C 30%,
+    #D9B85C 50%,
+    #C9A84C 70%,
+    rgba(201,168,76,0.35) 100%
+  );
+}
+
+::-webkit-scrollbar-corner {
+  background: #080808;
 }

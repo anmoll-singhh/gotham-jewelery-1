@@ -344,46 +344,79 @@ function BrandMarquee() {
 // ═══════════════════════════════════════════════════════════════════════════════
 // S3 — QUOTE PANEL  (cream breath — single brand statement)
 // ═══════════════════════════════════════════════════════════════════════════════
-function QuotePanel() {
-  return (
-    <section style={{ background: "var(--c-surface)", padding: "clamp(72px,14vh,130px) var(--gutter)", textAlign: "center", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(50,61,34,0.04) 0%, transparent 70%)", pointerEvents: "none" }} />
+const QUOTE_LINES = [
+  "In 40 years on 47th Street,",
+  "we have never sold a piece",
+  "we weren’t certain of.",
+] as const;
 
-      <div style={{ maxWidth: "720px", margin: "0 auto", position: "relative" }}>
+function QuotePanel() {
+  const vp = { once: true, amount: 0.5 } as const;
+
+  return (
+    <section style={{ background: "var(--c-surface)", padding: "clamp(80px,16vh,144px) var(--gutter)", textAlign: "center", position: "relative", overflow: "hidden" }}>
+
+      {/* Giant ghosted decorative quote mark */}
+      <div aria-hidden="true" style={{
+        position: "absolute", top: "-0.12em", left: "calc(var(--gutter) - 0.06em)",
+        fontFamily: "var(--f-display)", fontSize: "clamp(180px, 32vw, 400px)",
+        color: "rgba(50,61,34,0.055)", lineHeight: 1, fontWeight: 700, fontStyle: "italic",
+        userSelect: "none", pointerEvents: "none", zIndex: 0,
+      }}>&ldquo;</div>
+
+      <div style={{ maxWidth: "900px", margin: "0 auto", position: "relative", zIndex: 1 }}>
+
+        {/* Top rule — draws left → right */}
         <motion.div
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          style={{ height: "1px", background: "linear-gradient(to right, transparent, var(--c-accent-rich), transparent)", transformOrigin: "left center", marginBottom: "clamp(36px, 5vh, 56px)" }}
+          initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={vp}
+          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+          style={{ height: "1px", background: "linear-gradient(to right, transparent, var(--c-accent-rich) 40%, var(--c-accent-rich) 60%, transparent)", transformOrigin: "left", marginBottom: "clamp(48px,7vh,72px)" }}
         />
 
-        <motion.p
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-          style={{ fontFamily: "var(--f-display)", fontSize: "clamp(22px, 3.2vw, 44px)", color: "var(--c-text-dark)", fontStyle: "italic", fontWeight: 400, lineHeight: 1.4, letterSpacing: "var(--ls-display)", marginBottom: "clamp(24px, 4vh, 40px)" }}
-        >
-          "In 40 years on 47th Street,<br />we have never sold a piece<br />we weren't certain of."
-        </motion.p>
+        {/* Quote — each line wipes upward from a clip wrapper */}
+        <div style={{ marginBottom: "clamp(36px,5vh,52px)" }}>
+          {QUOTE_LINES.map((line, i) => (
+            <div key={i} style={{ overflow: "hidden", lineHeight: 1.15 }}>
+              <motion.p
+                initial={{ y: "108%" }}
+                whileInView={{ y: "0%" }}
+                viewport={vp}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: i * 0.14 }}
+                style={{
+                  fontFamily:    "var(--f-display)",
+                  fontSize:      "clamp(28px, 4.4vw, 62px)",
+                  color:         i === 2 ? "var(--c-accent-rich)" : "var(--c-text-dark)",
+                  fontStyle:     "italic",
+                  fontWeight:    400,
+                  lineHeight:    1.22,
+                  letterSpacing: "var(--ls-display)",
+                  margin:        0,
+                  paddingBottom: "0.06em",
+                }}
+              >
+                {i === 0 ? "“" : ""}{line}{i === 2 ? "”" : ""}
+              </motion.p>
+            </div>
+          ))}
+        </div>
 
-        <motion.span
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-          style={{ fontFamily: "var(--f-label)", fontSize: "9px", letterSpacing: "var(--ls-label)", textTransform: "uppercase", color: "var(--c-accent-rich)", opacity: 0.8, display: "block" }}
-        >
-          Gotham City Jewelers · Est. 1985 · Manhattan Diamond District
-        </motion.span>
-
+        {/* Attribution */}
         <motion.div
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-          style={{ height: "1px", background: "linear-gradient(to right, transparent, var(--c-accent-rich), transparent)", transformOrigin: "right center", marginTop: "clamp(36px, 5vh, 56px)" }}
+          initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={vp}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.52 }}
+          style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "11px" }}
+        >
+          <div style={{ width: "30px", height: "1px", background: "var(--c-accent-rich)", opacity: 0.55 }} />
+          <span style={{ fontFamily: "var(--f-label)", fontSize: "9px", letterSpacing: "var(--ls-label)", textTransform: "uppercase", color: "var(--c-accent-rich)" }}>
+            Gotham City Jewelers · Est. 1985 · Manhattan Diamond District
+          </span>
+        </motion.div>
+
+        {/* Bottom rule — draws right → left */}
+        <motion.div
+          initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={vp}
+          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.28 }}
+          style={{ height: "1px", background: "linear-gradient(to right, transparent, var(--c-accent-rich) 40%, var(--c-accent-rich) 60%, transparent)", transformOrigin: "right", marginTop: "clamp(48px,7vh,72px)" }}
         />
       </div>
     </section>
@@ -794,7 +827,7 @@ export default function Home() {
     <>
       {!_loaderShown && <LoadingScreen onDone={handleLoaderDone} />}
       <Nav />
-      <main style={{ overflowX: "hidden", background: "var(--bg-void-grad)" }}>
+      <main style={{ background: "var(--bg-void-grad)" }}>
 
         <HeroScene live={loaded} />
         <GoldLine />
