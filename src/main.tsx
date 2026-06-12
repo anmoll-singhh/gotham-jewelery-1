@@ -21,22 +21,31 @@ ScrollTrigger.config({
   autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load,orientationchange',
 })
 
-// Lenis smooth scroll + GSAP ticker integration
-// This runs once globally. All ScrollTrigger instances in the app
-// will automatically sync with Lenis through this ticker.
-const lenis = new Lenis()
-lenis.on('scroll', ScrollTrigger.update)
-gsap.ticker.add((time) => { lenis.raf(time * 1000) })
-gsap.ticker.lagSmoothing(0)
+// Lenis smooth scroll — desktop only.
+// On touch-only devices Lenis intercepts touchmove but (with smoothTouch:false default)
+// doesn't drive native scroll, which completely blocks scrolling on mobile.
+const hasFinePointer = window.matchMedia('(pointer: fine)').matches
 
-// Expose to window so ScrollToTop can call lenis.scrollTo(0, { immediate: true })
-// without needing to pass lenis through React context/props.
-;(window as unknown as { __lenis: typeof lenis }).__lenis = lenis
+type LenisInstance = InstanceType<typeof Lenis>
+let lenis: LenisInstance | null = null
+
+if (hasFinePointer) {
+  lenis = new Lenis()
+  lenis.on('scroll', ScrollTrigger.update)
+  gsap.ticker.add((time) => { lenis!.raf(time * 1000) })
+  gsap.ticker.lagSmoothing(0)
+} else {
+  // Touch devices: native scroll drives ScrollTrigger via passive listener.
+  window.addEventListener('scroll', ScrollTrigger.update, { passive: true })
+}
+
+// Expose to window so ScrollToTop can call lenis.scrollTo(0) without prop-drilling.
+;(window as unknown as { __lenis: LenisInstance | null }).__lenis = lenis
 
 // Refresh all ScrollTrigger pin spacers after web fonts load.
 document.fonts.ready.then(() => {
   ScrollTrigger.refresh()
-  ;(lenis as unknown as { resize?: () => void }).resize?.()
+  if (lenis) (lenis as unknown as { resize?: () => void }).resize?.()
 })
 
 // Debounced resize refresh: GSAP pin spacers are calculated for a specific viewport.
@@ -45,7 +54,7 @@ window.addEventListener('resize', () => {
   clearTimeout(_resizeTimer)
   _resizeTimer = setTimeout(() => {
     ScrollTrigger.refresh()
-    ;(lenis as unknown as { resize?: () => void }).resize?.()
+    if (lenis) (lenis as unknown as { resize?: () => void }).resize?.()
   }, 250)
 })
 
