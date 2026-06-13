@@ -1,4 +1,4 @@
-﻿import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
 const NAV = [
@@ -8,26 +8,26 @@ const NAV = [
 ]
 
 const LEGAL = [
-  { label: 'Privacy',  href: '#' },
-  { label: 'Terms',    href: '#' },
-  { label: 'Sitemap',  href: '#' },
+  { label: 'Privacy',  href: '#privacy'  },
+  { label: 'Terms',    href: '#terms'    },
+  { label: 'Sitemap',  href: '#sitemap'  },
 ]
 
 const SOCIAL = [
-  { label: 'Instagram', href: 'https://instagram.com/gothamcityjewelers' },
+  { label: 'Instagram', href: 'https://instagram.com/gothamcityjewelers', external: true },
 ]
 
 export function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer style={{ background: 'var(--bg-void-grad)', borderTop: '1px solid rgba(201,168,76,0.10)' }}>
+    <footer aria-label="Site footer" style={{ background: 'var(--bg-void-grad)', borderTop: '1px solid rgba(201,168,76,0.10)' }}>
 
       {/* Upper — big statement */}
       <div style={{ maxWidth: 'var(--max-w)', margin: '0 auto', padding: 'var(--s-lg) var(--gutter) var(--s-md)' }}>
 
         {/* Gold hairline */}
-        <div style={{ height: '1px', background: 'linear-gradient(to right, rgba(201,168,76,0.6) 0%, rgba(201,168,76,0.15) 70%, transparent 100%)', marginBottom: 'var(--s-md)' }} />
+        <div aria-hidden="true" style={{ height: '1px', background: 'linear-gradient(to right, rgba(201,168,76,0.6) 0%, rgba(201,168,76,0.15) 70%, transparent 100%)', marginBottom: 'var(--s-md)' }} />
 
         <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 'var(--s-lg)', alignItems: 'flex-start' }}>
 
@@ -58,18 +58,20 @@ export function Footer() {
               }}>
                 Nothing leaves<br />before we're certain.
               </p>
-              <p style={{ fontFamily: 'var(--f-body)', fontSize: 'var(--t-body)', color: 'rgba(240,234,196,0.38)', fontWeight: 300, lineHeight: 1.8, maxWidth: '320px' }}>
+              <address style={{ fontStyle: 'normal', fontFamily: 'var(--f-body)', fontSize: 'var(--t-body)', color: 'rgba(240,234,196,0.45)', fontWeight: 300, lineHeight: 1.8, maxWidth: '320px' }}>
                 23 West 47th Street, Suite 402<br />
                 Manhattan, New York 10036<br />
-                Mon – Fri · 9am – 5pm
-              </p>
+                <span aria-label="Business hours">Mon – Fri · 9am – 5pm</span>
+              </address>
             </motion.div>
           </div>
 
-          {/* Right — nav columns: 3-col flex on desktop, 2-col grid on mobile */}
+          {/* Right — nav columns */}
           <div className="footer-nav-cols" style={{ display: 'flex', gap: 'clamp(40px,6vw,80px)', alignItems: 'flex-start', paddingTop: '4px' }}>
-            <div>
-              <p style={{ fontFamily: 'var(--f-label)', fontSize: '9px', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'rgba(201,168,76,0.5)', marginBottom: '20px' }}>Navigate</p>
+
+            {/* Navigate */}
+            <nav aria-label="Footer navigation">
+              <h2 style={{ fontFamily: 'var(--f-label)', fontSize: '9px', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'rgba(201,168,76,0.5)', marginBottom: '20px', fontWeight: 400 }}>Navigate</h2>
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {NAV.map(l => (
                   <li key={l.href}>
@@ -80,10 +82,11 @@ export function Footer() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
 
+            {/* Contact */}
             <div>
-              <p style={{ fontFamily: 'var(--f-label)', fontSize: '9px', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'rgba(201,168,76,0.5)', marginBottom: '20px' }}>Contact</p>
+              <h2 style={{ fontFamily: 'var(--f-label)', fontSize: '9px', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'rgba(201,168,76,0.5)', marginBottom: '20px', fontWeight: 400 }}>Contact</h2>
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {[
                   { label: '+1 (917) 757-0314',              href: 'tel:+19177570314' },
@@ -91,25 +94,40 @@ export function Footer() {
                   { label: 'Book an Appointment',             href: '/ring-builder' },
                 ].map(l => (
                   <li key={l.label}>
-                    <a href={l.href} style={{ fontFamily: 'var(--f-body)', fontSize: 'var(--t-body)', color: 'rgba(240,234,196,0.45)', transition: 'color 0.2s var(--ease-ui)', letterSpacing: '0.03em' }}
-                      onMouseEnter={e => { e.currentTarget.style.color = 'var(--c-accent)' }}
-                      onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,234,196,0.45)' }}
-                    >{l.label}</a>
+                    {l.href.startsWith('/') ? (
+                      <Link to={l.href} style={{ fontFamily: 'var(--f-body)', fontSize: 'var(--t-body)', color: 'rgba(240,234,196,0.45)', transition: 'color 0.2s var(--ease-ui)', letterSpacing: '0.03em' }}
+                        onMouseEnter={e => { e.currentTarget.style.color = 'var(--c-accent)' }}
+                        onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,234,196,0.45)' }}
+                      >{l.label}</Link>
+                    ) : (
+                      <a href={l.href} style={{ fontFamily: 'var(--f-body)', fontSize: 'var(--t-body)', color: 'rgba(240,234,196,0.45)', transition: 'color 0.2s var(--ease-ui)', letterSpacing: '0.03em' }}
+                        onMouseEnter={e => { e.currentTarget.style.color = 'var(--c-accent)' }}
+                        onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,234,196,0.45)' }}
+                      >{l.label}</a>
+                    )}
                   </li>
                 ))}
               </ul>
             </div>
 
+            {/* Follow */}
             <div>
-              <p style={{ fontFamily: 'var(--f-label)', fontSize: '9px', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'rgba(201,168,76,0.5)', marginBottom: '20px' }}>Follow</p>
+              <h2 style={{ fontFamily: 'var(--f-label)', fontSize: '9px', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'rgba(201,168,76,0.5)', marginBottom: '20px', fontWeight: 400 }}>Follow</h2>
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {SOCIAL.map(l => (
                   <li key={l.label}>
-                    <a href={l.href} target="_blank" rel="noopener noreferrer"
+                    <a
+                      href={l.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${l.label}${l.external ? ' (opens in new tab)' : ''}`}
                       style={{ fontFamily: 'var(--f-body)', fontSize: 'var(--t-body)', color: 'rgba(240,234,196,0.45)', transition: 'color 0.2s var(--ease-ui)', letterSpacing: '0.03em' }}
                       onMouseEnter={e => { e.currentTarget.style.color = 'var(--c-accent)' }}
                       onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,234,196,0.45)' }}
-                    >{l.label}</a>
+                    >
+                      {l.label}
+                      <span aria-hidden="true" style={{ fontSize: '8px', opacity: 0.4, marginLeft: '4px' }}>↗</span>
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -125,16 +143,20 @@ export function Footer() {
           flexWrap: 'wrap', gap: '12px',
         }}>
           <p style={{ fontFamily: 'var(--f-body)', fontSize: '10px', letterSpacing: '0.12em', color: 'rgba(240,234,196,0.22)' }}>
-            © {year} Gotham City Jewelers LLC. Manhattan Diamond District.
+            <small>© {year} Gotham City Jewelers LLC. Manhattan Diamond District.</small>
           </p>
-          <div className="footer-legal-links" style={{ display: 'flex', gap: '28px' }}>
-            {LEGAL.map(l => (
-              <a key={l.label} href={l.href} style={{ fontFamily: 'var(--f-label)', fontSize: '9px', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'rgba(240,234,196,0.22)', transition: 'color 0.2s var(--ease-ui)' }}
-                onMouseEnter={e => { e.currentTarget.style.color = 'rgba(240,234,196,0.6)' }}
-                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,234,196,0.22)' }}
-              >{l.label}</a>
-            ))}
-          </div>
+          <nav aria-label="Legal links">
+            <ul className="footer-legal-links" style={{ display: 'flex', gap: '28px', listStyle: 'none' }}>
+              {LEGAL.map(l => (
+                <li key={l.label}>
+                  <a href={l.href} style={{ fontFamily: 'var(--f-label)', fontSize: '9px', letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'rgba(240,234,196,0.22)', transition: 'color 0.2s var(--ease-ui)' }}
+                    onMouseEnter={e => { e.currentTarget.style.color = 'rgba(240,234,196,0.6)' }}
+                    onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,234,196,0.22)' }}
+                  >{l.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
       </div>
     </footer>

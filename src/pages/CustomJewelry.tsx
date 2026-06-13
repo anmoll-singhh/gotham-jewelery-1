@@ -245,7 +245,12 @@ function BeginSection() {
             padding:    'var(--s-md)',
           }}>
             <span style={{ ...labelStyle, marginBottom: '28px' }}>Inquiry</span>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <form
+              onSubmit={e => { e.preventDefault(); handleSubmit(); }}
+              noValidate
+              aria-label="Custom jewelry inquiry form"
+              style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
+            >
               <label htmlFor="cj-name"    style={srOnly}>Your Name</label>
               <input
                 ref={nameRef}
@@ -253,6 +258,8 @@ function BeginSection() {
                 type="text"
                 placeholder="Your Name"
                 autoComplete="name"
+                required
+                aria-required="true"
                 style={{
                   background:  'transparent',
                   border:      '1px solid var(--c-border)',
@@ -277,6 +284,8 @@ function BeginSection() {
                 type="email"
                 placeholder="Email Address"
                 autoComplete="email"
+                required
+                aria-required="true"
                 style={{
                   background:  'transparent',
                   border:      '1px solid var(--c-border)',
@@ -344,12 +353,11 @@ function BeginSection() {
               <button
                 className="btn-primary"
                 style={{ justifyContent: 'center', width: '100%' }}
-                type="button"
-                onClick={handleSubmit}
+                type="submit"
               >
                 Send Inquiry
               </button>
-            </div>
+            </form>
           </div>
         </ScrollReveal>
 
@@ -383,7 +391,7 @@ export default function CustomJewelry() {
     <>
       <Nav />
 
-      <main>
+      <main id="main-content">
         {/* ── SCENE 1: ATELIER HERO ──────────────────────────────── */}
         <div
           ref={heroRef}

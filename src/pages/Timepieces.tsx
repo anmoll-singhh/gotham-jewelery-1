@@ -323,8 +323,8 @@ function TheHouses() {
                 }}>
                   {brand.desc}
                 </p>
-                <Link to="/timepieces" className="btn-outline" style={{ fontSize: "10px", display: "inline-flex", alignItems: "center" }}>
-                  Price on Request →
+                <Link to="/timepieces" className="btn-outline" aria-label="Price on Request" style={{ fontSize: "10px", display: "inline-flex", alignItems: "center" }}>
+                  Price on Request <span aria-hidden="true"> →</span>
                 </Link>
               </div>
             </div>
@@ -422,6 +422,7 @@ function FeaturedWatches({ activeBrand, sectionRef }: { activeBrand: string; sec
                 <Link
                   key={brand}
                   to={brand === "All" ? "/timepieces" : `/timepieces?brand=${encodeURIComponent(brand)}`}
+                  aria-current={isActive ? "true" : undefined}
                   style={{
                     fontFamily:    "var(--f-label)",
                     fontSize:      "9px",
@@ -573,9 +574,11 @@ const VAULT_SLIDES = [
 // MAIN PAGE
 // ─────────────────────────────────────────────────────────────────────────────
 export default function Timepieces() {
-  const heroRef      = useRef<HTMLDivElement>(null);
-  const inventoryRef = useRef<HTMLElement>(null);
-  const [heroSlide, setHeroSlide] = useState(0);
+  const heroRef        = useRef<HTMLDivElement>(null);
+  const inventoryRef   = useRef<HTMLElement>(null);
+  const liveRegionRef  = useRef<HTMLDivElement>(null);
+  const [heroSlide, setHeroSlide]   = useState(0);
+  const [isPaused,  setIsPaused]    = useState(false);
 
   const [searchParams] = useSearchParams();
   const activeBrand = searchParams.get("brand") ?? "All";
@@ -590,22 +593,64 @@ export default function Timepieces() {
   }, [activeBrand]);
 
   useEffect(() => {
+    if (isPaused) return;
     const id = setInterval(() => setHeroSlide(s => (s + 1) % VAULT_SLIDES.length), 5500);
     return () => clearInterval(id);
-  }, []);
+  }, [isPaused]);
+
+  // Announce slide changes to screen readers
+  useEffect(() => {
+    if (liveRegionRef.current) {
+      liveRegionRef.current.textContent =
+        `Slide ${heroSlide + 1} of ${VAULT_SLIDES.length}: ${VAULT_SLIDES[heroSlide].h1a} ${VAULT_SLIDES[heroSlide].h1b}`;
+    }
+  }, [heroSlide]);
+
+  const goToSlide = (i: number) => { setHeroSlide(i); setIsPaused(true); };
+
+  const handleCarouselKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowRight") { e.preventDefault(); goToSlide((heroSlide + 1) % VAULT_SLIDES.length); }
+    if (e.key === "ArrowLeft")  { e.preventDefault(); goToSlide((heroSlide - 1 + VAULT_SLIDES.length) % VAULT_SLIDES.length); }
+    if (e.key === "Home")       { e.preventDefault(); goToSlide(0); }
+    if (e.key === "End")        { e.preventDefault(); goToSlide(VAULT_SLIDES.length - 1); }
+  };
 
   return (
     <>
       <Nav />
 
-      <main>
+      <main id="main-content">
 
         {/* ══ S1: HERO SLIDER — 4 inventory watches ════════════════════ */}
-        <div ref={heroRef} className="vault-hero" style={{ position: "relative", overflow: "hidden", background: "#000" }}>
+        <section
+          ref={heroRef}
+          className="vault-hero"
+          aria-roledescription="carousel"
+          aria-label={`Featured timepieces — ${VAULT_SLIDES.length} slides`}
+          style={{ position: "relative", overflow: "hidden", background: "#000" }}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onFocus={() => setIsPaused(true)}
+          onBlur={() => setIsPaused(false)}
+        >
+          {/* Screen reader live region */}
+          <div
+            ref={liveRegionRef}
+            aria-live="polite"
+            aria-atomic="true"
+            style={{ position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}
+          />
 
           {/* Crossfading background slides */}
           {VAULT_SLIDES.map((s, i) => (
-            <div key={i} style={{ position: "absolute", inset: 0, opacity: i === heroSlide ? 1 : 0, transition: "opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)", pointerEvents: "none" }}>
+            <div
+              key={i}
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`Slide ${i + 1} of ${VAULT_SLIDES.length}: ${s.label}`}
+              aria-hidden={i !== heroSlide}
+              style={{ position: "absolute", inset: 0, opacity: i === heroSlide ? 1 : 0, transition: "opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)", pointerEvents: "none" }}
+            >
               {/* <picture> serves portrait AI-generated shots on mobile, landscape banners on desktop */}
               <picture style={{ position: "absolute", inset: 0, display: "block" }}>
                 <source media="(max-width: 767px)" srcSet={s.mobileImg} type="image/webp" />
@@ -615,8 +660,8 @@ export default function Timepieces() {
           ))}
 
           {/* Gradient overlays */}
-          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, #000 0%, rgba(0,0,0,0.40) 38%, rgba(0,0,0,0.08) 70%, transparent 100%)" }} />
-          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to right, rgba(0,0,0,0.60) 0%, transparent 55%)" }} />
+          <div aria-hidden="true" style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, #000 0%, rgba(0,0,0,0.40) 38%, rgba(0,0,0,0.08) 70%, transparent 100%)" }} />
+          <div aria-hidden="true" style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to right, rgba(0,0,0,0.60) 0%, transparent 55%)" }} />
 
           {/* Animated text content */}
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "var(--gutter)", paddingBottom: "clamp(28px, 5vh, 56px)", zIndex: 10, maxWidth: "1100px" }}>
@@ -643,20 +688,31 @@ export default function Timepieces() {
             </MagneticBtn>
           </div>
 
-          {/* Slide dots */}
-          <div style={{ position: "absolute", bottom: "clamp(20px,3.5vh,36px)", right: "var(--gutter)", zIndex: 10, display: "flex", gap: "8px", alignItems: "center" }}>
-            {VAULT_SLIDES.map((_, i) => (
-              <button key={i} aria-label={`Slide ${i + 1}`} onClick={() => setHeroSlide(i)}
-                style={{ width: i === heroSlide ? "22px" : "6px", height: "2px", background: i === heroSlide ? "var(--c-accent)" : "rgba(201,168,76,0.28)", border: "none", cursor: "pointer", padding: 0, transition: "all 0.4s ease", outline: "none" }}
+          {/* Slide dots — roving tabindex pattern */}
+          <div
+            role="tablist"
+            aria-label="Slideshow controls"
+            style={{ position: "absolute", bottom: "clamp(20px,3.5vh,36px)", right: "var(--gutter)", zIndex: 10, display: "flex", gap: "8px", alignItems: "center" }}
+          >
+            {VAULT_SLIDES.map((s, i) => (
+              <button
+                key={i}
+                role="tab"
+                aria-selected={i === heroSlide}
+                aria-label={`Slide ${i + 1}: ${s.label}`}
+                tabIndex={i === heroSlide ? 0 : -1}
+                onClick={() => goToSlide(i)}
+                onKeyDown={handleCarouselKeyDown}
+                style={{ width: i === heroSlide ? "22px" : "6px", height: "2px", background: i === heroSlide ? "var(--c-accent)" : "rgba(201,168,76,0.28)", border: "none", cursor: "pointer", padding: "8px 0", transition: "all 0.4s ease" }}
               />
             ))}
           </div>
 
           {/* Address tag */}
-          <div className="hide-mobile" style={{ position: "absolute", top: "50%", right: "var(--gutter)", transform: "translateY(-50%) rotate(90deg)", transformOrigin: "right center", fontFamily: "var(--f-label)", fontSize: "8px", letterSpacing: "0.30em", textTransform: "uppercase", color: "rgba(201,168,76,0.22)", whiteSpace: "nowrap", zIndex: 10 }}>
+          <div aria-hidden="true" className="hide-mobile" style={{ position: "absolute", top: "50%", right: "var(--gutter)", transform: "translateY(-50%) rotate(90deg)", transformOrigin: "right center", fontFamily: "var(--f-label)", fontSize: "8px", letterSpacing: "0.30em", textTransform: "uppercase", color: "rgba(201,168,76,0.22)", whiteSpace: "nowrap", zIndex: 10 }}>
             23 West 47th Street · Suite 402 · Manhattan
           </div>
-        </div>
+        </section>
 
         {divider}
 

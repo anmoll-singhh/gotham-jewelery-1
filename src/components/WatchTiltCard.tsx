@@ -61,7 +61,6 @@ export function WatchTiltCard({ img, name, ref_, brand, delay = 0 }: WatchTiltCa
           overflow:        'hidden',
           width:           '100%',
           height:          '100%',
-          cursor:          'pointer',
         }}
         transition={{ scale: { type: 'spring', stiffness: 300, damping: 25 } }}
       >

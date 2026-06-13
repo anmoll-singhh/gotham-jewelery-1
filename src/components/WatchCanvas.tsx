@@ -238,10 +238,13 @@ export function WatchCanvas({
           overflow: "hidden",
         }}
       >
-        {/* ── Canvas ──────────────────────────────────────────── */}
+        {/* ── Canvas (decorative scroll-driven animation) ─────── */}
         {mode === "canvas" && (
           <canvas
             ref={canvasRef}
+            aria-hidden="true"
+            role="img"
+            aria-label="Scroll-driven watch animation"
             style={{
               position: "absolute", inset: 0,
               width: "100%", height: "100%",
@@ -270,13 +273,23 @@ export function WatchCanvas({
 
         {/* ── Loading bar ─────────────────────────────────────── */}
         {mode === "canvas" && !ready && (
-          <div style={{
-            position: "absolute", inset: 0,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            background: "#000",
-          }}>
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute", inset: 0,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              background: "#000",
+            }}
+          >
             <div style={{ textAlign: "center" }}>
-              <div style={{ width: "180px", height: "1px", background: "rgba(197,164,110,0.15)", margin: "0 auto 14px" }}>
+              <div
+                role="progressbar"
+                aria-valuenow={loadPct}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label="Loading animation frames"
+                style={{ width: "180px", height: "1px", background: "rgba(197,164,110,0.15)", margin: "0 auto 14px" }}
+              >
                 <div style={{ height: "100%", width: `${loadPct}%`, background: "var(--c-accent)", transition: "width 0.1s linear" }} />
               </div>
               <p style={{ fontFamily: "var(--f-body)", fontSize: "9px", letterSpacing: "0.32em", textTransform: "uppercase", color: "rgba(255,255,255,0.22)" }}>
@@ -289,6 +302,7 @@ export function WatchCanvas({
         {/* ── Entry overlay (fades from black over first 6% of progress) ── */}
         <div
           ref={entryOverlayRef}
+          aria-hidden="true"
           style={{
             position: "absolute", inset: 0,
             background: "#000", zIndex: 5,
@@ -299,6 +313,7 @@ export function WatchCanvas({
         {/* ── Exit overlay ────────────────────────────────────── */}
         <div
           ref={exitOverlayRef}
+          aria-hidden="true"
           style={{
             position: "absolute", inset: 0,
             background: "#000", zIndex: 6,

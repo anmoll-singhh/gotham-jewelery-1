@@ -341,7 +341,7 @@ export default function RingBuilder() {
     <>
       <Nav />
 
-      <main>
+      <main id="main-content">
         {/* ── SCENE 1: STUDIO HERO ──────────────────────────────── */}
         <div
           ref={heroRef}

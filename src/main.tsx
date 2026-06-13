@@ -9,6 +9,17 @@ import Lenis from 'lenis'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// ── prefers-reduced-motion: disable GSAP animations for vestibular users ───
+// The CSS rule in globals.css already handles CSS transitions/animations.
+// This configures GSAP so scroll-triggered effects also respect the preference.
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+if (reduceMotion) {
+  // Set GSAP's global default duration to near-zero so all tweens are instant.
+  gsap.defaults({ duration: 0.001, ease: 'none' })
+  // Disable ScrollTrigger scrub so pinned scenes snap rather than animate.
+  ScrollTrigger.defaults({ scrub: false })
+}
+
 // Safari / iOS Safari scroll-restoration fix:
 // without this, Safari reloads to a saved scroll offset → wrong pin positions.
 if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {

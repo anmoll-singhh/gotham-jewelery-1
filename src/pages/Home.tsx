@@ -86,24 +86,77 @@ const HERO_SLIDES = [
 ] as const;
 
 function HeroScene({ live }: { live: boolean }) {
-  const [slide, setSlide] = useState(0);
+  const [slide, setSlide]             = useState(0);
+  const [isPaused, setIsPaused]       = useState(false);
+  const intervalRef                   = useRef<ReturnType<typeof setInterval> | null>(null);
+  const liveRegionRef                 = useRef<HTMLDivElement>(null);
+  const carouselRef                   = useRef<HTMLDivElement>(null);
 
+  // Start / stop auto-advance based on pause state
   useEffect(() => {
-    const id = setInterval(() => setSlide(s => (s + 1) % HERO_SLIDES.length), 5500);
-    return () => clearInterval(id);
-  }, []);
+    if (isPaused) return;
+    intervalRef.current = setInterval(() => setSlide(s => (s + 1) % HERO_SLIDES.length), 5500);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [isPaused]);
+
+  // Announce slide changes to screen readers via aria-live region
+  useEffect(() => {
+    if (liveRegionRef.current) {
+      liveRegionRef.current.textContent =
+        `Slide ${slide + 1} of ${HERO_SLIDES.length}: ${HERO_SLIDES[slide].h1a} ${HERO_SLIDES[slide].h1b}`;
+    }
+  }, [slide]);
+
+  const goToSlide = (i: number) => {
+    setSlide(i);
+    setIsPaused(true);
+  };
+
+  // Keyboard navigation for carousel
+  const handleCarouselKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowRight") { e.preventDefault(); goToSlide((slide + 1) % HERO_SLIDES.length); }
+    if (e.key === "ArrowLeft")  { e.preventDefault(); goToSlide((slide - 1 + HERO_SLIDES.length) % HERO_SLIDES.length); }
+    if (e.key === "Home")       { e.preventDefault(); goToSlide(0); }
+    if (e.key === "End")        { e.preventDefault(); goToSlide(HERO_SLIDES.length - 1); }
+  };
 
   const current = HERO_SLIDES[slide];
 
   return (
-    <div className="hero-scene" style={{ position: "relative", overflow: "hidden", background: "#000" }}>
+    <section
+      ref={carouselRef}
+      className="hero-scene"
+      aria-roledescription="carousel"
+      aria-label={`Featured slides — ${HERO_SLIDES.length} slides total`}
+      style={{ position: "relative", overflow: "hidden", background: "#000" }}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocus={() => setIsPaused(true)}
+      onBlur={() => setIsPaused(false)}
+    >
+      {/* Screen reader live region — announces each slide change */}
+      <div
+        ref={liveRegionRef}
+        aria-live="polite"
+        aria-atomic="true"
+        style={{ position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}
+      />
+
       <AnimatePresence>{!live && <HeroSkeleton key="sk" />}</AnimatePresence>
 
       {HERO_SLIDES.map((s, i) => (
-        <div key={i} style={{ position: "absolute", inset: 0, opacity: i === slide ? 1 : 0, transition: "opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)", pointerEvents: "none" }}>
+        <div
+          key={i}
+          role="group"
+          aria-roledescription="slide"
+          aria-label={`Slide ${i + 1} of ${HERO_SLIDES.length}`}
+          aria-hidden={i !== slide}
+          style={{ position: "absolute", inset: 0, opacity: i === slide ? 1 : 0, transition: "opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)", pointerEvents: "none" }}
+        >
           <Pic
             src={s.img}
-            alt="" aria-hidden="true"
+            alt=""
+            aria-hidden="true"
             fetchPriority={i === 0 ? "high" : "low"}
             loading={i === 0 ? "eager" : "lazy"}
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.50) saturate(0.65) contrast(1.05)" }}
@@ -124,11 +177,9 @@ function HeroScene({ live }: { live: boolean }) {
             transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
           >
             <span style={{ ...lbl, marginBottom: "20px", display: "block" }}>{current.label}</span>
-            {live && (
-              <h1 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-hero)", color: "var(--c-white)", lineHeight: "var(--lh-display)", fontStyle: "italic", fontWeight: 400, letterSpacing: "var(--ls-display)", maxWidth: "960px", marginBottom: "28px" }}>
-                {current.h1a}<br />{current.h1b}
-              </h1>
-            )}
+            <h1 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-hero)", color: "var(--c-white)", lineHeight: "var(--lh-display)", fontStyle: "italic", fontWeight: 400, letterSpacing: "var(--ls-display)", maxWidth: "960px", marginBottom: "28px" }}>
+              {current.h1a}<br />{current.h1b}
+            </h1>
             <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.72)", fontWeight: 300, lineHeight: 1.9, maxWidth: "340px", marginBottom: "40px", letterSpacing: "0.012em" }}>
               {current.sub}
             </p>
@@ -141,25 +192,36 @@ function HeroScene({ live }: { live: boolean }) {
         </div>
       </div>
 
-      {/* Slide dots */}
-      <div style={{ position: "absolute", bottom: "clamp(20px,3.5vh,36px)", right: "var(--gutter)", zIndex: 10, display: "flex", gap: "8px", alignItems: "center" }}>
+      {/* Slide dots — roving tabindex pattern (active dot only in tab order) */}
+      <div
+        role="tablist"
+        aria-label="Slideshow controls"
+        style={{ position: "absolute", bottom: "clamp(20px,3.5vh,36px)", right: "var(--gutter)", zIndex: 10, display: "flex", gap: "8px", alignItems: "center" }}
+      >
         {HERO_SLIDES.map((_, i) => (
-          <button key={i} aria-label={`Slide ${i + 1}`} onClick={() => setSlide(i)}
-            style={{ width: i === slide ? "22px" : "6px", height: "2px", background: i === slide ? "var(--c-accent)" : "rgba(201,168,76,0.28)", border: "none", cursor: "pointer", padding: 0, transition: "all 0.4s ease", outline: "none" }}
+          <button
+            key={i}
+            role="tab"
+            aria-selected={i === slide}
+            aria-label={`Slide ${i + 1}: ${HERO_SLIDES[i].h1a} ${HERO_SLIDES[i].h1b}`}
+            tabIndex={i === slide ? 0 : -1}
+            onClick={() => goToSlide(i)}
+            onKeyDown={handleCarouselKeyDown}
+            style={{ width: i === slide ? "22px" : "6px", height: "2px", background: i === slide ? "var(--c-accent)" : "rgba(201,168,76,0.28)", border: "none", cursor: "pointer", padding: "8px 0", transition: "all 0.4s ease" }}
           />
         ))}
       </div>
 
-      <div className="hide-mobile" style={{ position: "absolute", top: "50%", right: "var(--gutter)", transform: "translateY(-50%) rotate(90deg)", transformOrigin: "right center", fontFamily: "var(--f-label)", fontSize: "8px", letterSpacing: "0.30em", textTransform: "uppercase", color: "rgba(201,168,76,0.22)", whiteSpace: "nowrap", zIndex: 10 }}>
+      <div aria-hidden="true" className="hide-mobile" style={{ position: "absolute", top: "50%", right: "var(--gutter)", transform: "translateY(-50%) rotate(90deg)", transformOrigin: "right center", fontFamily: "var(--f-label)", fontSize: "8px", letterSpacing: "0.30em", textTransform: "uppercase", color: "rgba(201,168,76,0.22)", whiteSpace: "nowrap", zIndex: 10 }}>
         23 West 47th Street · Suite 402 · Manhattan
       </div>
 
-      <div className="hide-mobile" style={{ position: "absolute", bottom: "28px", left: "50%", transform: "translateX(-50%)", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: "7px" }}>
+      <div aria-hidden="true" className="hide-mobile" style={{ position: "absolute", bottom: "28px", left: "50%", transform: "translateX(-50%)", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: "7px" }}>
         <span style={{ fontFamily: "var(--f-label)", fontSize: "7px", letterSpacing: "0.34em", textTransform: "uppercase", color: "rgba(201,168,76,0.3)" }}>Scroll</span>
         <motion.div animate={{ scaleY: [1, 1.55, 1], opacity: [0.22, 0.65, 0.22] }} transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
           style={{ width: "1px", height: "38px", background: "linear-gradient(to bottom, rgba(201,168,76,0.65), transparent)", transformOrigin: "top" }} />
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -324,7 +386,8 @@ const MARQUEE_BRANDS = ["Rolex", "Patek Philippe", "Audemars Piguet", "Cartier",
 
 function BrandMarquee() {
   return (
-    <div style={{ background: "var(--bg-void-grad)", borderTop: "1px solid rgba(201,168,76,0.07)", borderBottom: "1px solid rgba(201,168,76,0.07)", overflow: "hidden", padding: "17px 0" }}>
+    /* aria-hidden: decorative brand strip — redundant info available in nav */
+    <div aria-hidden="true" style={{ background: "var(--bg-void-grad)", borderTop: "1px solid rgba(201,168,76,0.07)", borderBottom: "1px solid rgba(201,168,76,0.07)", overflow: "hidden", padding: "17px 0" }}>
       <motion.div
         animate={{ x: [0, "-33.333%"] }}
         transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
@@ -578,7 +641,7 @@ function StoreScene() {
 
       {/* Layer 1: Exterior — desktop only; mobile fallback renders its own images */}
       <div ref={layer1Ref} className="hide-mobile" style={{ position: "absolute", inset: 0, willChange: "opacity, transform" }}>
-        <video className="hide-mobile" autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.72)" }}>
+        <video className="hide-mobile" autoPlay muted loop playsInline aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.72)" }}>
           <source src="/assets/gotham-showroom-walk.mp4" type="video/mp4" />
         </video>
         <Pic src="/assets/gotham-store-interior-1.webp" alt="" aria-hidden="true" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) saturate(0.70)" }} />
@@ -682,7 +745,24 @@ function LeadCaptureScene() {
   const emailRef   = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
 
+  const [errors,  setErrors]  = useState<{ name?: string; email?: string }>({});
+  const [status,  setStatus]  = useState<"idle" | "success">("idle");
+
+  const validate = () => {
+    const next: typeof errors = {};
+    const name  = nameRef.current?.value.trim()  ?? "";
+    const email = emailRef.current?.value.trim() ?? "";
+    if (!name)                                         next.name  = "Please enter your name.";
+    if (!email)                                        next.email = "Please enter your email address.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) next.email = "Please enter a valid email address.";
+    return next;
+  };
+
   const handleSubmit = () => {
+    const errs = validate();
+    setErrors(errs);
+    if (Object.keys(errs).length > 0) return;
+
     const name    = nameRef.current?.value.trim()    ?? "";
     const email   = emailRef.current?.value.trim()   ?? "";
     const message = messageRef.current?.value.trim() ?? "";
@@ -692,6 +772,8 @@ function LeadCaptureScene() {
       email   && `Email: ${email}`,
       message && `\nMessage:\n${message}`,
     ].filter(Boolean).join("\n"));
+
+    setStatus("success");
     window.location.href = `mailto:sales@gothamcityjewelers.com?subject=${subject}&body=${body}`;
   };
 
@@ -704,6 +786,10 @@ function LeadCaptureScene() {
     letterSpacing: "0.32em", textTransform: "uppercase",
     color: "rgba(201,168,76,0.78)", marginBottom: "10px",
   };
+  const errorStyle: React.CSSProperties = {
+    display: "block", fontFamily: "var(--f-body)", fontSize: "11px",
+    color: "#ff8a7a", marginTop: "6px", letterSpacing: "0.01em",
+  };
   const onFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     e.currentTarget.style.borderBottomColor = "rgba(201,168,76,0.55)";
   };
@@ -712,21 +798,21 @@ function LeadCaptureScene() {
   };
 
   return (
-    <section style={{ background: "var(--bg-dark-grad)", padding: "var(--s-xl) var(--gutter)", position: "relative", zIndex: 4 }}>
+    <section aria-labelledby="contact-heading" style={{ background: "var(--bg-dark-grad)", padding: "var(--s-xl) var(--gutter)", position: "relative", zIndex: 4 }}>
       <div style={{ maxWidth: "var(--max-w)", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--s-xl)", alignItems: "start" }} className="contact-grid">
 
         <motion.div initial={{ opacity: 0, y: 32 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}>
           <span style={lbl}>Start the Conversation</span>
-          <h2 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h1)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", letterSpacing: "var(--ls-display)", marginTop: "16px", marginBottom: "var(--s-md)" }}>
+          <h2 id="contact-heading" style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h1)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", letterSpacing: "var(--ls-display)", marginTop: "16px", marginBottom: "var(--s-md)" }}>
             Every piece begins<br />with a question.
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "18px", borderTop: "1px solid rgba(201,168,76,0.08)", paddingTop: "var(--s-sm)" }}>
             <a href="tel:+19177570314" style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "var(--c-accent)", fontWeight: 300, letterSpacing: "0.04em", display: "flex", alignItems: "center", gap: "14px" }}>
-              <span style={{ width: "24px", height: "1px", background: "var(--c-accent)", display: "inline-block", flexShrink: 0 }} />
+              <span aria-hidden="true" style={{ width: "24px", height: "1px", background: "var(--c-accent)", display: "inline-block", flexShrink: 0 }} />
               +1 917 757 0314
             </a>
             <a href="mailto:sales@gothamcityjewelers.com" style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.60)", fontWeight: 300, letterSpacing: "0.02em", display: "flex", alignItems: "center", gap: "14px" }}>
-              <span style={{ width: "24px", height: "1px", background: "rgba(240,234,196,0.18)", display: "inline-block", flexShrink: 0 }} />
+              <span aria-hidden="true" style={{ width: "24px", height: "1px", background: "rgba(240,234,196,0.18)", display: "inline-block", flexShrink: 0 }} />
               sales@gothamcityjewelers.com
             </a>
             <p style={{ fontFamily: "var(--f-body)", fontSize: "12px", color: "rgba(240,234,196,0.48)", fontWeight: 300, lineHeight: 1.8, maxWidth: "280px", marginTop: "4px" }}>
@@ -736,38 +822,106 @@ function LeadCaptureScene() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 32 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}>
-          <div style={{ borderTop: "1px solid rgba(201,168,76,0.08)", padding: "26px 0" }}>
-            <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
-              <span style={numStyle}>01</span>
-              <div style={{ flex: 1 }}>
-                <label htmlFor="lc-name" style={fieldLabel}>Your Name</label>
-                <input ref={nameRef} id="lc-name" type="text" placeholder="First and last name" autoComplete="name" style={fieldBase} onFocus={onFocus} onBlur={onBlur} />
+          {/* aria-live region announces success/error state to screen readers */}
+          <div
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            style={{ position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}
+          >
+            {status === "success" ? "Your inquiry has been sent. We will be in touch shortly." : ""}
+            {Object.keys(errors).length > 0 ? `Please fix ${Object.keys(errors).length} error${Object.keys(errors).length > 1 ? "s" : ""} before submitting.` : ""}
+          </div>
+
+          <form
+            onSubmit={e => { e.preventDefault(); handleSubmit(); }}
+            noValidate
+            aria-label="Inquiry form"
+          >
+            <div style={{ borderTop: "1px solid rgba(201,168,76,0.08)", padding: "26px 0" }}>
+              <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
+                <span aria-hidden="true" style={numStyle}>01</span>
+                <div style={{ flex: 1 }}>
+                  <label htmlFor="lc-name" style={fieldLabel}>
+                    Your Name <span aria-hidden="true" style={{ color: "var(--c-accent)" }}>*</span>
+                  </label>
+                  <input
+                    ref={nameRef}
+                    id="lc-name"
+                    type="text"
+                    placeholder="First and last name"
+                    autoComplete="name"
+                    required
+                    aria-required="true"
+                    aria-describedby={errors.name ? "lc-name-error" : undefined}
+                    aria-invalid={errors.name ? "true" : undefined}
+                    style={{ ...fieldBase, borderBottomColor: errors.name ? "rgba(255,138,122,0.6)" : "rgba(201,168,76,0.12)" }}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onChange={() => errors.name && setErrors(e => ({ ...e, name: undefined }))}
+                  />
+                  {errors.name && <span id="lc-name-error" role="alert" style={errorStyle}>{errors.name}</span>}
+                </div>
               </div>
             </div>
-          </div>
-          <div style={{ borderTop: "1px solid rgba(201,168,76,0.08)", padding: "26px 0" }}>
-            <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
-              <span style={numStyle}>02</span>
-              <div style={{ flex: 1 }}>
-                <label htmlFor="lc-email" style={fieldLabel}>Email Address</label>
-                <input ref={emailRef} id="lc-email" type="email" placeholder="your@email.com" autoComplete="email" style={fieldBase} onFocus={onFocus} onBlur={onBlur} />
+
+            <div style={{ borderTop: "1px solid rgba(201,168,76,0.08)", padding: "26px 0" }}>
+              <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
+                <span aria-hidden="true" style={numStyle}>02</span>
+                <div style={{ flex: 1 }}>
+                  <label htmlFor="lc-email" style={fieldLabel}>
+                    Email Address <span aria-hidden="true" style={{ color: "var(--c-accent)" }}>*</span>
+                  </label>
+                  <input
+                    ref={emailRef}
+                    id="lc-email"
+                    type="email"
+                    placeholder="your@email.com"
+                    autoComplete="email"
+                    required
+                    aria-required="true"
+                    aria-describedby={errors.email ? "lc-email-error" : undefined}
+                    aria-invalid={errors.email ? "true" : undefined}
+                    style={{ ...fieldBase, borderBottomColor: errors.email ? "rgba(255,138,122,0.6)" : "rgba(201,168,76,0.12)" }}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onChange={() => errors.email && setErrors(e => ({ ...e, email: undefined }))}
+                  />
+                  {errors.email && <span id="lc-email-error" role="alert" style={errorStyle}>{errors.email}</span>}
+                </div>
               </div>
             </div>
-          </div>
-          <div style={{ borderTop: "1px solid rgba(201,168,76,0.08)", padding: "26px 0" }}>
-            <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
-              <span style={numStyle}>03</span>
-              <div style={{ flex: 1 }}>
-                <label htmlFor="lc-msg" style={fieldLabel}>What are you looking for?</label>
-                <textarea ref={messageRef} id="lc-msg" placeholder="Ring, timepiece, custom piece — whatever helps." rows={3} style={{ ...fieldBase, resize: "none" }} onFocus={onFocus} onBlur={onBlur} />
+
+            <div style={{ borderTop: "1px solid rgba(201,168,76,0.08)", padding: "26px 0" }}>
+              <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
+                <span aria-hidden="true" style={numStyle}>03</span>
+                <div style={{ flex: 1 }}>
+                  <label htmlFor="lc-msg" style={fieldLabel}>What are you looking for?</label>
+                  <textarea
+                    ref={messageRef}
+                    id="lc-msg"
+                    placeholder="Ring, timepiece, custom piece — whatever helps."
+                    rows={3}
+                    style={{ ...fieldBase, resize: "none" }}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          <div style={{ borderTop: "1px solid rgba(201,168,76,0.08)", paddingTop: "28px" }}>
-            <button className="btn-primary" type="button" onClick={handleSubmit} style={{ width: "100%", justifyContent: "center" }}>
-              Send Inquiry →
-            </button>
-          </div>
+
+            <div style={{ borderTop: "1px solid rgba(201,168,76,0.08)", paddingTop: "28px" }}>
+              {status === "success" ? (
+                <p style={{ fontFamily: "var(--f-body)", fontSize: "13px", color: "rgba(201,168,76,0.9)", letterSpacing: "0.04em", lineHeight: 1.8 }}>
+                  Thank you — your inquiry has been sent. We'll be in touch shortly.
+                </p>
+              ) : (
+                <button className="btn-primary" type="submit" style={{ width: "100%", justifyContent: "center" }}>
+                  Send Inquiry
+                </button>
+              )}
+            </div>
+          </form>
         </motion.div>
       </div>
     </section>
@@ -847,7 +1001,7 @@ export default function Home() {
     <>
       {!_loaderShown && <LoadingScreen onDone={handleLoaderDone} />}
       <Nav />
-      <main style={{ background: "var(--bg-void-grad)" }}>
+      <main id="main-content" style={{ background: "var(--bg-void-grad)" }}>
 
         <HeroScene live={loaded} />
         <GoldLine />

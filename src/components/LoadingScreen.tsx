@@ -258,8 +258,19 @@ export function LoadingScreen({ onDone }: LoadingScreenProps) {
 
   return (
     <>
-      {/* LEFT WING */}
+      {/* Screen reader announcement — loading status (visually hidden) */}
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        style={{ position: 'fixed', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', zIndex: 9998 }}
+      >
+        {splitting ? 'Content ready.' : 'Loading Gotham City Jewelers…'}
+      </div>
+
+      {/* LEFT WING — visual only */}
       <motion.div
+        aria-hidden="true"
         animate={{ x: splitting ? '-100%' : '0%' }}
         transition={{ duration: SPLIT_MS / 1000, ease: EASE_SPLIT }}
         style={{ position: 'fixed', top: 0, bottom: 0, left: 0, width: '50%', overflow: 'hidden', zIndex: 9999 }}
@@ -267,8 +278,9 @@ export function LoadingScreen({ onDone }: LoadingScreenProps) {
         <PanelInner phase={phase} side="left" />
       </motion.div>
 
-      {/* RIGHT WING */}
+      {/* RIGHT WING — visual only */}
       <motion.div
+        aria-hidden="true"
         animate={{ x: splitting ? '100%' : '0%' }}
         transition={{ duration: SPLIT_MS / 1000, ease: EASE_SPLIT }}
         style={{ position: 'fixed', top: 0, bottom: 0, right: 0, width: '50%', overflow: 'hidden', zIndex: 9999 }}
@@ -276,8 +288,9 @@ export function LoadingScreen({ onDone }: LoadingScreenProps) {
         <PanelInner phase={phase} side="right" />
       </motion.div>
 
-      {/* Vertical gold seam at split center */}
+      {/* Vertical gold seam at split center — visual only */}
       <motion.div
+        aria-hidden="true"
         animate={{ opacity: splitting ? 0 : 1, scaleY: splitting ? 0.25 : 1 }}
         transition={{ duration: 0.18, ease: 'easeIn' }}
         style={{
