@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gotham — Design Direction</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d0d0d;
+    color: #e8e2d6;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    padding: 32px 24px 60px;
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-size: 13px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .subtitle {
+    font-size: 22px;
+    color: rgba(232,226,214,0.82);
+    margin-bottom: 8px;
+    font-weight: 300;
+    line-height: 1.4;
+  }
+  .desc {
+    font-size: 13px;
+    color: rgba(232,226,214,0.42);
+    margin-bottom: 36px;
+    max-width: 720px;
+    line-height: 1.7;
+  }
+
+  /* ── Direction cards ─────────────────────── */
+  .directions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 48px;
+  }
+  @media (max-width: 800px) { .directions { grid-template-columns: 1fr; } }
+
+  .dir-card {
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .dir-card:hover { border-color: rgba(201,168,76,0.45); transform: translateY(-2px); }
+  .dir-card.selected { border-color: #C9A84C; box-shadow: 0 0 0 2px rgba(201,168,76,0.25); }
+  .dir-card .badge {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: #C9A84C;
+    color: #0d0d0d;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 2px;
+    display: none;
+  }
+  .dir-card.selected .badge { display: block; }
+
+  /* ── Preview panels ─── */
+  .preview {
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+  }
+  .preview-content {
+    position: relative;
+    z-index: 2;
+  }
+  .preview-label {
+    font-size: 8px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .preview-h1 {
+    font-size: 28px;
+    line-height: 1.0;
+    font-style: italic;
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+  .preview-btn {
+    display: inline-block;
+    padding: 9px 22px;
+    font-size: 8px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: default;
+  }
+
+  /* Direction A: Dark Forest (lifted from current) */
+  .preview-a {
+    background: linear-gradient(160deg, #1a3520 0%, #0d1a0f 100%);
+  }
+  .preview-a::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 60%);
+    z-index: 1;
+  }
+  .preview-a .preview-h1 { color: #F0EAC4; }
+  .preview-a .btn { background: #C9A84C; color: #0d1a0f; }
+  .preview-a .img-sim {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 100%;
+    background: radial-gradient(ellipse 80% 60% at 75% 35%, rgba(201,168,76,0.08) 0%, transparent 70%),
+                linear-gradient(135deg, #1a3520 0%, #253318 50%, #1a2e1a 100%);
+    z-index: 0;
+    filter: brightness(1.15);
+  }
+
+  /* Direction B: Champagne Balance (more cream breaks) */
+  .preview-b {
+    background: #F7F0E0;
+  }
+  .preview-b::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(247,240,224,0.95) 0%, rgba(247,240,224,0.6) 50%, transparent 100%);
+    z-index: 1;
+  }
+  .preview-b .preview-label { color: #A88830; }
+  .preview-b .preview-h1 { color: #1e2414; }
+  .preview-b .img-sim {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 70%;
+    background: linear-gradient(135deg, #2c4a2e 0%, #1a3520 50%, #243a20 100%);
+    z-index: 0;
+    opacity: 0.82;
+  }
+  .preview-b .btn { border: 1px solid rgba(30,36,20,0.22); color: #1e2414; background: transparent; }
+
+  /* Direction C: Bottle Green Heritage */
+  .preview-c {
+    background: linear-gradient(160deg, #1B3828 0%, #122A1E 60%, #0E2018 100%);
+  }
+  .preview-c::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%);
+    z-index: 1;
+  }
+  .preview-c .preview-h1 { color: #F0EAC4; }
+  .preview-c .btn { background: #C9A84C; color: #122A1E; }
+  .preview-c .img-sim {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 50% 55% at 80% 30%, rgba(201,168,76,0.12) 0%, transparent 68%),
+      radial-gradient(ellipse 40% 40% at 20% 70%, rgba(18,42,30,0.8) 0%, transparent 80%),
+      linear-gradient(135deg, #1B3828 0%, #253C2E 50%, #1B3828 100%);
+    z-index: 0;
+  }
+
+  /* Direction D: Noir + Gold (more contrast, most dramatic) */
+  .preview-d {
+    background: #080808;
+  }
+  .preview-d::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.3) 45%, transparent 70%);
+    z-index: 1;
+  }
+  .preview-d .preview-h1 { color: #F0EAC4; }
+  .preview-d .btn { border: 1px solid rgba(201,168,76,0.5); color: #C9A84C; background: transparent; }
+  .preview-d .img-sim {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 65% 40%, rgba(201,168,76,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 25% 25%, rgba(20,15,0,0.95) 0%, transparent 70%),
+      linear-gradient(150deg, #1a1208 0%, #0c0a04 50%, #080808 100%);
+    z-index: 0;
+    filter: brightness(1.4);
+  }
+
+  .dir-info {
+    padding: 18px 20px 20px;
+    background: rgba(255,255,255,0.025);
+  }
+  .dir-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #e8e2d6;
+    margin-bottom: 5px;
+    letter-spacing: 0.04em;
+  }
+  .dir-desc {
+    font-size: 12px;
+    color: rgba(232,226,214,0.48);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .dir-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tag {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 2px;
+    border: 1px solid;
+    font-weight: 500;
+  }
+  .tag-green { color: #5aaa7a; border-color: rgba(90,170,122,0.3); }
+  .tag-gold  { color: #C9A84C; border-color: rgba(201,168,76,0.3); }
+  .tag-cream { color: #e8d9a8; border-color: rgba(232,217,168,0.3); }
+  .tag-dark  { color: rgba(232,226,214,0.45); border-color: rgba(232,226,214,0.15); }
+  .tag-rec   { background: rgba(201,168,76,0.12); color: #C9A84C; border-color: rgba(201,168,76,0.35); }
+
+  /* ── Component suggestions ───────────────────────── */
+  .section-title {
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    margin-bottom: 20px;
+    margin-top: 48px;
+    padding-top: 36px;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+
+  .comp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 48px;
+  }
+  @media (max-width: 900px) { .comp-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .comp-grid { grid-template-columns: 1fr; } }
+
+  .comp-card {
+    border: 1px solid rgba(201,168,76,0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .comp-card:hover { border-color: rgba(201,168,76,0.35); }
+  .comp-card.selected { border-color: #C9A84C; }
+
+  .comp-preview {
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Aurora bg preview */
+  .aurora-prev {
+    background: #0f1a0a;
+  }
+  .aurora-prev::before {
+    content: '';
+    position: absolute;
+    top: -30%; left: -15%;
+    width: 65%; height: 65%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(197,164,110,0.28) 0%, transparent 68%);
+    filter: blur(28px);
+    animation: blob1 4s ease-in-out infinite alternate;
+  }
+  .aurora-prev::after {
+    content: '';
+    position: absolute;
+    bottom: -20%; right: -10%;
+    width: 55%; height: 55%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(90,170,122,0.18) 0%, transparent 68%);
+    filter: blur(36px);
+    animation: blob2 5s ease-in-out infinite alternate;
+  }
+  @keyframes blob1 { to { transform: translate(20px, 15px); } }
+  @keyframes blob2 { to { transform: translate(-20px, -12px); } }
+
+  /* Noise/grain texture preview */
+  .noise-prev {
+    background: linear-gradient(135deg, #1a3520 0%, #0d1a0f 100%);
+  }
+  .noise-prev::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.18;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+
+  /* Gradient border preview */
+  .gborder-prev {
+    background: #0d1a0f;
+  }
+  .gborder-inner {
+    width: 100px; height: 60px;
+    border-radius: 3px;
+    padding: 1.5px;
+    background: linear-gradient(135deg, rgba(201,168,76,0.8), rgba(201,168,76,0.1), rgba(201,168,76,0.6));
+    position: relative;
+    z-index: 1;
+  }
+  .gborder-fill {
+    width: 100%; height: 100%;
+    background: #0d1a0f;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #C9A84C;
+  }
+
+  /* Spotlight preview */
+  .spotlight-prev {
+    background: #0d1a0f;
+    overflow: hidden;
+  }
+  .spotlight-beam {
+    position: absolute;
+    width: 140px; height: 200px;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    background: conic-gradient(from 180deg at 50% 0%, transparent 340deg, rgba(201,168,76,0.22) 355deg, rgba(201,168,76,0.22) 365deg, transparent 20deg);
+    filter: blur(2px);
+    animation: spot 3s ease-in-out infinite alternate;
+  }
+  @keyframes spot { to { left: 30%; } }
+
+  /* Shimmer button preview */
+  .shimmer-prev {
+    background: #0d1a0f;
+  }
+  .shimmer-btn {
+    position: relative;
+    padding: 11px 28px;
+    background: #C9A84C;
+    color: #0d1a0f;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 700;
+    overflow: hidden;
+    border-radius: 1px;
+  }
+  .shimmer-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -80%;
+    width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+    transform: skewX(-20deg);
+    animation: shimmer 2.5s ease-in-out infinite;
+  }
+  @keyframes shimmer { to { left: 160%; } }
+
+  /* Magnetic ripple button */
+  .ripple-prev {
+    background: #0d1a0f;
+  }
+  .ripple-btn {
+    position: relative;
+    padding: 11px 28px;
+    border: 1px solid rgba(201,168,76,0.55);
+    color: #C9A84C;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 600;
+    overflow: hidden;
+    border-radius: 1px;
+  }
+  .ripple-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.4);
+    transform: translate(-50%, -50%);
+    animation: ripple-out 2.2s ease-out infinite;
+  }
+  .ripple-ring:nth-child(2) { animation-delay: 0.7s; }
+  .ripple-ring:nth-child(3) { animation-delay: 1.4s; }
+  @keyframes ripple-out {
+    0% { width: 0; height: 0; opacity: 0.9; }
+    100% { width: 160px; height: 80px; opacity: 0; }
+  }
+
+  /* Text gradient preview */
+  .textgrad-prev {
+    background: #0d1a0f;
+  }
+  .metal-text {
+    font-size: 26px;
+    font-style: italic;
+    font-weight: 400;
+    background: linear-gradient(135deg, #F9F3EA 0%, #C5A46E 40%, #C9A84C 55%, #91723F 75%, #C9A84C 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% 200%;
+    animation: gold-shift 3s ease-in-out infinite alternate;
+  }
+  @keyframes gold-shift { to { background-position: 100% 100%; } }
+
+  .comp-info {
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.02);
+  }
+  .comp-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #e8e2d6;
+    margin-bottom: 3px;
+  }
+  .comp-source {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    margin-bottom: 5px;
+  }
+  .comp-desc {
+    font-size: 11px;
+    color: rgba(232,226,214,0.42);
+    line-height: 1.55;
+  }
+  .comp-card.selected .comp-name { color: #C9A84C; }
+
+  /* ── Action ──── */
+  .action-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 16px 32px;
+    background: rgba(13,13,13,0.96);
+    border-top: 1px solid rgba(201,168,76,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+  .selection-summary {
+    font-size: 12px;
+    color: rgba(232,226,214,0.55);
+  }
+  .selection-summary strong {
+    color: #C9A84C;
+    font-weight: 600;
+  }
+  .confirm-btn {
+    padding: 12px 32px;
+    background: #C9A84C;
+    color: #0d0d0d;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    border-radius: 1px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Gotham City Jewelers · Design Audit</h1>
+<p class="subtitle">Choose your premium direction</p>
+<p class="desc">
+  Current site feels heavy because backgrounds are near-black (#0f1a0a) and images are filtered to 45–50% brightness with stacked black gradients.
+  The reference image (Founders Club) uses visible rich green and images at ~65% brightness. Pick the direction that resonates — then choose which effects to add.
+</p>
+
+<!-- ── COLOR DIRECTION ─────────────────────────────── -->
+<div style="font-size:11px;letter-spacing:0.26em;text-transform:uppercase;color:rgba(201,168,76,0.6);margin-bottom:16px;">
+  Step 1 · Colour Direction
+</div>
+
+<div class="directions" id="dir-group">
+
+  <!-- A: Dark Forest Lifted -->
+  <div class="dir-card" data-group="direction" data-choice="A" onclick="selectCard(this, 'dir-group')">
+    <div class="badge">Selected</div>
+    <div class="preview preview-a">
+      <div class="img-sim"></div>
+      <div class="preview-content">
+        <span class="preview-label">Manhattan Diamond District</span>
+        <p class="preview-h1" style="color:#F0EAC4;">Where every stone<br>carries a promise.</p>
+        <span class="preview-btn btn" style="background:#C9A84C;color:#0d1a0f;">Design Your Ring</span>
+      </div>
+    </div>
+    <div class="dir-info">
+      <div class="dir-name">A — Dark Forest Lifted</div>
+      <div class="dir-desc">Current palette shifted lighter. Background raised to #1a3520, images at 60–65% brightness. Feels like a premium woodland estate — recognisably green.</div>
+      <div class="dir-tags">
+        <span class="tag tag-green">Green visible</span>
+        <span class="tag tag-gold">Gold accents</span>
+        <span class="tag tag-dark">Still moody</span>
+        <span class="tag tag-rec">Least change</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- B: Champagne Balance -->
+  <div class="dir-card" data-group="direction" data-choice="B" onclick="selectCard(this, 'dir-group')">
+    <div class="badge">Selected</div>
+    <div class="preview preview-b">
+      <div class="img-sim"></div>
+      <div class="preview-content">
+        <span class="preview-label" style="color:#A88830;">Crafted in New York</span>
+        <p class="preview-h1" style="color:#1e2414;">Where every stone<br>carries a promise.</p>
+        <span class="preview-btn btn" style="border:1px solid rgba(30,36,20,0.22);color:#1e2414;">Design Your Ring</span>
+      </div>
+    </div>
+    <div class="dir-info">
+      <div class="dir-name">B — Champagne Balance</div>
+      <div class="dir-desc">More cream (#F7F0E0) sections breaking the dark narrative — like Cartier.com. Dark sections stay deep green; light sections breathe in warm cream.</div>
+      <div class="dir-tags">
+        <span class="tag tag-cream">Cream breaks</span>
+        <span class="tag tag-green">Deep green</span>
+        <span class="tag tag-gold">Gold rich</span>
+        <span class="tag tag-rec">Most premium</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- C: Bottle Green Heritage — RECOMMENDED -->
+  <div class="dir-card" data-group="direction" data-choice="C" onclick="selectCard(this, 'dir-group')">
+    <div class="badge">Selected</div>
+    <div class="preview preview-c">
+      <div class="img-sim"></div>
+      <div class="preview-content">
+        <span class="preview-label">The Founders Club · Reference</span>
+        <p class="preview-h1" style="color:#F0EAC4;">Where every stone<br>carries a promise.</p>
+        <span class="preview-btn btn" style="background:#C9A84C;color:#122A1E;">Design Your Ring</span>
+      </div>
+    </div>
+    <div class="dir-info">
+      <div class="dir-name">C — Bottle Green Heritage ✦ Recommended</div>
+      <div class="dir-desc">Closest to the reference image. Background #1B3828 — rich, visible bottle green. Images at 62–68% brightness. Radial gold glow at corners. Sophisticated, exclusivity.</div>
+      <div class="dir-tags">
+        <span class="tag tag-green">Rich bottle green</span>
+        <span class="tag tag-gold">Gold bloom</span>
+        <span class="tag tag-cream">Cream text</span>
+        <span class="tag tag-rec">✦ Recommended</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- D: Noir + Gold -->
+  <div class="dir-card" data-group="direction" data-choice="D" onclick="selectCard(this, 'dir-group')">
+    <div class="badge">Selected</div>
+    <div class="preview preview-d">
+      <div class="img-sim"></div>
+      <div class="preview-content">
+        <span class="preview-label">The Vault · Certified Timepieces</span>
+        <p class="preview-h1" style="color:#F0EAC4;">Authenticated.<br>Nothing less.</p>
+        <span class="preview-btn btn" style="border:1px solid rgba(201,168,76,0.5);color:#C9A84C;">Enter the Vault</span>
+      </div>
+    </div>
+    <div class="dir-info">
+      <div class="dir-name">D — Noir + Gold Extreme</div>
+      <div class="dir-desc">True black (#080808) background, gold is the only color. More like a high-watchmaker or jeweller maison (Vacheron Constantin, AP). Maximum contrast.</div>
+      <div class="dir-tags">
+        <span class="tag tag-dark">Near black</span>
+        <span class="tag tag-gold">Gold dominant</span>
+        <span class="tag tag-dark">No green</span>
+        <span class="tag tag-dark">Watches only</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── BACKGROUND EFFECTS ─────────────────────── -->
+<div class="section-title">Step 2 · Background Effects & Animations (multi-select)</div>
+<p style="font-size:12px;color:rgba(232,226,214,0.42);line-height:1.7;margin-bottom:20px;max-width:680px;">
+  These are component-level effects from React Bits, Aceternity UI, and custom shaders. Each can be applied to specific sections rather than globally.
+</p>
+
+<div class="comp-grid" id="fx-group">
+
+  <div class="comp-card" data-group="fx" data-choice="aurora" onclick="toggleComp(this)">
+    <div class="comp-preview aurora-prev">
+      <span style="position:relative;z-index:1;font-size:11px;letter-spacing:0.2em;color:rgba(240,234,196,0.7);text-transform:uppercase;">Aurora</span>
+    </div>
+    <div class="comp-info">
+      <div class="comp-name">Aurora Background</div>
+      <div class="comp-source">React Bits · react-bits.dev</div>
+      <div class="comp-desc">Animated radial blobs creating a soft gold/green light diffusion. Already partially in project as AuroraGold — needs intensity tuning.</div>
+    </div>
+  </div>
+
+  <div class="comp-card" data-group="fx" data-choice="noise" onclick="toggleComp(this)">
+    <div class="comp-preview noise-prev">
+      <span style="position:relative;z-index:1;font-size:11px;letter-spacing:0.2em;color:rgba(240,234,196,0.7);text-transform:uppercase;">Grain</span>
+    </div>
+    <div class="comp-info">
+      <div class="comp-name">Film Grain / Noise Texture</div>
+      <div class="comp-source">CSS + SVG Filter · no library</div>
+      <div class="comp-desc">Subtle animated noise overlay on dark sections. Used by high-end fashion sites (Kenzo, Loewe) for tactile luxury depth. Zero performance cost.</div>
+    </div>
+  </div>
+
+  <div class="comp-card" data-group="fx" data-choice="spotlight" onclick="toggleComp(this)">
+    <div class="comp-preview spotlight-prev">
+      <div class="spotlight-beam"></div>
+      <span style="position:relative;z-index:1;font-size:11px;letter-spacing:0.2em;color:rgba(240,234,196,0.7);text-transform:uppercase;">Spotlight</span>
+    </div>
+    <div class="comp-info">
+      <div class="comp-name">Spotlight / Beam Effect</div>
+      <div class="comp-source">Aceternity UI · ui.aceternity.com</div>
+      <div class="comp-desc">Mouse-tracked spotlight that follows cursor on hero sections. Creates a dramatic "jeweller's loupe" feel. Adds interactivity without distracting from content.</div>
+    </div>
+  </div>
+
+  <div class="comp-card" data-group="fx" data-choice="gborder" onclick="toggleComp(this)">
+    <div class="comp-preview gborder-prev">
+      <div class="gborder-inner">
+        <div class="gborder-fill">Button</div>
+      </div>
+    </div>
+    <div class="comp-info">
+      <div class="comp-name">Animated Gradient Border</div>
+      <div class="comp-source">React Bits / CSS only</div>
+      <div class="comp-desc">Gold gradient that rotates around button/card borders. Draws the eye to CTAs. Use on primary action buttons for premium feel.</div>
+    </div>
+  </div>
+
+  <div class="comp-card" data-group="fx" data-choice="particles" onclick="toggleComp(this)">
+    <div class="comp-preview" style="background:linear-gradient(160deg,#1B3828,#0E2018);overflow:hidden;">
+      <!-- floating dots -->
+      <div style="position:absolute;inset:0;">
+        <div style="position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(201,168,76,0.6);top:25%;left:35%;animation:float1 4s ease-in-out infinite;"></div>
+        <div style="position:absolute;width:2px;height:2px;border-radius:50%;background:rgba(201,168,76,0.35);top:60%;left:65%;animation:float1 5s ease-in-out infinite reverse;"></div>
+        <div style="position:absolute;width:2px;height:2px;border-radius:50%;background:rgba(201,168,76,0.45);top:40%;left:75%;animation:float1 6s ease-in-out infinite;"></div>
+        <div style="position:absolute;width:1px;height:1px;border-radius:50%;background:rgba(240,234,196,0.4);top:70%;left:20%;animation:float1 3.5s ease-in-out infinite reverse;"></div>
+        <style>@keyframes float1{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}</style>
+      </div>
+      <span style="position:relative;z-index:1;font-size:11px;letter-spacing:0.2em;color:rgba(240,234,196,0.7);text-transform:uppercase;">Particles</span>
+    </div>
+    <div class="comp-info">
+      <div class="comp-name">Floating Gold Particles</div>
+      <div class="comp-source">tsParticles / React Bits</div>
+      <div class="comp-desc">Slow-drifting gold dust on hero/CTA sections. Very subtle. Evokes diamond dust. Pure CSS alternative possible for zero bundle cost.</div>
+    </div>
+  </div>
+
+  <div class="comp-card" data-group="fx" data-choice="grid" onclick="toggleComp(this)">
+    <div class="comp-preview" style="background:#0d1a0f;overflow:hidden;">
+      <svg style="position:absolute;inset:0;opacity:0.12" width="100%" height="100%">
+        <defs>
+          <pattern id="g" width="32" height="32" patternUnits="userSpaceOnUse">
+            <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#C9A84C" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#g)" />
+      </svg>
+      <span style="position:relative;z-index:1;font-size:11px;letter-spacing:0.2em;color:rgba(240,234,196,0.7);text-transform:uppercase;">Grid</span>
+    </div>
+    <div class="comp-info">
+      <div class="comp-name">Subtle Gold Grid / Dot Pattern</div>
+      <div class="comp-source">Aceternity UI / SVG pattern</div>
+      <div class="comp-desc">Faint architectural grid or dot pattern for text-heavy sections. Like graph paper — adds structure and sophistication without competing with content.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── BUTTON ANIMATIONS ───────────────────────── -->
+<div class="section-title">Step 3 · Button & CTA Animations (multi-select)</div>
+
+<div class="comp-grid" id="btn-group">
+
+  <div class="comp-card" data-group="btn" data-choice="shimmer" onclick="toggleComp(this)">
+    <div class="comp-preview shimmer-prev">
+      <div class="shimmer-btn">Design Your Ring</div>
+    </div>
+    <div class="comp-info">
+      <div class="comp-name">Shimmer Sweep</div>
+      <div class="comp-source">CSS only · already in project</div>
+      <div class="comp-desc">Light sweep on hover/idle. Currently only on hover — make it idle-animated on primary CTAs to draw attention even without interaction.</div>
+    </div>
+  </div>
+
+  <div class="comp-card" data-group="btn" data-choice="ripple" onclick="toggleComp(this)">
+    <div class="comp-preview ripple-prev">
+      <div class="ripple-btn">
+        Enter the Vault
+        <div class="ripple-ring"></div>
+        <div class="ripple-ring"></div>
+        <div class="ripple-ring"></div>
+      </div>
+    </div>
+    <div class="comp-info">
+      <div class="comp-name">Pulse Rings (idle)</div>
+      <div class="comp-source">Framer Motion / CSS</div>
+      <div class="comp-desc">Concentric gold rings expand outward from outline buttons. Used on secondary "Enter the Vault" CTAs to add life without being loud.</div>
+    </div>
+  </div>
+
+  <div class="comp-card" data-group="btn" data-choice="goldtext" onclick="toggleComp(this)">
+    <div class="comp-preview textgrad-prev">
+      <div class="metal-text">Yours.</div>
+    </div>
+    <div class="comp-info">
+      <div class="comp-name">Animated Metallic Gold Text</div>
+      <div class="comp-source">CSS gradient animation</div>
+      <div class="comp-desc">Gold gradient that slowly shifts across headline text — simulates light reflecting off metal. Perfect for "Stage 03 · Yours." and hero subheads.</div>
+    </div>
+  </div>
+
+  <div class="comp-card" data-group="btn" data-choice="magnetic" onclick="toggleComp(this)">
+    <div class="comp-preview" style="background:#0d1a0f;">
+      <div style="padding:11px 28px;background:#C9A84C;color:#0d1a0f;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;font-weight:700;position:relative;">
+        Design Your Ring
+        <div style="position:absolute;inset:-8px;border:1px dashed rgba(201,168,76,0.2);pointer-events:none;"></div>
+      </div>
+    </div>
+    <div class="comp-info">
+      <div class="comp-name">Magnetic Attract (enhanced)</div>
+      <div class="comp-source">Framer Motion · already in project</div>
+      <div class="comp-desc">Already using MagneticBtn — upgrade spring physics (softer stiffness, add rotation) and increase attraction radius for more dramatic pull on desktop.</div>
+    </div>
+  </div>
+
+  <div class="comp-card" data-group="btn" data-choice="fill" onclick="toggleComp(this)">
+    <div class="comp-preview" style="background:#0d1a0f;">
+      <div style="position:relative;padding:11px 28px;border:1px solid rgba(201,168,76,0.5);color:#C9A84C;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;font-weight:600;overflow:hidden;">
+        View Timepieces
+        <div style="position:absolute;inset:0;background:#C9A84C;transform:scaleX(0.4);transform-origin:left;opacity:0.08;transition:transform 0.4s ease;"></div>
+      </div>
+    </div>
+    <div class="comp-info">
+      <div class="comp-name">Fill Slide on Hover</div>
+      <div class="comp-source">CSS + Framer Motion</div>
+      <div class="comp-desc">Gold fill slides in from left on hover — outline becomes filled. Smooth, satisfying micro-interaction for secondary CTAs (View Timepieces, Learn More).</div>
+    </div>
+  </div>
+
+  <div class="comp-card" data-group="btn" data-choice="underline" onclick="toggleComp(this)">
+    <div class="comp-preview" style="background:#F7F0E0;flex-direction:column;gap:12px;">
+      <div style="font-size:13px;color:#1e2414;letter-spacing:0.04em;position:relative;padding-bottom:3px;">
+        Design Your Ring
+        <div style="position:absolute;bottom:0;left:0;width:100%;height:1px;background:linear-gradient(to right,#A88830,#C9A84C);animation:wipe 2s ease-in-out infinite alternate;transform-origin:left;"></div>
+        <style>@keyframes wipe{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}</style>
+      </div>
+      <div style="font-size:13px;color:#1e2414;letter-spacing:0.04em;">Explore the Collection</div>
+    </div>
+    <div class="comp-info">
+      <div class="comp-name">Gold Underline Reveal (cream sections)</div>
+      <div class="comp-source">CSS animation</div>
+      <div class="comp-desc">For text links and nav items in cream/light sections — a gold line draws under the text on hover. Elegant, minimal, Maison-quality.</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="height:70px;"></div>
+
+<div class="action-bar">
+  <div class="selection-summary" id="summary">Click options above to select your preferences →</div>
+  <button class="confirm-btn" onclick="submitSelections()">Confirm Selections →</button>
+</div>
+
+<script>
+const selections = { direction: null, fx: [], btn: [] };
+
+function selectCard(el, group) {
+  document.querySelectorAll(`[data-group="${group}"]`).forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selections[group] = el.dataset.choice;
+  updateSummary();
+}
+
+function toggleComp(el) {
+  el.classList.toggle('selected');
+  const g = el.dataset.group;
+  const v = el.dataset.choice;
+  if (el.classList.contains('selected')) {
+    if (!selections[g]) selections[g] = [];
+    if (!selections[g].includes(v)) selections[g].push(v);
+  } else {
+    selections[g] = selections[g].filter(x => x !== v);
+  }
+  updateSummary();
+}
+
+function updateSummary() {
+  const parts = [];
+  if (selections.direction) parts.push(`Direction <strong>${selections.direction}</strong>`);
+  if (selections.fx && selections.fx.length) parts.push(`Effects: <strong>${selections.fx.join(', ')}</strong>`);
+  if (selections.btn && selections.btn.length) parts.push(`Buttons: <strong>${selections.btn.join(', ')}</strong>`);
+  document.getElementById('summary').innerHTML = parts.length ? parts.join(' · ') : 'Click options above →';
+}
+
+function submitSelections() {
+  const msg = `Direction: ${selections.direction || 'none'} | Effects: ${(selections.fx||[]).join(',')} | Buttons: ${(selections.btn||[]).join(',')}`;
+  // Try superpowers helper
+  if (window.__superpowers_select) {
+    window.__superpowers_select(msg);
+  }
+  alert(`Selections recorded:\n\n${msg}\n\nTell Claude in the chat to proceed.`);
+}
+</script>
+</body>
+</html>
