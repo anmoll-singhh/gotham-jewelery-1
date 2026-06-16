@@ -51,9 +51,9 @@ const BAT_D =
 const EASE_DRAW: [number, number, number, number] = [0.42, 0, 0.58, 1]
 const EASE_SPLIT: [number, number, number, number] = [0.76, 0, 0.24, 1]
 
-const DRAW_MS = 2800   // bat trace duration
-const PAUSE_MS = 500    // hold at complete
-const SPLIT_MS = 920    // split animation duration
+const DRAW_MS = 1500   // bat trace duration
+const PAUSE_MS = 250    // hold at complete
+const SPLIT_MS = 650    // split animation duration
 
 type Phase = 'drawing' | 'complete' | 'splitting' | 'gone'
 
@@ -180,7 +180,7 @@ function PanelInner({ phase, side }: { phase: Phase; side: 'left' | 'right' }) {
       {/* Top gold hairline — draws L→R */}
       <motion.div
         initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-        transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+        transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
         style={{
           position: 'absolute', top: '11%', left: 0, right: 0, height: '1px',
           background: 'linear-gradient(90deg, transparent, rgba(197,164,110,.12) 15%, rgba(197,164,110,.52) 50%, rgba(197,164,110,.12) 85%, transparent)',
@@ -190,7 +190,7 @@ function PanelInner({ phase, side }: { phase: Phase; side: 'left' | 'right' }) {
       {/* Bottom gold hairline — draws R→L */}
       <motion.div
         initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-        transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1], delay: 0.22 }}
+        transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
         style={{
           position: 'absolute', bottom: '11%', left: 0, right: 0, height: '1px',
           background: 'linear-gradient(90deg, transparent, rgba(197,164,110,.12) 15%, rgba(197,164,110,.52) 50%, rgba(197,164,110,.12) 85%, transparent)',

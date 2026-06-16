@@ -131,7 +131,7 @@ export function WatchCanvas({
 
     const resize = () => {
       const rawDpr = window.devicePixelRatio || 1;
-      const dpr = Math.min(rawDpr, 2.5);
+      const dpr = Math.min(rawDpr, 3);
       canvas.width  = canvas.offsetWidth  * dpr;
       canvas.height = canvas.offsetHeight * dpr;
       const ctx = canvas.getContext("2d")!;
@@ -238,7 +238,7 @@ export function WatchCanvas({
   return (
     <div
       ref={mobileWrapRef}
-      style={{ position: "relative", height: isMobile ? `${scrubVh + 100}vh` : "auto" }}
+      style={{ position: "relative", height: isMobile ? `${scrubVh + 100}vh` : "auto", background: "var(--c-void)" }}
     >
       <div
         ref={containerRef}
