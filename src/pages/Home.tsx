@@ -243,7 +243,7 @@ function StoneJourneyScene() {
   };
   const stageBody: React.CSSProperties = {
     fontFamily: "var(--f-body)", fontSize: "var(--t-body)",
-    color: "rgba(240,234,196,0.70)", fontWeight: 300,
+    color: "rgba(240,234,196,0.90)", fontWeight: 300,
     lineHeight: 1.85, maxWidth: "300px", marginTop: "22px", letterSpacing: "0.012em",
   };
 
@@ -300,7 +300,8 @@ function StoneJourneyScene() {
         </div>
       </div>
 
-      {/* Mobile layout */}
+      {/* Mobile layout — additional overlay behind text for contrast */}
+      <div className="show-mobile-only" style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, rgba(0,0,0,0.52) 0%, rgba(0,0,0,0.28) 60%, transparent 100%)", pointerEvents: "none", zIndex: 9 }} />
       <div className="show-mobile-only" style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", gap: "clamp(48px, 10vw, 72px)", padding: "var(--s-xl) var(--gutter)", minHeight: "100%", justifyContent: "center" }}>
         {[
           { num: "01", label: "The Earth",    title: "Rough.",      body: "Every diamond begins as carbon under pressure — millions of years compressed into light. We source only what passes our loupe on day one." },
@@ -394,11 +395,11 @@ function QuotePanel() {
               transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: i * 0.13 }}
               style={{
                 fontFamily:    "var(--f-display)",
-                fontSize:      "clamp(28px, 4.4vw, 62px)",
+                fontSize:      "clamp(30px, 4.4vw, 62px)",
                 color:         i === 2 ? "var(--c-accent-rich)" : "var(--c-text-dark)",
                 fontStyle:     "italic",
-                fontWeight:    400,
-                lineHeight:    1.22,
+                fontWeight:    500,
+                lineHeight:    1.25,
                 letterSpacing: "var(--ls-display)",
                 margin:        0,
                 paddingBottom: "0.06em",
@@ -416,7 +417,7 @@ function QuotePanel() {
           style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "11px" }}
         >
           <div style={{ width: "30px", height: "1px", background: "var(--c-accent-rich)", opacity: 0.55 }} />
-          <span style={{ fontFamily: "var(--f-label)", fontSize: "9px", letterSpacing: "var(--ls-label)", textTransform: "uppercase", color: "var(--c-accent-rich)" }}>
+          <span style={{ fontFamily: "var(--f-label)", fontSize: "10px", letterSpacing: "var(--ls-label)", textTransform: "uppercase", color: "var(--c-accent-rich)" }}>
             Gotham City Jewelers · Est. 1985 · Manhattan Diamond District
           </span>
         </motion.div>
@@ -637,13 +638,28 @@ function StoreScene() {
       <div
         className="show-mobile-only store-mobile-scroll"
         style={{
-          display: "none", flexDirection: "row",
-          overflowX: "auto", overflowY: "hidden",
-          scrollSnapType: "x mandatory",
+          display: "none", flexDirection: "column",
           position: "relative", zIndex: 10,
-          scrollbarWidth: "none",
         }}
       >
+        {/* Swipe hint */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", padding: "14px var(--gutter) 10px", position: "relative", zIndex: 15 }}>
+          <span style={{ fontFamily: "var(--f-label)", fontSize: "9px", letterSpacing: "0.32em", textTransform: "uppercase", color: "rgba(201,168,76,0.45)" }}>Swipe</span>
+          <span style={{ fontSize: "10px", color: "rgba(201,168,76,0.45)" }}>→</span>
+        </div>
+        {/* Scroll track */}
+        <div style={{
+          display: "flex", flexDirection: "row",
+          overflowX: "auto", overflowY: "hidden",
+          scrollSnapType: "x mandatory",
+          scrollbarWidth: "none",
+          paddingLeft: "var(--gutter)",
+          paddingBottom: "2px",
+          gap: "12px",
+          position: "relative",
+        }}>
+        {/* Right-fade gradient overlay */}
+        <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: "60px", background: "linear-gradient(to right, transparent, rgba(30,48,18,0.85))", pointerEvents: "none", zIndex: 12 }} />
         {[
           { img: "/assets/gotham-store-interior-1.webp", label: "23 W 47th Street · Manhattan",    title: "Step inside.",              body: "Monday – Friday, 9am to 5pm. Walk-ins welcome.", cta: null },
           { img: "/assets/gotham-store-interior-2.webp", label: "The Collection",                   title: "Every piece authenticated.", body: "Rolex, Patek, AP, Cartier, RM — each cleared our 14-point inspection.", cta: { label: "View Timepieces", href: "/timepieces" } },
@@ -651,10 +667,11 @@ function StoreScene() {
         ].map((s, i) => (
           <div key={i} style={{
             position: "relative",
-            width: "100vw", height: "78vh",
+            width: "calc(88vw - var(--gutter))", height: "72vh",
             flexShrink: 0,
             scrollSnapAlign: "start",
             overflow: "hidden",
+            borderRadius: "2px",
           }}>
             <Pic src={s.img} alt="" aria-hidden="true" loading={i === 0 ? "eager" : "lazy"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.75) saturate(0.88)" }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.12) 55%, transparent 100%)" }} />
@@ -666,6 +683,7 @@ function StoreScene() {
             </div>
           </div>
         ))}
+        </div>{/* end scroll track */}
       </div>
     </section>
   );

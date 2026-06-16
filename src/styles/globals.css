@@ -84,7 +84,7 @@ ol {
   to   { background-position: 100% 50% }
 }
 
-/* btn-primary: continuous idle shimmer (8s) + fast on hover (0.85s) */
+/* btn-primary: subtle sweep on hover only (no idle animation) */
 .btn-primary::before {
   content: '';
   position: absolute;
@@ -94,12 +94,11 @@ ol {
   height: 100%;
   background: linear-gradient(90deg,
       transparent 0%,
-      rgba(237, 232, 224, 0.28) 50%,
+      rgba(237, 232, 224, 0.22) 50%,
       transparent 100%);
   transform: skewX(-25deg);
   pointer-events: none;
   z-index: 1;
-  animation: shimmer-sweep 8s linear infinite;
 }
 
 .btn-primary:hover::before {
@@ -119,7 +118,7 @@ ol {
   background: var(--c-accent);
   color: var(--c-void);
   font-family: var(--f-label);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: var(--ls-cta);
   text-transform: uppercase;
@@ -155,7 +154,7 @@ ol {
   background-position: 100% 0;
   color: var(--c-white);
   font-family: var(--f-label);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 500;
   letter-spacing: var(--ls-cta);
   text-transform: uppercase;

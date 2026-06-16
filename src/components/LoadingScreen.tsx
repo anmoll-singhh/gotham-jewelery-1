@@ -51,8 +51,8 @@ const BAT_D =
 const EASE_DRAW: [number, number, number, number] = [0.42, 0, 0.58, 1]
 const EASE_SPLIT: [number, number, number, number] = [0.76, 0, 0.24, 1]
 
-const DRAW_MS = 1500   // bat trace duration
-const PAUSE_MS = 250    // hold at complete
+const DRAW_MS = 2200   // bat trace duration
+const PAUSE_MS = 700    // hold at complete
 const SPLIT_MS = 650    // split animation duration
 
 type Phase = 'drawing' | 'complete' | 'splitting' | 'gone'
