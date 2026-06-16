@@ -422,7 +422,8 @@ function FeaturedWatches({ activeBrand, sectionRef }: { activeBrand: string; sec
                   to={brand === "All" ? "/timepieces" : `/timepieces?brand=${encodeURIComponent(brand)}`}
                   style={{
                     fontFamily:    "var(--f-label)",
-                    fontSize:      "11px",
+                    fontSize:      "9px",
+                    fontWeight:    600,
                     letterSpacing: "var(--ls-label)",
                     textTransform: "uppercase",
                     padding:       "10px 20px",
