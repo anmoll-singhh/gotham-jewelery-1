@@ -1225,7 +1225,8 @@ button {
 }
 
 /* ── Store mobile horizontal scroll: hide native scrollbar ─── */
-.store-mobile-scroll::-webkit-scrollbar {
+.store-mobile-scroll::-webkit-scrollbar,
+.store-scroll-inner::-webkit-scrollbar {
   display: none;
 }
 

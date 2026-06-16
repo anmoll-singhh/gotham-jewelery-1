@@ -648,7 +648,7 @@ function StoreScene() {
           <span style={{ fontSize: "10px", color: "rgba(201,168,76,0.45)" }}>→</span>
         </div>
         {/* Scroll track */}
-        <div style={{
+        <div className="store-scroll-inner" style={{
           display: "flex", flexDirection: "row",
           overflowX: "auto", overflowY: "hidden",
           scrollSnapType: "x mandatory",
