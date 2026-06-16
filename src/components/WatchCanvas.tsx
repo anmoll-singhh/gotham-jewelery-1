@@ -74,10 +74,6 @@ export function WatchCanvas({
       targetFrame.current = Math.round(progress * (frames.current.length - 1));
     }
     onProgressRef.current?.(progress);
-    if (entryOverlayRef.current) {
-      const fadeProgress = Math.min(1, progress / 0.03);
-      entryOverlayRef.current.style.opacity = String(1 - fadeProgress);
-    }
   }, []);
 
   // ─── Phase 1: Probe for frames (all devices — mobile also gets canvas) ─
@@ -274,7 +270,7 @@ export function WatchCanvas({
           <img
             src={mode === "detecting"
               ? `${framesPath}/frame0001.jpg`
-              : `${framesPath}/frame0061.jpg`}
+              : `${framesPath}/frame0001.jpg`}
             alt=""
             aria-hidden="true"
             style={{
@@ -310,7 +306,7 @@ export function WatchCanvas({
           style={{
             position: "absolute", inset: 0,
             background: "var(--c-void)", zIndex: 5,
-            pointerEvents: "none", opacity: 1,
+            pointerEvents: "none", opacity: 0,
           }}
         />
 
