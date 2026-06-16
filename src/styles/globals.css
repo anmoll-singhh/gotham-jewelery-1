@@ -1230,6 +1230,15 @@ button {
   display: none;
 }
 
+/* ── Contact form field placeholders ─────────────────────── */
+input::placeholder,
+textarea::placeholder {
+  color: rgba(240, 234, 196, 0.38);
+  font-family: var(--f-body);
+  font-weight: 300;
+  font-style: italic;
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    SAFARI / CROSS-BROWSER COMPATIBILITY
    Fixes for iOS Safari 15+, Safari 16+ desktop, and Firefox.

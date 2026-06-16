@@ -19,7 +19,7 @@ import {
   useCallback,
   useEffect,
 } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useAnimate, stagger } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
@@ -510,6 +510,72 @@ function NightRevealScene() {
 
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// S5-MOBILE — full-width snap-scroll cards with dot indicator
+// ═══════════════════════════════════════════════════════════════════════════════
+const STORE_CARDS = [
+  { img: "/assets/gotham-store-interior-1.webp", label: "23 W 47th Street · Manhattan",    title: "Step inside.",              body: "Monday – Friday, 9am to 5pm. Walk-ins welcome.",                                                                   cta: null },
+  { img: "/assets/gotham-store-interior-2.webp", label: "The Collection",                   title: "Every piece authenticated.", body: "Rolex, Patek, AP, Cartier, RM — each cleared our 14-point inspection.", cta: { label: "View Timepieces",            href: "/timepieces"          } },
+  { img: "/assets/gotham-diamond-macro.webp",    label: "Private Consultation",             title: "Begin with a conversation.", body: "Same-day response. No pressure. No minimums.",                          cta: { label: "Call +1 917 757 0314",       href: "tel:+19177570314"      } },
+] as const;
+
+function StoreMobileCards() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const idx = Math.round(el.scrollLeft / el.offsetWidth);
+      setActiveIdx(Math.min(Math.max(idx, 0), STORE_CARDS.length - 1));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <div className="show-mobile-only" style={{ display: "none", flexDirection: "column", position: "relative", zIndex: 10 }}>
+      {/* Snap-scroll track */}
+      <div
+        ref={trackRef}
+        className="store-scroll-inner"
+        style={{
+          display: "flex", flexDirection: "row",
+          overflowX: "auto", overflowY: "hidden",
+          scrollSnapType: "x mandatory",
+          scrollbarWidth: "none",
+        }}
+      >
+        {STORE_CARDS.map((s, i) => (
+          <div key={i} style={{ position: "relative", width: "100vw", height: "80vh", flexShrink: 0, scrollSnapAlign: "start", overflow: "hidden" }}>
+            <Pic src={s.img} alt="" aria-hidden="true" loading={i === 0 ? "eager" : "lazy"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.72) saturate(0.88)" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.08) 55%, transparent 100%)" }} />
+            <div style={{ position: "relative", zIndex: 10, padding: "var(--gutter)", height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+              <span style={lbl}>{s.label}</span>
+              <h3 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h2)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", marginBottom: "10px" }}>{s.title}</h3>
+              <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-body)", color: "rgba(240,234,196,0.82)", fontWeight: 300, lineHeight: 1.75, marginBottom: s.cta ? "20px" : "0" }}>{s.body}</p>
+              {s.cta && <MagneticBtn href={s.cta.href}><span className="btn-outline">{s.cta.label}</span></MagneticBtn>}
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* Dot indicator */}
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", padding: "16px 0 20px" }}>
+        {STORE_CARDS.map((_, i) => (
+          <motion.div
+            key={i}
+            animate={{ width: i === activeIdx ? 20 : 6, opacity: i === activeIdx ? 1 : 0.35 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            style={{ height: "2px", background: "var(--c-accent)", borderRadius: "2px" }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // S5 — STORE WALK-THROUGH  (parallax showroom — 3 depth layers)
 // Final layer ends with single direct action: Call Now
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -634,57 +700,8 @@ function StoreScene() {
         </div>
       </div>
 
-      {/* Mobile fallback — horizontal snap scroll, 88vw cards peek the next */}
-      <div
-        className="show-mobile-only store-mobile-scroll"
-        style={{
-          display: "none", flexDirection: "column",
-          position: "relative", zIndex: 10,
-        }}
-      >
-        {/* Swipe hint */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", padding: "14px var(--gutter) 10px", position: "relative", zIndex: 15 }}>
-          <span style={{ fontFamily: "var(--f-label)", fontSize: "9px", letterSpacing: "0.32em", textTransform: "uppercase", color: "rgba(201,168,76,0.45)" }}>Swipe</span>
-          <span style={{ fontSize: "10px", color: "rgba(201,168,76,0.45)" }}>→</span>
-        </div>
-        {/* Scroll track */}
-        <div className="store-scroll-inner" style={{
-          display: "flex", flexDirection: "row",
-          overflowX: "auto", overflowY: "hidden",
-          scrollSnapType: "x mandatory",
-          scrollbarWidth: "none",
-          paddingLeft: "var(--gutter)",
-          paddingBottom: "2px",
-          gap: "12px",
-          position: "relative",
-        }}>
-        {/* Right-fade gradient overlay */}
-        <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: "60px", background: "linear-gradient(to right, transparent, rgba(30,48,18,0.85))", pointerEvents: "none", zIndex: 12 }} />
-        {[
-          { img: "/assets/gotham-store-interior-1.webp", label: "23 W 47th Street · Manhattan",    title: "Step inside.",              body: "Monday – Friday, 9am to 5pm. Walk-ins welcome.", cta: null },
-          { img: "/assets/gotham-store-interior-2.webp", label: "The Collection",                   title: "Every piece authenticated.", body: "Rolex, Patek, AP, Cartier, RM — each cleared our 14-point inspection.", cta: { label: "View Timepieces", href: "/timepieces" } },
-          { img: "/assets/gotham-diamond-macro.webp",    label: "Private Consultation",             title: "Begin with a conversation.", body: "Same-day response. No pressure. No minimums.", cta: { label: "Call +1 917 757 0314", href: "tel:+19177570314" } },
-        ].map((s, i) => (
-          <div key={i} style={{
-            position: "relative",
-            width: "calc(88vw - var(--gutter))", height: "72vh",
-            flexShrink: 0,
-            scrollSnapAlign: "start",
-            overflow: "hidden",
-            borderRadius: "2px",
-          }}>
-            <Pic src={s.img} alt="" aria-hidden="true" loading={i === 0 ? "eager" : "lazy"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.75) saturate(0.88)" }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.12) 55%, transparent 100%)" }} />
-            <div style={{ position: "relative", zIndex: 10, padding: "var(--gutter)", height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
-              <span style={lbl}>{s.label}</span>
-              <h3 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h2)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", marginBottom: "10px" }}>{s.title}</h3>
-              <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-body)", color: "rgba(240,234,196,0.72)", fontWeight: 300, lineHeight: 1.75, marginBottom: s.cta ? "20px" : "0" }}>{s.body}</p>
-              {s.cta && <MagneticBtn href={s.cta.href}><span className="btn-outline">{s.cta.label}</span></MagneticBtn>}
-            </div>
-          </div>
-        ))}
-        </div>{/* end scroll track */}
-      </div>
+      {/* Mobile fallback — full-width snap scroll, one card at a time */}
+      <StoreMobileCards />
     </section>
   );
 }
@@ -693,6 +710,73 @@ function StoreScene() {
 // ═══════════════════════════════════════════════════════════════════════════════
 // S6 — CONTACT  (editorial numbered form)
 // ═══════════════════════════════════════════════════════════════════════════════
+
+const SEND_CHARS = "Send Inquiry".split("");
+
+function AnimatedSendButton({ onClick }: { onClick: () => void }) {
+  const [scope, animate] = useAnimate();
+
+  const onHoverStart = () => {
+    void animate(".sc-top", { y: "-110%", opacity: 0 }, {
+      delay: stagger(0.028), duration: 0.32, ease: [0.76, 0, 0.24, 1],
+    });
+    void animate(".sc-bot", { y: "0%", opacity: 1 }, {
+      delay: stagger(0.028), duration: 0.32, ease: [0.76, 0, 0.24, 1],
+    });
+    void animate(".sc-arrow", { x: 10 }, { duration: 0.38, ease: [0.16, 1, 0.3, 1] });
+  };
+
+  const onHoverEnd = () => {
+    void animate(".sc-top", { y: "0%", opacity: 1 }, {
+      delay: stagger(0.02, { from: "last" }), duration: 0.26,
+    });
+    void animate(".sc-bot", { y: "110%", opacity: 0 }, {
+      delay: stagger(0.02, { from: "last" }), duration: 0.26,
+    });
+    void animate(".sc-arrow", { x: 0 }, { duration: 0.28 });
+  };
+
+  return (
+    <motion.button
+      ref={scope}
+      type="button"
+      onClick={onClick}
+      className="btn-primary"
+      onHoverStart={onHoverStart}
+      onHoverEnd={onHoverEnd}
+      whileTap={{ scale: 0.97 }}
+      style={{ width: "100%", justifyContent: "center", gap: 0, position: "relative" }}
+    >
+      {/* Visible letter row */}
+      <span style={{ display: "inline-flex", position: "relative", overflow: "hidden" }}>
+        <span style={{ display: "inline-flex" }}>
+          {SEND_CHARS.map((c, i) => (
+            <motion.span key={`t${i}`} className="sc-top" style={{ display: "inline-block" }}>
+              {c === " " ? " " : c}
+            </motion.span>
+          ))}
+        </span>
+        {/* Hidden row that rises from below on hover */}
+        <span aria-hidden style={{ position: "absolute", inset: 0, display: "inline-flex" }}>
+          {SEND_CHARS.map((c, i) => (
+            <motion.span
+              key={`b${i}`}
+              className="sc-bot"
+              initial={{ y: "110%", opacity: 0 }}
+              style={{ display: "inline-block" }}
+            >
+              {c === " " ? " " : c}
+            </motion.span>
+          ))}
+        </span>
+      </span>
+      <motion.span className="sc-arrow" style={{ marginLeft: 12, display: "inline-block" }}>
+        →
+      </motion.span>
+    </motion.button>
+  );
+}
+
 const fieldBase: React.CSSProperties = {
   width: "100%", background: "transparent", border: "none",
   borderBottom: "1px solid rgba(201,168,76,0.12)", padding: "10px 0 14px",
@@ -787,9 +871,7 @@ function LeadCaptureScene() {
             </div>
           </div>
           <div style={{ borderTop: "1px solid rgba(201,168,76,0.08)", paddingTop: "28px" }}>
-            <button className="btn-primary" type="button" onClick={handleSubmit} style={{ width: "100%", justifyContent: "center" }}>
-              Send Inquiry →
-            </button>
+            <AnimatedSendButton onClick={handleSubmit} />
           </div>
         </motion.div>
       </div>

@@ -107,20 +107,21 @@ export function Nav() {
                 onClick={scrollInstantToTop}
                 style={{
                   fontFamily:    "var(--f-label)",
-                  fontSize:      "11px",
-                  letterSpacing: "0.20em",
+                  fontSize:      "12px",
+                  letterSpacing: "0.18em",
                   textTransform: "uppercase",
                   color:         location.pathname === link.href ? "var(--c-accent)" : "var(--c-text)",
-                  opacity:       location.pathname === link.href ? 1 : 0.65,
+                  opacity:       location.pathname === link.href ? 1 : 0.85,
                   transition:    "opacity 0.25s var(--ease-ui), color 0.25s var(--ease-ui)",
                   display:       "flex",
                   alignItems:    "center",
                   gap:           "5px",
+                  textShadow:    scrolled ? "none" : "0 1px 8px rgba(0,0,0,0.55)",
                 }}
                 onMouseEnter={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.color = "var(--c-accent)"; }}
                 onMouseLeave={e => {
                   const active = location.pathname === link.href;
-                  e.currentTarget.style.opacity = active ? "1" : "0.65";
+                  e.currentTarget.style.opacity = active ? "1" : "0.85";
                   e.currentTarget.style.color   = active ? "var(--c-accent)" : "var(--c-text)";
                 }}
               >
@@ -166,16 +167,16 @@ export function Nav() {
                               onClick={() => { setOpenDropdown(null); scrollInstantToTop(); }}
                               style={{
                                 display:       "block",
-                                padding:       "8px 20px",
+                                padding:       "10px 20px",
                                 fontFamily:    "var(--f-label)",
-                                fontSize:      "11px",
-                                letterSpacing: "0.18em",
+                                fontSize:      "12px",
+                                letterSpacing: "0.16em",
                                 textTransform: "uppercase",
-                                color:         "rgba(240,234,196,0.5)",
+                                color:         "rgba(240,234,196,0.78)",
                                 transition:    "color 0.18s ease, background 0.18s ease",
                               }}
-                              onMouseEnter={e => { e.currentTarget.style.color = "var(--c-accent)"; e.currentTarget.style.background = "rgba(201,168,76,0.06)"; }}
-                              onMouseLeave={e => { e.currentTarget.style.color = "rgba(240,234,196,0.5)"; e.currentTarget.style.background = "transparent"; }}
+                              onMouseEnter={e => { e.currentTarget.style.color = "var(--c-accent)"; e.currentTarget.style.background = "rgba(201,168,76,0.08)"; }}
+                              onMouseLeave={e => { e.currentTarget.style.color = "rgba(240,234,196,0.78)"; e.currentTarget.style.background = "transparent"; }}
                             >
                               {item.label}
                             </Link>
@@ -198,11 +199,11 @@ export function Nav() {
                 transition={{ type: "spring", stiffness: 300, damping: 22 }}
                 style={{
                   display:       "inline-block",
-                  padding:       "9px 22px",
-                  border:        "1px solid rgba(201,168,76,0.45)",
+                  padding:       "10px 22px",
+                  border:        "1px solid rgba(201,168,76,0.55)",
                   fontFamily:    "var(--f-label)",
-                  fontSize:      "11px",
-                  letterSpacing: "0.20em",
+                  fontSize:      "12px",
+                  letterSpacing: "0.18em",
                   textTransform: "uppercase",
                   color:         "var(--c-accent)",
                   cursor:        "pointer",
