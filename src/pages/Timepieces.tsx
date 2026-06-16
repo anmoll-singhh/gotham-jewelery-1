@@ -17,7 +17,7 @@ import {
 // ─────────────────────────────────────────────────────────────────────────────
 const labelStyle: React.CSSProperties = {
   fontFamily:    "var(--f-label)",
-  fontSize:      "9px",
+  fontSize:      "11px",
   letterSpacing: "var(--ls-label)",
   textTransform: "uppercase",
   color:         "var(--c-accent)",
@@ -98,7 +98,7 @@ function VaultScene() {
               <p style={{ fontFamily: "var(--f-display)", fontSize: "clamp(38px, 6.5vw, 106px)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: 0.9, letterSpacing: "var(--ls-display)" }}>
                 Submariner<br />Date.
               </p>
-              <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-body)", color: "rgba(240,234,196,0.36)", fontWeight: 300, lineHeight: 1.8, marginTop: "20px", maxWidth: "260px", textAlign: "center", marginInline: "auto" }}>
+              <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-body)", color: "rgba(240,234,196,0.82)", fontWeight: 400, lineHeight: 1.8, marginTop: "20px", maxWidth: "260px", textAlign: "center", marginInline: "auto" }}>
                 Ref. 126610LN. Oystersteel.<br />Ceramic bezel. 300m. Authenticated.
               </p>
             </div>
@@ -111,7 +111,7 @@ function VaultScene() {
                 14-Point<br />Cleared.
               </p>
               <span style={{ ...labelStyle, textAlign: "inherit", marginTop: "14px", marginBottom: 0 }}>Every Reference · Every Time</span>
-              <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-body)", color: "rgba(240,234,196,0.36)", fontWeight: 300, lineHeight: 1.8, marginTop: "12px" }}>
+              <p style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-body)", color: "rgba(240,234,196,0.82)", fontWeight: 400, lineHeight: 1.8, marginTop: "12px" }}>
                 Nothing enters the case without passing<br />our full authentication standard.
               </p>
             </div>
@@ -120,7 +120,7 @@ function VaultScene() {
           {/* P3 — CTA */}
           <div className="vault-p3-wrap" style={{ position: "absolute", bottom: "var(--s-sm)", left: "50%", transform: "translateX(-50%)", zIndex: 10 }}>
             <div ref={p3} style={{ textAlign: "center" }}>
-              <p className="vault-brand-list" style={{ fontFamily: "var(--f-label)", fontSize: "9px", letterSpacing: "var(--ls-label)", textTransform: "uppercase", color: "rgba(201,168,76,0.5)", marginBottom: "24px", whiteSpace: "nowrap" }}>
+              <p className="vault-brand-list" style={{ fontFamily: "var(--f-label)", fontSize: "11px", letterSpacing: "var(--ls-label)", textTransform: "uppercase", color: "rgba(201,168,76,0.85)", marginBottom: "24px", whiteSpace: "nowrap" }}>
                 Rolex · Patek Philippe · Audemars Piguet · Cartier · Richard Mille
               </p>
               <MagneticBtn href="/timepieces">
@@ -153,14 +153,14 @@ function ProvenanceStats() {
             <motion.div key={s.num} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: [0.16,1,0.3,1], delay: i * 0.08 }}
               style={{ padding: "clamp(28px,4vh,52px) clamp(16px,2.5vw,36px)", borderLeft: i > 0 ? "1px solid rgba(201,168,76,0.08)" : "none" }}>
               <p style={{ fontFamily: "var(--f-display)", fontSize: "clamp(30px,4.5vw,60px)", color: "var(--c-accent)", fontStyle: "italic", fontWeight: 400, lineHeight: 1, marginBottom: "14px" }}>{s.num}</p>
-              <p style={{ fontFamily: "var(--f-label)", fontSize: "8px", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--c-white)", lineHeight: 1.6, marginBottom: "10px" }}>{s.line1}<br />{s.line2}</p>
-              <p style={{ fontFamily: "var(--f-body)", fontSize: "12px", color: "rgba(240,234,196,0.32)", fontWeight: 300, lineHeight: 1.7 }}>{s.note}</p>
+              <p style={{ fontFamily: "var(--f-label)", fontSize: "10px", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--c-white)", lineHeight: 1.6, marginBottom: "10px" }}>{s.line1}<br />{s.line2}</p>
+              <p style={{ fontFamily: "var(--f-body)", fontSize: "13px", color: "rgba(240,234,196,0.72)", fontWeight: 400, lineHeight: 1.7 }}>{s.note}</p>
             </motion.div>
           ))}
         </div>
         {/* Quote */}
         <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 1.1, delay: 0.35 }}
-          style={{ fontFamily: "var(--f-display)", fontSize: "clamp(15px,1.4vw,20px)", color: "rgba(240,234,196,0.22)", fontStyle: "italic", fontWeight: 400, lineHeight: 1.65, maxWidth: "560px", margin: "var(--s-md) auto 0", textAlign: "center", letterSpacing: "var(--ls-display)" }}>
+          style={{ fontFamily: "var(--f-display)", fontSize: "clamp(16px,1.5vw,22px)", color: "rgba(240,234,196,0.70)", fontStyle: "italic", fontWeight: 400, lineHeight: 1.65, maxWidth: "560px", margin: "var(--s-md) auto 0", textAlign: "center", letterSpacing: "var(--ls-display)" }}>
           "In 40 years on 47th Street, we've never sold a piece we weren't certain of."
         </motion.p>
       </div>
@@ -346,9 +346,9 @@ function TheHouses() {
             If it isn't on this list,<br />we don't carry it.
           </p>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px", padding: "0 var(--gutter) var(--s-md)" }}>
           {BRANDS.map((brand) => (
-            <div key={brand.name} style={{ position: "relative", height: "65vw", overflow: "hidden", flexShrink: 0 }}>
+            <div key={brand.name} style={{ position: "relative", height: "65vw", overflow: "hidden", flexShrink: 0, borderRadius: "6px", boxShadow: "0 6px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.10)" }}>
               <img
                 src={brand.watch} alt={brand.name}
                 loading="lazy"
@@ -356,11 +356,11 @@ function TheHouses() {
               />
               <div style={{
                 position: "absolute", inset: 0,
-                background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.1) 70%, transparent 100%)",
+                background: "linear-gradient(to top, rgba(0,0,0,0.84) 0%, rgba(0,0,0,0.18) 65%, transparent 100%)",
               }} />
               <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "24px var(--gutter)" }}>
-                <img src={brand.img} alt={brand.name} loading="lazy" style={{ height: "22px", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.6, marginBottom: "10px" }} />
-                <p style={{ fontFamily: "var(--f-body)", fontSize: "12px", color: "rgba(240,234,196,0.42)", fontWeight: 300, lineHeight: 1.7, maxWidth: "280px" }}>{brand.desc}</p>
+                <img src={brand.img} alt={brand.name} loading="lazy" style={{ height: "22px", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.88, marginBottom: "10px" }} />
+                <p style={{ fontFamily: "var(--f-body)", fontSize: "14px", color: "rgba(240,234,196,0.85)", fontWeight: 400, lineHeight: 1.7, maxWidth: "280px" }}>{brand.desc}</p>
               </div>
             </div>
           ))}
@@ -398,16 +398,14 @@ function FeaturedWatches({ activeBrand, sectionRef }: { activeBrand: string; sec
     <section ref={sectionRef} style={{ background: "var(--c-surface)", padding: "var(--s-xl) var(--gutter)" }}>
       <div style={{ maxWidth: "var(--max-w)", margin: "0 auto" }}>
         <ScrollReveal>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "var(--s-md)", flexWrap: "wrap", gap: "16px" }}>
-            <div>
-              <span style={{ ...labelStyle, color: "var(--c-accent-rich)" }}>
-                {activeBrand && activeBrand !== "All" ? activeBrand : "Featured"}
-              </span>
-              <h2 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h2)", color: "var(--c-text-dark)", fontStyle: "italic", fontWeight: 400, lineHeight: 1.1 }}>
-                {activeBrand && activeBrand !== "All" ? `${activeBrand} inventory.` : "Current inventory."}
-              </h2>
-            </div>
-            <p style={{ fontFamily: "var(--f-body)", fontSize: "12px", color: "var(--c-muted-dark)", maxWidth: "280px", textAlign: "right", lineHeight: 1.7, fontWeight: 300 }}>
+          <div style={{ marginBottom: "var(--s-md)" }}>
+            <span style={{ ...labelStyle, color: "var(--c-accent-rich)" }}>
+              {activeBrand && activeBrand !== "All" ? activeBrand : "Featured"}
+            </span>
+            <h2 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h2)", color: "var(--c-text-dark)", fontStyle: "italic", fontWeight: 500, lineHeight: 1.1, marginBottom: "12px" }}>
+              {activeBrand && activeBrand !== "All" ? `${activeBrand} inventory.` : "Current inventory."}
+            </h2>
+            <p style={{ fontFamily: "var(--f-body)", fontSize: "13px", color: "var(--c-muted-dark)", maxWidth: "440px", textAlign: "left", lineHeight: 1.7, fontWeight: 400 }}>
               All prices on request. Call or email to inquire about availability.
             </p>
           </div>
@@ -424,12 +422,12 @@ function FeaturedWatches({ activeBrand, sectionRef }: { activeBrand: string; sec
                   to={brand === "All" ? "/timepieces" : `/timepieces?brand=${encodeURIComponent(brand)}`}
                   style={{
                     fontFamily:    "var(--f-label)",
-                    fontSize:      "9px",
+                    fontSize:      "11px",
                     letterSpacing: "var(--ls-label)",
                     textTransform: "uppercase",
-                    padding:       "8px 18px",
-                    border:        `1px solid ${isActive ? "var(--c-accent-rich)" : "rgba(50,61,34,0.18)"}`,
-                    color:          isActive ? "var(--c-accent-rich)" : "rgba(50,61,34,0.70)",
+                    padding:       "10px 20px",
+                    border:        `1px solid ${isActive ? "var(--c-accent-rich)" : "rgba(50,61,34,0.22)"}`,
+                    color:          isActive ? "var(--c-accent-rich)" : "rgba(50,61,34,0.88)",
                     background:     isActive ? "rgba(168,134,79,0.08)" : "rgba(50,61,34,0.04)",
                     transition:    "all 0.22s var(--ease-ui)",
                     whiteSpace:    "nowrap",
@@ -633,7 +631,7 @@ export default function Timepieces() {
                 <h1 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-hero)", color: "var(--c-white)", lineHeight: "var(--lh-display)", fontStyle: "italic", fontWeight: 400, letterSpacing: "var(--ls-display)", maxWidth: "900px", marginBottom: "clamp(16px,2.5vh,24px)" }}>
                   {VAULT_SLIDES[heroSlide].h1a}<br />{VAULT_SLIDES[heroSlide].h1b}
                 </h1>
-                <p className="vault-hero-desc" style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.42)", fontWeight: 300, lineHeight: 1.9, maxWidth: "380px", marginBottom: "clamp(24px,4vh,40px)" }}>
+                <p className="vault-hero-desc" style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.85)", fontWeight: 400, lineHeight: 1.9, maxWidth: "380px", marginBottom: "clamp(24px,4vh,40px)" }}>
                   {VAULT_SLIDES[heroSlide].sub}
                 </p>
               </motion.div>

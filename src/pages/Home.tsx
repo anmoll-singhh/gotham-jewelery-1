@@ -804,12 +804,12 @@ function LeadCaptureScene() {
 
   const numStyle: React.CSSProperties = {
     fontFamily: "var(--f-display)", fontSize: "clamp(11px,1vw,13px)",
-    color: "rgba(201,168,76,0.32)", fontStyle: "italic", paddingTop: "2px", minWidth: "28px", userSelect: "none",
+    color: "rgba(201,168,76,0.58)", fontStyle: "italic", paddingTop: "2px", minWidth: "28px", userSelect: "none",
   };
   const fieldLabel: React.CSSProperties = {
-    display: "block", fontFamily: "var(--f-label)", fontSize: "8px",
+    display: "block", fontFamily: "var(--f-label)", fontSize: "10px",
     letterSpacing: "0.32em", textTransform: "uppercase",
-    color: "rgba(201,168,76,0.78)", marginBottom: "10px",
+    color: "rgba(201,168,76,0.88)", marginBottom: "10px",
   };
   const onFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     e.currentTarget.style.borderBottomColor = "rgba(201,168,76,0.55)";
@@ -824,20 +824,20 @@ function LeadCaptureScene() {
 
         <motion.div initial={{ opacity: 0, y: 32 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}>
           <span style={lbl}>Start the Conversation</span>
-          <h2 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h1)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", letterSpacing: "var(--ls-display)", marginTop: "16px", marginBottom: "var(--s-md)" }}>
-            Every piece begins<br />with a question.
+          <h2 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h1)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 500, lineHeight: "var(--lh-display)", letterSpacing: "var(--ls-display)", marginTop: "16px", marginBottom: "var(--s-md)" }}>
+            Every great piece<br />starts here.
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "18px", borderTop: "1px solid rgba(201,168,76,0.08)", paddingTop: "var(--s-sm)" }}>
             <a href="tel:+19177570314" style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "var(--c-accent)", fontWeight: 300, letterSpacing: "0.04em", display: "flex", alignItems: "center", gap: "14px" }}>
               <span style={{ width: "24px", height: "1px", background: "var(--c-accent)", display: "inline-block", flexShrink: 0 }} />
               +1 917 757 0314
             </a>
-            <a href="mailto:sales@gothamcityjewelers.com" style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.60)", fontWeight: 300, letterSpacing: "0.02em", display: "flex", alignItems: "center", gap: "14px" }}>
-              <span style={{ width: "24px", height: "1px", background: "rgba(240,234,196,0.18)", display: "inline-block", flexShrink: 0 }} />
+            <a href="mailto:sales@gothamcityjewelers.com" style={{ fontFamily: "var(--f-body)", fontSize: "var(--t-sub)", color: "rgba(240,234,196,0.85)", fontWeight: 400, letterSpacing: "0.02em", display: "flex", alignItems: "center", gap: "14px" }}>
+              <span style={{ width: "24px", height: "1px", background: "rgba(240,234,196,0.35)", display: "inline-block", flexShrink: 0 }} />
               sales@gothamcityjewelers.com
             </a>
-            <p style={{ fontFamily: "var(--f-body)", fontSize: "12px", color: "rgba(240,234,196,0.48)", fontWeight: 300, lineHeight: 1.8, maxWidth: "280px", marginTop: "4px" }}>
-              Same-day response. No pressure, no minimums, no timelines until you're ready.
+            <p style={{ fontFamily: "var(--f-body)", fontSize: "14px", color: "rgba(240,234,196,0.78)", fontWeight: 400, lineHeight: 1.8, maxWidth: "300px", marginTop: "4px" }}>
+              Same-day response. No hard sell, no pressure — just one honest conversation about what you're looking for.
             </p>
           </div>
         </motion.div>
