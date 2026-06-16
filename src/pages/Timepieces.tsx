@@ -299,7 +299,7 @@ function TheHouses() {
                 loading="lazy"
                 style={{
                   position: "absolute", inset: 0, width: "100%", height: "100%",
-                  objectFit: "cover", filter: "brightness(0.30) saturate(0.8)",
+                  objectFit: "cover", filter: "brightness(0.72) saturate(0.92)",
                   transition: "transform 0.9s var(--ease-out)",
                 }}
                 onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.04)"; }}
@@ -307,7 +307,7 @@ function TheHouses() {
               />
               <div style={{
                 position: "absolute", inset: 0,
-                background: "linear-gradient(to top, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.22) 60%, rgba(0,0,0,0.06) 100%)",
+                background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.22) 60%, rgba(0,0,0,0.06) 100%)",
               }} />
               <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "clamp(20px,4vw,40px) var(--gutter)" }}>
                 <img
@@ -323,8 +323,8 @@ function TheHouses() {
                 }}>
                   {brand.desc}
                 </p>
-                <Link to="/timepieces" className="btn-outline" aria-label="Price on Request" style={{ fontSize: "10px", display: "inline-flex", alignItems: "center" }}>
-                  Price on Request <span aria-hidden="true"> →</span>
+                <Link to="/timepieces" className="btn-outline" style={{ fontSize: "10px", display: "inline-flex", alignItems: "center" }}>
+                  Price on Request →
                 </Link>
               </div>
             </div>
@@ -352,11 +352,11 @@ function TheHouses() {
               <img
                 src={brand.watch} alt={brand.name}
                 loading="lazy"
-                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.3) saturate(0.8)" }}
+                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.72) saturate(0.92)" }}
               />
               <div style={{
                 position: "absolute", inset: 0,
-                background: "linear-gradient(to top, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.1) 70%, transparent 100%)",
+                background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.1) 70%, transparent 100%)",
               }} />
               <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "24px var(--gutter)" }}>
                 <img src={brand.img} alt={brand.name} loading="lazy" style={{ height: "22px", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.6, marginBottom: "10px" }} />
@@ -422,7 +422,6 @@ function FeaturedWatches({ activeBrand, sectionRef }: { activeBrand: string; sec
                 <Link
                   key={brand}
                   to={brand === "All" ? "/timepieces" : `/timepieces?brand=${encodeURIComponent(brand)}`}
-                  aria-current={isActive ? "true" : undefined}
                   style={{
                     fontFamily:    "var(--f-label)",
                     fontSize:      "9px",
@@ -513,9 +512,9 @@ function ExchangeCTA() {
         src="/assets/gotham-sell-trade.webp"
         alt="Sell or trade your luxury watch"
         loading="lazy"
-        style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.25) saturate(0.7)", willChange: "transform" }}
+        style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.65) saturate(0.88)", willChange: "transform" }}
       />
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.55) 100%)" }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.28) 100%)" }} />
 
       <div style={{
         position: "relative", zIndex: 10, maxWidth: "var(--max-w)", margin: "0 auto",
@@ -574,11 +573,9 @@ const VAULT_SLIDES = [
 // MAIN PAGE
 // ─────────────────────────────────────────────────────────────────────────────
 export default function Timepieces() {
-  const heroRef        = useRef<HTMLDivElement>(null);
-  const inventoryRef   = useRef<HTMLElement>(null);
-  const liveRegionRef  = useRef<HTMLDivElement>(null);
-  const [heroSlide, setHeroSlide]   = useState(0);
-  const [isPaused,  setIsPaused]    = useState(false);
+  const heroRef      = useRef<HTMLDivElement>(null);
+  const inventoryRef = useRef<HTMLElement>(null);
+  const [heroSlide, setHeroSlide] = useState(0);
 
   const [searchParams] = useSearchParams();
   const activeBrand = searchParams.get("brand") ?? "All";
@@ -593,75 +590,33 @@ export default function Timepieces() {
   }, [activeBrand]);
 
   useEffect(() => {
-    if (isPaused) return;
     const id = setInterval(() => setHeroSlide(s => (s + 1) % VAULT_SLIDES.length), 5500);
     return () => clearInterval(id);
-  }, [isPaused]);
-
-  // Announce slide changes to screen readers
-  useEffect(() => {
-    if (liveRegionRef.current) {
-      liveRegionRef.current.textContent =
-        `Slide ${heroSlide + 1} of ${VAULT_SLIDES.length}: ${VAULT_SLIDES[heroSlide].h1a} ${VAULT_SLIDES[heroSlide].h1b}`;
-    }
-  }, [heroSlide]);
-
-  const goToSlide = (i: number) => { setHeroSlide(i); setIsPaused(true); };
-
-  const handleCarouselKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowRight") { e.preventDefault(); goToSlide((heroSlide + 1) % VAULT_SLIDES.length); }
-    if (e.key === "ArrowLeft")  { e.preventDefault(); goToSlide((heroSlide - 1 + VAULT_SLIDES.length) % VAULT_SLIDES.length); }
-    if (e.key === "Home")       { e.preventDefault(); goToSlide(0); }
-    if (e.key === "End")        { e.preventDefault(); goToSlide(VAULT_SLIDES.length - 1); }
-  };
+  }, []);
 
   return (
     <>
       <Nav />
 
-      <main id="main-content">
+      <main style={{ background: 'linear-gradient(to bottom, #1E3012 0%, #253A15 35%, #2D4A1A 65%, #3C5E22 100%)' }}>
 
         {/* ══ S1: HERO SLIDER — 4 inventory watches ════════════════════ */}
-        <section
-          ref={heroRef}
-          className="vault-hero"
-          aria-roledescription="carousel"
-          aria-label={`Featured timepieces — ${VAULT_SLIDES.length} slides`}
-          style={{ position: "relative", overflow: "hidden", background: "#000" }}
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          onFocus={() => setIsPaused(true)}
-          onBlur={() => setIsPaused(false)}
-        >
-          {/* Screen reader live region */}
-          <div
-            ref={liveRegionRef}
-            aria-live="polite"
-            aria-atomic="true"
-            style={{ position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}
-          />
+        <div ref={heroRef} className="vault-hero" style={{ position: "relative", overflow: "hidden", background: "#000" }}>
 
           {/* Crossfading background slides */}
           {VAULT_SLIDES.map((s, i) => (
-            <div
-              key={i}
-              role="group"
-              aria-roledescription="slide"
-              aria-label={`Slide ${i + 1} of ${VAULT_SLIDES.length}: ${s.label}`}
-              aria-hidden={i !== heroSlide}
-              style={{ position: "absolute", inset: 0, opacity: i === heroSlide ? 1 : 0, transition: "opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)", pointerEvents: "none" }}
-            >
+            <div key={i} style={{ position: "absolute", inset: 0, opacity: i === heroSlide ? 1 : 0, transition: "opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)", pointerEvents: "none" }}>
               {/* <picture> serves portrait AI-generated shots on mobile, landscape banners on desktop */}
               <picture style={{ position: "absolute", inset: 0, display: "block" }}>
                 <source media="(max-width: 767px)" srcSet={s.mobileImg} type="image/webp" />
-                <img src={s.img} alt="" aria-hidden="true" className="vault-hero-img" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.45) saturate(0.80) contrast(1.08)" }} />
+                <img src={s.img} alt="" aria-hidden="true" className="vault-hero-img" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.62) saturate(0.88) contrast(1.06)" }} />
               </picture>
             </div>
           ))}
 
           {/* Gradient overlays */}
-          <div aria-hidden="true" style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, #000 0%, rgba(0,0,0,0.40) 38%, rgba(0,0,0,0.08) 70%, transparent 100%)" }} />
-          <div aria-hidden="true" style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to right, rgba(0,0,0,0.60) 0%, transparent 55%)" }} />
+          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, #000 0%, rgba(0,0,0,0.35) 38%, rgba(0,0,0,0.08) 70%, transparent 100%)" }} />
+          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to right, rgba(0,0,0,0.45) 0%, transparent 55%)" }} />
 
           {/* Animated text content */}
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "var(--gutter)", paddingBottom: "clamp(28px, 5vh, 56px)", zIndex: 10, maxWidth: "1100px" }}>
@@ -688,31 +643,20 @@ export default function Timepieces() {
             </MagneticBtn>
           </div>
 
-          {/* Slide dots — roving tabindex pattern */}
-          <div
-            role="tablist"
-            aria-label="Slideshow controls"
-            style={{ position: "absolute", bottom: "clamp(20px,3.5vh,36px)", right: "var(--gutter)", zIndex: 10, display: "flex", gap: "8px", alignItems: "center" }}
-          >
-            {VAULT_SLIDES.map((s, i) => (
-              <button
-                key={i}
-                role="tab"
-                aria-selected={i === heroSlide}
-                aria-label={`Slide ${i + 1}: ${s.label}`}
-                tabIndex={i === heroSlide ? 0 : -1}
-                onClick={() => goToSlide(i)}
-                onKeyDown={handleCarouselKeyDown}
-                style={{ width: i === heroSlide ? "22px" : "6px", height: "2px", background: i === heroSlide ? "var(--c-accent)" : "rgba(201,168,76,0.28)", border: "none", cursor: "pointer", padding: "8px 0", transition: "all 0.4s ease" }}
+          {/* Slide dots */}
+          <div style={{ position: "absolute", bottom: "clamp(20px,3.5vh,36px)", right: "var(--gutter)", zIndex: 10, display: "flex", gap: "8px", alignItems: "center" }}>
+            {VAULT_SLIDES.map((_, i) => (
+              <button key={i} aria-label={`Slide ${i + 1}`} onClick={() => setHeroSlide(i)}
+                style={{ width: i === heroSlide ? "22px" : "6px", height: "2px", background: i === heroSlide ? "var(--c-accent)" : "rgba(201,168,76,0.28)", border: "none", cursor: "pointer", padding: 0, transition: "all 0.4s ease", outline: "none" }}
               />
             ))}
           </div>
 
           {/* Address tag */}
-          <div aria-hidden="true" className="hide-mobile" style={{ position: "absolute", top: "50%", right: "var(--gutter)", transform: "translateY(-50%) rotate(90deg)", transformOrigin: "right center", fontFamily: "var(--f-label)", fontSize: "8px", letterSpacing: "0.30em", textTransform: "uppercase", color: "rgba(201,168,76,0.22)", whiteSpace: "nowrap", zIndex: 10 }}>
+          <div className="hide-mobile" style={{ position: "absolute", top: "50%", right: "var(--gutter)", transform: "translateY(-50%) rotate(90deg)", transformOrigin: "right center", fontFamily: "var(--f-label)", fontSize: "8px", letterSpacing: "0.30em", textTransform: "uppercase", color: "rgba(201,168,76,0.22)", whiteSpace: "nowrap", zIndex: 10 }}>
             23 West 47th Street · Suite 402 · Manhattan
           </div>
-        </section>
+        </div>
 
         {divider}
 

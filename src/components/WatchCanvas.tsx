@@ -75,7 +75,7 @@ export function WatchCanvas({
     }
     onProgressRef.current?.(progress);
     if (entryOverlayRef.current) {
-      const fadeProgress = Math.min(1, progress / 0.06);
+      const fadeProgress = Math.min(1, progress / 0.03);
       entryOverlayRef.current.style.opacity = String(1 - fadeProgress);
     }
   }, []);
@@ -84,7 +84,7 @@ export function WatchCanvas({
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (modeRef.current === "detecting") setMode("static");
-    }, 4000);
+    }, 1800);
 
     const probe = new Image();
     probe.onload = () => { clearTimeout(timeout); setMode("canvas"); };
@@ -135,8 +135,7 @@ export function WatchCanvas({
 
     const resize = () => {
       const rawDpr = window.devicePixelRatio || 1;
-      const isPortrait = canvas.offsetHeight > canvas.offsetWidth;
-      const dpr = isPortrait ? 1 : Math.min(rawDpr, 2);
+      const dpr = Math.min(rawDpr, 2.5);
       canvas.width  = canvas.offsetWidth  * dpr;
       canvas.height = canvas.offsetHeight * dpr;
       const ctx = canvas.getContext("2d")!;
@@ -148,7 +147,10 @@ export function WatchCanvas({
     resize();
     window.addEventListener("resize", resize);
 
+    let isVisible = true;
+
     const draw = () => {
+      if (!isVisible) return;
       const rounded = Math.max(0, Math.min(Math.round(targetFrame.current), frames.current.length - 1));
       if (rounded !== drawnFrame.current) {
         const img = frames.current[rounded];
@@ -170,9 +172,25 @@ export function WatchCanvas({
     };
     rafId.current = requestAnimationFrame(draw);
 
+    // Pause RAF when section scrolls fully off-screen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          cancelAnimationFrame(rafId.current);
+          rafId.current = requestAnimationFrame(draw);
+        } else {
+          cancelAnimationFrame(rafId.current);
+        }
+      },
+      { threshold: 0 }
+    );
+    if (containerRef.current) observer.observe(containerRef.current);
+
     return () => {
       cancelAnimationFrame(rafId.current);
       window.removeEventListener("resize", resize);
+      observer.disconnect();
     };
   }, [mode, ready]);
 
@@ -234,22 +252,19 @@ export function WatchCanvas({
           top: isMobile ? 0 : undefined,
           zIndex: 20,
           height: "100vh",
-          background: "#000",
+          background: "var(--c-void)",
           overflow: "hidden",
         }}
       >
-        {/* ── Canvas (decorative scroll-driven animation) ─────── */}
+        {/* ── Canvas ──────────────────────────────────────────── */}
         {mode === "canvas" && (
           <canvas
             ref={canvasRef}
-            aria-hidden="true"
-            role="img"
-            aria-label="Scroll-driven watch animation"
             style={{
               position: "absolute", inset: 0,
               width: "100%", height: "100%",
               display: "block", zIndex: 2,
-              background: "#000", imageRendering: "auto",
+              background: "var(--c-void)", imageRendering: "auto",
             }}
           />
         )}
@@ -266,30 +281,20 @@ export function WatchCanvas({
               position: "absolute", inset: 0,
               width: "100%", height: "100%",
               objectFit: "cover", objectPosition: "center",
-              zIndex: 2, background: "#000",
+              zIndex: 2, background: "var(--c-void)",
             }}
           />
         )}
 
         {/* ── Loading bar ─────────────────────────────────────── */}
         {mode === "canvas" && !ready && (
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute", inset: 0,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              background: "#000",
-            }}
-          >
+          <div style={{
+            position: "absolute", inset: 0,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            background: "var(--c-void)",
+          }}>
             <div style={{ textAlign: "center" }}>
-              <div
-                role="progressbar"
-                aria-valuenow={loadPct}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-label="Loading animation frames"
-                style={{ width: "180px", height: "1px", background: "rgba(197,164,110,0.15)", margin: "0 auto 14px" }}
-              >
+              <div style={{ width: "180px", height: "1px", background: "rgba(197,164,110,0.15)", margin: "0 auto 14px" }}>
                 <div style={{ height: "100%", width: `${loadPct}%`, background: "var(--c-accent)", transition: "width 0.1s linear" }} />
               </div>
               <p style={{ fontFamily: "var(--f-body)", fontSize: "9px", letterSpacing: "0.32em", textTransform: "uppercase", color: "rgba(255,255,255,0.22)" }}>
@@ -302,10 +307,9 @@ export function WatchCanvas({
         {/* ── Entry overlay (fades from black over first 6% of progress) ── */}
         <div
           ref={entryOverlayRef}
-          aria-hidden="true"
           style={{
             position: "absolute", inset: 0,
-            background: "#000", zIndex: 5,
+            background: "var(--c-void)", zIndex: 5,
             pointerEvents: "none", opacity: 1,
           }}
         />
@@ -313,7 +317,6 @@ export function WatchCanvas({
         {/* ── Exit overlay ────────────────────────────────────── */}
         <div
           ref={exitOverlayRef}
-          aria-hidden="true"
           style={{
             position: "absolute", inset: 0,
             background: "#000", zIndex: 6,

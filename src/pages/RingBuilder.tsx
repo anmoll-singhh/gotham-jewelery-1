@@ -241,14 +241,14 @@ function Invitation() {
           height:          '120%',
           objectFit:      'cover',
           objectPosition: 'center',
-          filter:         'brightness(0.22)',
+          filter:         'brightness(0.64)',
           willChange:     'transform',
         }}
       />
       <div style={{
         position:   'absolute',
         inset:       0,
-        background:  'linear-gradient(135deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.45) 100%)',
+        background:  'linear-gradient(135deg, rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.18) 100%)',
       }} />
 
       <div style={{
@@ -341,7 +341,7 @@ export default function RingBuilder() {
     <>
       <Nav />
 
-      <main id="main-content">
+      <main>
         {/* ── SCENE 1: STUDIO HERO ──────────────────────────────── */}
         <div
           ref={heroRef}
@@ -366,14 +366,14 @@ export default function RingBuilder() {
               height:          '100%',
               objectFit:      'cover',
               objectPosition: 'center',
-              filter:         'brightness(0.38)',
+              filter:         'brightness(0.74)',
               willChange:     'transform',
             }}
           />
           <div style={{
             position:   'absolute',
             inset:       0,
-            background:  'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 35%, transparent 100%)',
+            background:  'linear-gradient(to top, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0.22) 35%, transparent 100%)',
           }} />
 
           <div style={{

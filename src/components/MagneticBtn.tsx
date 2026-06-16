@@ -1,21 +1,17 @@
 import { useRef } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
-import { Link } from 'react-router-dom'
 
 interface MagneticBtnProps {
   children: React.ReactNode
   href?: string
   onClick?: () => void
   className?: string
+  /** Target element (spring physics). Default: 'a' if href provided, 'button' otherwise */
 }
-
-const isInternalHref = (href: string) =>
-  href.startsWith('/') || href.startsWith('#')
 
 /**
  * Framer Motion magnetic button. Used on ALL primary CTAs per the design constitution.
  * Spring: stiffness 150, damping 15 — do not change these values.
- * Uses React Router <Link> for internal paths (avoids full-page reload in SPA).
  */
 export function MagneticBtn({ children, href, onClick, className }: MagneticBtnProps) {
   const ref = useRef<HTMLDivElement>(null)
@@ -47,13 +43,11 @@ export function MagneticBtn({ children, href, onClick, className }: MagneticBtnP
         whileTap={{ scale: 0.97, y: 2 }}
       >
         {href ? (
-          isInternalHref(href) ? (
-            <Link to={href} className={className}>{children}</Link>
-          ) : (
-            <a href={href} className={className}>{children}</a>
-          )
+          <a href={href} className={className}>
+            {children}
+          </a>
         ) : (
-          <button type="button" onClick={onClick} className={className}>
+          <button onClick={onClick} className={className}>
             {children}
           </button>
         )}

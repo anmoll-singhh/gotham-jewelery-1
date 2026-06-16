@@ -39,7 +39,7 @@ export function AuroraGold({ children, bg, intensity = 1, style, className }: Au
         aria-hidden="true"
         style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}
       >
-        {/* Blob 1 — top-left warm gold */}
+        {/* Blob 1 — top-left warm gold (stronger presence) */}
         <motion.div
           style={{
             position:     'absolute',
@@ -48,7 +48,7 @@ export function AuroraGold({ children, bg, intensity = 1, style, className }: Au
             width:        '65%',
             height:       '65%',
             borderRadius: '50%',
-            background:   `radial-gradient(circle, rgba(197,164,110,${0.14 * op}) 0%, transparent 68%)`,
+            background:   `radial-gradient(circle, rgba(201,168,76,${0.22 * op}) 0%, transparent 68%)`,
             filter:       'blur(72px)',
             willChange:   'transform',
           }}
@@ -56,7 +56,7 @@ export function AuroraGold({ children, bg, intensity = 1, style, className }: Au
           transition={{ duration: 28, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
         />
 
-        {/* Blob 2 — bottom-right deep amber */}
+        {/* Blob 2 — bottom-right deep bottle green (environmental warmth) */}
         <motion.div
           style={{
             position:     'absolute',
@@ -65,7 +65,7 @@ export function AuroraGold({ children, bg, intensity = 1, style, className }: Au
             width:        '55%',
             height:       '55%',
             borderRadius: '50%',
-            background:   `radial-gradient(circle, rgba(184,146,74,${0.11 * op}) 0%, transparent 68%)`,
+            background:   `radial-gradient(circle, rgba(27,56,40,${0.55 * op}) 0%, transparent 68%)`,
             filter:       'blur(90px)',
             willChange:   'transform',
           }}
@@ -73,7 +73,7 @@ export function AuroraGold({ children, bg, intensity = 1, style, className }: Au
           transition={{ duration: 36, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
         />
 
-        {/* Blob 3 — center shimmer */}
+        {/* Blob 3 — center shimmer (uplifted) */}
         <motion.div
           style={{
             position:     'absolute',
@@ -82,7 +82,7 @@ export function AuroraGold({ children, bg, intensity = 1, style, className }: Au
             width:        '38%',
             height:       '38%',
             borderRadius: '50%',
-            background:   `radial-gradient(circle, rgba(212,184,122,${0.07 * op}) 0%, transparent 68%)`,
+            background:   `radial-gradient(circle, rgba(212,184,122,${0.12 * op}) 0%, transparent 68%)`,
             filter:       'blur(110px)',
             willChange:   'transform',
           }}

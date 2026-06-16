@@ -26,9 +26,9 @@
   --f-label:   'Josefin Sans', system-ui, sans-serif;
 
   /* ── Palette ─────────────────────────────────────────────────────────────── */
-  --c-void:         #0f1a0a;   /* deep forest olive — brand darkness, visibly green */
-  --c-dark:         #1a2910;   /* Deep Olive — primary dark surface */
-  --c-mid:          #2e3a1e;   /* Olive Grove — raised surface, card backgrounds */
+  --c-void:         #1E3012;   /* dark olive — lighter than bottle green, warm earthy character */
+  --c-dark:         #2D4A1A;   /* olive forest — medium dark, clearly green-warm */
+  --c-mid:          #3C5E22;   /* olive mid — lighter, warm olive character */
   --c-surface:      #F7F0E0;   /* Parchment — cream light sections */
   --c-surface-2:    #F0EAC4;   /* Harvest Cream — slightly warmer cream */
   --c-white:        #F0EAC4;   /* Harvest Cream — primary "white" text on dark bg */
@@ -45,8 +45,8 @@
   --c-border-light: rgba(201,168,76,0.20);
 
   /* ── Gradient section backgrounds ─────────────────────────────────────────── */
-  --bg-dark-grad: linear-gradient(160deg, #1d2b11 0%, #0b1207 100%);
-  --bg-void-grad: linear-gradient(170deg, #111d0c 0%, #080d06 50%, #0d1809 100%);
+  --bg-dark-grad: linear-gradient(160deg, #2D4A1A 0%, #1E3012 100%);
+  --bg-void-grad: linear-gradient(170deg, #253E15 0%, #1E3012 50%, #203815 100%);
 
   /* ── Typography — Display Scale ─────────────────────────────────────────── */
   --t-hero:  clamp(56px, 8vw,  136px);

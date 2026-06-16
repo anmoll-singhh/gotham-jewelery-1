@@ -34,7 +34,7 @@ const PHASES = [
 
 function TheCraft() {
   return (
-    <section style={{ background: 'var(--bg-void-grad)', padding: 'var(--s-xl) var(--gutter)' }}>
+    <section style={{ background: 'transparent', padding: 'var(--s-xl) var(--gutter)' }}>
       <div style={{ maxWidth: 'var(--max-w)', margin: '0 auto' }}>
         <ScrollReveal>
           <span style={labelStyle}>The Craft</span>
@@ -88,7 +88,7 @@ function TheCraft() {
                       width:      '100%',
                       height:     '100%',
                       objectFit: 'cover',
-                      filter:     'brightness(0.45) saturate(0.8)',
+                      filter:     'brightness(0.78) saturate(0.92)',
                       transition: 'transform 0.9s var(--ease-out)',
                     }}
                     onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.04)' }}
@@ -179,7 +179,7 @@ function BeginSection() {
   }
 
   return (
-    <section style={{ background: 'var(--bg-dark-grad)', padding: 'var(--s-xl) var(--gutter)' }}>
+    <section style={{ background: 'transparent', padding: 'var(--s-xl) var(--gutter)' }}>
       <div className="grid-2col" style={{
         maxWidth:            'var(--max-w)',
         margin:              '0 auto',
@@ -245,12 +245,7 @@ function BeginSection() {
             padding:    'var(--s-md)',
           }}>
             <span style={{ ...labelStyle, marginBottom: '28px' }}>Inquiry</span>
-            <form
-              onSubmit={e => { e.preventDefault(); handleSubmit(); }}
-              noValidate
-              aria-label="Custom jewelry inquiry form"
-              style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
-            >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <label htmlFor="cj-name"    style={srOnly}>Your Name</label>
               <input
                 ref={nameRef}
@@ -258,8 +253,6 @@ function BeginSection() {
                 type="text"
                 placeholder="Your Name"
                 autoComplete="name"
-                required
-                aria-required="true"
                 style={{
                   background:  'transparent',
                   border:      '1px solid var(--c-border)',
@@ -284,8 +277,6 @@ function BeginSection() {
                 type="email"
                 placeholder="Email Address"
                 autoComplete="email"
-                required
-                aria-required="true"
                 style={{
                   background:  'transparent',
                   border:      '1px solid var(--c-border)',
@@ -353,11 +344,12 @@ function BeginSection() {
               <button
                 className="btn-primary"
                 style={{ justifyContent: 'center', width: '100%' }}
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
               >
                 Send Inquiry
               </button>
-            </form>
+            </div>
           </div>
         </ScrollReveal>
 
@@ -391,7 +383,7 @@ export default function CustomJewelry() {
     <>
       <Nav />
 
-      <main id="main-content">
+      <main style={{ background: 'linear-gradient(to bottom, #1E3012 0%, #253A15 40%, #2D4A1A 70%, #3C5E22 100%)' }}>
         {/* ── SCENE 1: ATELIER HERO ──────────────────────────────── */}
         <div
           ref={heroRef}
@@ -416,14 +408,14 @@ export default function CustomJewelry() {
               height:          '100%',
               objectFit:      'cover',
               objectPosition: 'center',
-              filter:         'brightness(0.35)',
+              filter:         'brightness(0.74)',
               willChange:     'transform',
             }}
           />
           <div style={{
             position:   'absolute',
             inset:       0,
-            background:  'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 35%, transparent 100%)',
+            background:  'linear-gradient(to top, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0.22) 35%, transparent 100%)',
           }} />
 
           <div style={{
