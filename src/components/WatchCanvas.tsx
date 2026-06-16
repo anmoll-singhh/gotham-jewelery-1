@@ -132,8 +132,8 @@ export function WatchCanvas({
     const resize = () => {
       const rawDpr = window.devicePixelRatio || 1;
       const dpr = Math.min(rawDpr, 3);
-      canvas.width  = canvas.offsetWidth  * dpr;
-      canvas.height = canvas.offsetHeight * dpr;
+      canvas.width  = Math.ceil(canvas.offsetWidth  * dpr);
+      canvas.height = Math.ceil(canvas.offsetHeight * dpr);
       const ctx = canvas.getContext("2d")!;
       ctx.scale(dpr, dpr);
       ctx.imageSmoothingEnabled = true;
@@ -238,7 +238,13 @@ export function WatchCanvas({
   return (
     <div
       ref={mobileWrapRef}
-      style={{ position: "relative", height: isMobile ? `${scrubVh + 100}vh` : "auto", background: "var(--c-void)" }}
+      style={{
+        position: "relative",
+        height: isMobile ? `${scrubVh + 100}vh` : "auto",
+        background: "var(--c-void)",
+        isolation: "isolate",
+        overflowX: "clip",
+      }}
     >
       <div
         ref={containerRef}

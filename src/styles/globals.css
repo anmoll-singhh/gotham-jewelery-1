@@ -697,7 +697,8 @@ button {
 
 @media (max-width: 767px) {
   .watch-canvas-wrap {
-    height: 100dvh !important;
+    height: 100vh !important;   /* fallback: browsers without svh */
+    height: 100svh !important;  /* small viewport = always the visible area */
   }
 
   /* Vault panels are hidden on mobile (both sit at the same absolute position
@@ -1376,5 +1377,88 @@ html {
     padding: 14px 20px !important;
     margin-bottom: 16px !important;
     max-width: 100% !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   WATCH CARD IMAGE SHIMMER — gold sweep while images load
+   Used by WatchTiltCard and any card that adds .img-shimmer-wrap
+═══════════════════════════════════════════════════════════════════ */
+@keyframes card-gold-sweep {
+  0%   { transform: translateX(-120%) skewX(-18deg); }
+  100% { transform: translateX(280%)  skewX(-18deg); }
+}
+
+.img-shimmer-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Dark placeholder that sits behind the image while it loads */
+.img-shimmer-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(
+    160deg,
+    rgba(22, 34, 14, 0.97) 0%,
+    rgba(30, 48, 18, 0.95) 100%
+  );
+  pointer-events: none;
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Sweeping gold highlight on the shimmer */
+.img-shimmer-bg::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: 0;
+  width: 55%;
+  height: 140%;
+  background: linear-gradient(
+    90deg,
+    transparent           0%,
+    rgba(201,168,76,0.06) 35%,
+    rgba(201,168,76,0.13) 50%,
+    rgba(201,168,76,0.06) 65%,
+    transparent           100%
+  );
+  will-change: transform;
+  animation: card-gold-sweep 2.1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Tiny GCJ monogram centred in the placeholder */
+.img-shimmer-bg::before {
+  content: 'GCJ';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0; /* inset: 0 fallback */
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-label);
+  font-size: 9px;
+  letter-spacing: 0.38em;
+  color: rgba(201, 168, 76, 0.18);
+  pointer-events: none;
+}
+
+/* When image finishes loading — fade out and kill the animation */
+.img-shimmer-bg.loaded {
+  opacity: 0;
+}
+.img-shimmer-bg.loaded::after {
+  animation: none;  /* stops the GPU layer once invisible */
+  will-change: auto;
+}
+
+/* Respect user motion preference — instant reveal, no sweep */
+@media (prefers-reduced-motion: reduce) {
+  .img-shimmer-bg::after {
+    animation: none;
+  }
+  .img-shimmer-bg {
+    transition: none;
   }
 }

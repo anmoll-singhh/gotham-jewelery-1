@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Link, useLocation } from "react-router-dom";
+import { scrollInstantToTop } from "./ScrollToTop";
 
 type NavLink = {
   label: string;
@@ -103,6 +104,7 @@ export function Nav() {
             >
               <Link
                 to={link.href}
+                onClick={scrollInstantToTop}
                 style={{
                   fontFamily:    "var(--f-label)",
                   fontSize:      "11px",
@@ -161,7 +163,7 @@ export function Nav() {
                           >
                             <Link
                               to={item.href}
-                              onClick={() => setOpenDropdown(null)}
+                              onClick={() => { setOpenDropdown(null); scrollInstantToTop(); }}
                               style={{
                                 display:       "block",
                                 padding:       "8px 20px",
@@ -189,7 +191,7 @@ export function Nav() {
 
           {/* CTA */}
           <li>
-            <Link to="/ring-builder">
+            <Link to="/ring-builder" onClick={scrollInstantToTop}>
               <motion.span
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
@@ -252,7 +254,7 @@ export function Nav() {
                 >
                   <Link
                     to={link.href}
-                    onClick={() => setMenuOpen(false)}
+                    onClick={() => { setMenuOpen(false); scrollInstantToTop(); }}
                     style={{
                       display:        "flex",
                       alignItems:     "center",
@@ -276,7 +278,7 @@ export function Nav() {
                         <Link
                           key={sub.label}
                           to={sub.href}
-                          onClick={() => setMenuOpen(false)}
+                          onClick={() => { setMenuOpen(false); scrollInstantToTop(); }}
                           style={{ fontFamily: "var(--f-label)", fontSize: "11px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(240,234,196,0.45)", display: "flex", alignItems: "center", gap: "8px", padding: "8px 0", borderBottom: "1px solid rgba(201,168,76,0.05)", transition: "color 0.2s" }}
                           onMouseEnter={e => { e.currentTarget.style.color = "var(--c-accent)"; }}
                           onMouseLeave={e => { e.currentTarget.style.color = "rgba(240,234,196,0.45)"; }}
@@ -296,7 +298,7 @@ export function Nav() {
                 transition={{ delay: 0.28, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                 style={{ padding: "40px var(--gutter) 0", display: "flex", flexDirection: "column", gap: "14px", width: "100%" }}
               >
-                <Link to="/ring-builder" onClick={() => setMenuOpen(false)}>
+                <Link to="/ring-builder" onClick={() => { setMenuOpen(false); scrollInstantToTop(); }}>
                   <span className="btn-primary" style={{ justifyContent: "center", width: "100%", display: "flex" }}>Book a Visit</span>
                 </Link>
                 <a href="tel:+19177570314" style={{ fontFamily: "var(--f-label)", fontSize: "11px", letterSpacing: "0.20em", textTransform: "uppercase", color: "rgba(201,168,76,0.5)", textAlign: "center", paddingTop: "8px" }}>

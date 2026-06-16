@@ -8,7 +8,7 @@
  *  - "Price on Request" text reveals on hover
  */
 
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 
 interface WatchTiltCardProps {
@@ -21,6 +21,7 @@ interface WatchTiltCardProps {
 
 export function WatchTiltCard({ img, name, ref_, brand, delay = 0 }: WatchTiltCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
+  const [imgLoaded, setImgLoaded] = useState(false)
 
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
@@ -65,19 +66,27 @@ export function WatchTiltCard({ img, name, ref_, brand, delay = 0 }: WatchTiltCa
         }}
         transition={{ scale: { type: 'spring', stiffness: 300, damping: 25 } }}
       >
+        {/* Gold shimmer placeholder — fades out once image is decoded */}
+        <div
+          className={`img-shimmer-bg${imgLoaded ? ' loaded' : ''}`}
+          aria-hidden="true"
+        />
+
         {/* Watch image */}
         <img
           src={img}
           alt={name}
           loading="lazy"
           className="watch-tilt-card-img"
+          onLoad={() => setImgLoaded(true)}
           style={{
             width:      '100%',
             height:     '100%',
             objectFit: 'cover',
             filter:     'brightness(0.52) saturate(0.82)',
             display:   'block',
-            transition: 'filter 0.4s ease',
+            transition: 'filter 0.4s ease, opacity 0.7s cubic-bezier(0.16,1,0.3,1)',
+            opacity:    imgLoaded ? 1 : 0,
           }}
         />
 
