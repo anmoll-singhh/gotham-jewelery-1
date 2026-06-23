@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOME — Gotham City Jewelers
  *
  * Sequence
