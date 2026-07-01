@@ -555,7 +555,9 @@ button {
 
 @media (max-width: 767px) {
   .hero-full {
-    min-height: 100svh;
+    /* dvh (not svh): tracks the live viewport so the hero grows as the mobile
+       address bar retracts — svh stays at the bar-shown size and leaves a gap. */
+    min-height: 100dvh;
   }
 }
 
@@ -696,8 +698,8 @@ button {
 
 @media (max-width: 767px) {
   .watch-canvas-wrap {
-    height: 100vh !important;   /* fallback: browsers without svh */
-    height: 100svh !important;  /* small viewport = always the visible area */
+    height: 100vh !important;   /* fallback: browsers without dvh */
+    height: 100dvh !important;  /* dynamic viewport: fills as the address bar retracts (no bottom gap) */
   }
 
   /* Vault panels are hidden on mobile (both sit at the same absolute position
@@ -1348,8 +1350,55 @@ html {
 @media (max-width: 767px) {
   .vault-hero,
   .hero-scene {
-    height: 100svh;
+    /* dvh (not svh): the hero tracks the live viewport, so it grows with the
+       page as the mobile address bar retracts instead of leaving a bottom gap. */
+    height: 100dvh;
   }
+}
+
+/* ── WatchCanvas frame-preload loading animation ─────────────────────
+   While the scroll-driven frames preload behind the first-frame poster, a
+   subtle gold light sweeps across the scene + the label pulses, so the user
+   knows the section is loading more and is an interactive reveal, not a still. */
+@keyframes wc-shimmer {
+  0%   { transform: translateX(-130%); }
+  100% { transform: translateX(130%); }
+}
+.wc-shimmer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden;
+}
+.wc-shimmer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 55%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(201, 168, 76, 0.08) 42%,
+    rgba(240, 234, 196, 0.16) 50%,
+    rgba(201, 168, 76, 0.08) 58%,
+    transparent 100%
+  );
+  filter: blur(8px);
+  animation: wc-shimmer 2.1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+@keyframes wc-pulse {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; }
+}
+.wc-loading-label {
+  animation: wc-pulse 1.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wc-shimmer::before { animation: none; }
+  .wc-loading-label   { animation: none; opacity: 0.7; }
 }
 
 /* ── Timepieces hero: portrait AI images on mobile ───────────────────

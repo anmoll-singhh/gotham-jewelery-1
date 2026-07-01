@@ -302,12 +302,16 @@ export function WatchCanvas({
               <div style={{ width: "180px", height: "1px", background: "rgba(197,164,110,0.15)", margin: "0 auto 14px" }}>
                 <div style={{ height: "100%", width: `${loadPct}%`, background: "var(--c-accent)", transition: "width 0.1s linear" }} />
               </div>
-              <p style={{ fontFamily: "var(--f-body)", fontSize: "9px", letterSpacing: "0.32em", textTransform: "uppercase", color: "rgba(255,255,255,0.22)" }}>
-                Loading · {loadPct}%
+              <p className="wc-loading-label" style={{ fontFamily: "var(--f-body)", fontSize: "9px", letterSpacing: "0.32em", textTransform: "uppercase", color: "rgba(201,168,76,0.62)" }}>
+                Loading the reveal · {loadPct}%
               </p>
             </div>
           </div>
         )}
+
+        {/* ── Loading shimmer — subtle gold sweep over the poster while frames
+             preload, signalling the scene is loading more (not a static image) ── */}
+        {mode === "canvas" && !ready && <div className="wc-shimmer" aria-hidden="true" />}
 
         {/* ── Entry overlay (fades from black over first 6% of progress) ── */}
         <div
