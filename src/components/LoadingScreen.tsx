@@ -3,9 +3,9 @@
  *
  * Sequence:
  *  1. Black screen — gold hairlines draw across top and bottom
- *  2. Bat outline traces itself (pathLength 0→1) over 2.8s with glow
+ *  2. Bat outline traces itself (pathLength 0→1) over 2.9s with glow
  *  3. "GOTHAM CITY JEWELERS" logo fades in at 70% draw completion
- *  4. 500ms hold at complete state — bat fill materialises
+ *  4. 1000ms hold at complete state — bat fill materialises
  *  5. Left panel flies x→-100%, right panel flies x→+100%, 0.92s expo ease
  *  6. onDone() fires — home page takes over
  *
@@ -47,8 +47,8 @@ const BAT_D =
 const EASE_DRAW: [number, number, number, number] = [0.42, 0, 0.58, 1]
 const EASE_SPLIT: [number, number, number, number] = [0.76, 0, 0.24, 1]
 
-const DRAW_MS = 2200   // bat trace duration
-const PAUSE_MS = 700    // hold at complete
+const DRAW_MS = 2900   // bat trace duration (+700ms for a slower, more cinematic trace)
+const PAUSE_MS = 1000   // hold at complete (+300ms longer beat before the split)
 const SPLIT_MS = 650    // split animation duration
 
 type Phase = 'drawing' | 'complete' | 'splitting' | 'gone'
