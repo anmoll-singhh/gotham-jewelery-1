@@ -4,7 +4,7 @@
  * HOW IT WORKS:
  *  1. Probe frame0001.jpg. If it loads → canvas mode. If it 404s → static mode.
  *  2. Canvas mode: preload all frames, RAF loop draws current frame.
- *  3. Static mode: show frame0061.jpg as a poster.
+ *  3. Static mode: show frame0001.jpg as a poster (also the always-on bg layer).
  *  4. Desktop: GSAP ScrollTrigger pins + scrubs.
  *     Mobile:   CSS position:sticky wrapper + native scroll listener drives same doUpdate.
  */
@@ -258,7 +258,27 @@ export function WatchCanvas({
           overflow: "hidden",
         }}
       >
+        {/* ── Poster — the FIRST FRAME is always the background layer ──
+            Rendered in every mode (detecting, static AND canvas-while-loading)
+            so the section shows frame 1 instead of the raw green void before
+            the canvas has painted. This is the fallback picture for the whole
+            scene. zIndex:1 keeps it behind the live canvas. */}
+        <img
+          src={`${framesPath}/frame0001.jpg`}
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: "absolute", inset: 0,
+            width: "100%", height: "100%",
+            objectFit: "cover", objectPosition: "center",
+            zIndex: 1, background: "#000",
+          }}
+          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+        />
+
         {/* ── Canvas ──────────────────────────────────────────── */}
+        {/* transparent bg (NOT var(--c-void)) so the poster shows through until
+            the first frame is drawn — otherwise an opaque green canvas hides it */}
         {mode === "canvas" && (
           <canvas
             ref={canvasRef}
@@ -266,24 +286,7 @@ export function WatchCanvas({
               position: "absolute", inset: 0,
               width: "100%", height: "100%",
               display: "block", zIndex: 2,
-              background: "var(--c-void)", imageRendering: "auto",
-            }}
-          />
-        )}
-
-        {/* ── Static poster ───────────────────────────────────── */}
-        {(mode === "detecting" || mode === "static") && (
-          <img
-            src={mode === "detecting"
-              ? `${framesPath}/frame0001.jpg`
-              : `${framesPath}/frame0001.jpg`}
-            alt=""
-            aria-hidden="true"
-            style={{
-              position: "absolute", inset: 0,
-              width: "100%", height: "100%",
-              objectFit: "cover", objectPosition: "center",
-              zIndex: 2, background: "var(--c-void)",
+              background: "transparent", imageRendering: "auto",
             }}
           />
         )}
@@ -293,7 +296,7 @@ export function WatchCanvas({
           <div style={{
             position: "absolute", inset: 0,
             display: "flex", alignItems: "center", justifyContent: "center",
-            background: "var(--c-void)",
+            background: "rgba(12,18,8,0.55)", zIndex: 4,
           }}>
             <div style={{ textAlign: "center" }}>
               <div style={{ width: "180px", height: "1px", background: "rgba(197,164,110,0.15)", margin: "0 auto 14px" }}>
