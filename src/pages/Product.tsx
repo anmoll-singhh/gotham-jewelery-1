@@ -208,7 +208,7 @@ function ProductView({ product }: { product: Product }) {
   return (
     <>
       <Nav />
-      <main style={{ background: "var(--bg-void-grad)", paddingTop: "74px" }}>
+      <main style={{ background: "var(--bg-product)", paddingTop: "74px" }}>
 
         {/* ── 1 · Breadcrumb ───────────────────────────────────────────── */}
         <nav aria-label="Breadcrumb" style={{ padding: `20px ${gutter} 0`, maxWidth: "var(--max-w)", margin: "0 auto" }}>
