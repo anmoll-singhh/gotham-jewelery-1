@@ -67,11 +67,11 @@ export function Nav() {
           alignItems:     "center",
           justifyContent: "space-between",
           padding:        "0 var(--gutter)",
-          height:         "68px",
+          height:         "74px",
           transition:     "background 0.45s var(--ease-silk), backdrop-filter 0.45s var(--ease-silk)",
-          background:     scrolled ? "rgba(24,30,15,0.94)" : "transparent",
-          backdropFilter: scrolled ? "blur(20px) saturate(160%)" : "none",
-          borderBottom:   scrolled ? "1px solid rgba(201,168,76,0.10)" : "1px solid transparent",
+          background:     scrolled ? "rgba(34,49,22,0.90)" : "linear-gradient(to bottom, rgba(18,26,10,0.55) 0%, rgba(18,26,10,0) 100%)",
+          backdropFilter: scrolled ? "blur(20px) saturate(150%)" : "none",
+          borderBottom:   scrolled ? "1px solid rgba(201,168,76,0.24)" : "1px solid transparent",
         }}
       >
         {/* Logo */}
@@ -79,7 +79,7 @@ export function Nav() {
           <img
             src="/assets/gotham-logo.webp"
             alt="Gotham City Jewelers"
-            style={{ height: "30px", width: "auto", display: "block", filter: "brightness(0) invert(1)", opacity: 0.9 }}
+            style={{ height: "34px", width: "auto", display: "block", filter: "brightness(0) invert(1)", opacity: 1 }}
             onError={e => {
               const el = e.currentTarget as HTMLImageElement;
               // webp not supported → try original PNG
@@ -107,22 +107,22 @@ export function Nav() {
                 onClick={scrollInstantToTop}
                 style={{
                   fontFamily:    "var(--f-label)",
-                  fontSize:      "12px",
-                  letterSpacing: "0.18em",
+                  fontSize:      "14.5px",
+                  fontWeight:    600,
+                  letterSpacing: "0.12em",
                   textTransform: "uppercase",
-                  color:         location.pathname === link.href ? "var(--c-accent)" : "var(--c-text)",
-                  opacity:       location.pathname === link.href ? 1 : 0.85,
+                  color:         location.pathname === link.href ? "var(--c-accent)" : "var(--c-nav-text)",
+                  opacity:       1,
                   transition:    "opacity 0.25s var(--ease-ui), color 0.25s var(--ease-ui)",
                   display:       "flex",
                   alignItems:    "center",
                   gap:           "5px",
-                  textShadow:    scrolled ? "none" : "0 1px 8px rgba(0,0,0,0.55)",
+                  textShadow:    scrolled ? "none" : "0 1px 12px rgba(0,0,0,0.7), 0 0 2px rgba(0,0,0,0.4)",
                 }}
-                onMouseEnter={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.color = "var(--c-accent)"; }}
+                onMouseEnter={e => { e.currentTarget.style.color = "var(--c-accent-bright)"; }}
                 onMouseLeave={e => {
                   const active = location.pathname === link.href;
-                  e.currentTarget.style.opacity = active ? "1" : "0.85";
-                  e.currentTarget.style.color   = active ? "var(--c-accent)" : "var(--c-text)";
+                  e.currentTarget.style.color   = active ? "var(--c-accent)" : "var(--c-nav-text)";
                 }}
               >
                 {link.label}
@@ -199,18 +199,21 @@ export function Nav() {
                 transition={{ type: "spring", stiffness: 300, damping: 22 }}
                 style={{
                   display:       "inline-block",
-                  padding:       "10px 22px",
-                  border:        "1px solid rgba(201,168,76,0.55)",
+                  padding:       "11px 26px",
+                  border:        "1px solid var(--c-accent)",
+                  background:    "var(--c-accent)",
                   fontFamily:    "var(--f-label)",
-                  fontSize:      "12px",
-                  letterSpacing: "0.18em",
+                  fontSize:      "13px",
+                  fontWeight:    600,
+                  letterSpacing: "0.14em",
                   textTransform: "uppercase",
-                  color:         "var(--c-accent)",
+                  color:         "var(--c-void)",
                   cursor:        "pointer",
-                  transition:    "border-color 0.25s var(--ease-ui), background 0.25s var(--ease-ui)",
+                  boxShadow:     scrolled ? "0 2px 10px rgba(0,0,0,0.2)" : "0 2px 18px rgba(0,0,0,0.3)",
+                  transition:    "border-color 0.25s var(--ease-ui), background 0.25s var(--ease-ui), box-shadow 0.25s var(--ease-ui)",
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--c-accent)"; (e.currentTarget as HTMLElement).style.background = "rgba(201,168,76,0.08)"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(201,168,76,0.45)"; (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--c-accent-bright)"; (e.currentTarget as HTMLElement).style.borderColor = "var(--c-accent-bright)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "var(--c-accent)"; (e.currentTarget as HTMLElement).style.borderColor = "var(--c-accent)"; }}
               >
                 Book a Visit
               </motion.span>

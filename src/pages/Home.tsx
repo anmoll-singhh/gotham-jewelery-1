@@ -27,7 +27,6 @@ import {
   Footer,
   MagneticBtn,
   HeroSkeleton,
-  LoadingScreen,
   Pic,
 } from "@/components";
 import { WatchCanvas } from "@/components/WatchCanvas";
@@ -53,8 +52,6 @@ const GoldLine = ({ opacity = 0.5 }: { opacity?: number }) => (
     background: `linear-gradient(to right, transparent, rgba(201,168,76,${opacity}) 30%, rgba(201,168,76,${opacity * 1.1}) 50%, rgba(201,168,76,${opacity}) 70%, transparent)`,
   }} />
 );
-
-let _loaderShown = false;
 
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -108,7 +105,7 @@ function HeroScene({ live }: { live: boolean }) {
             alt="" aria-hidden="true"
             fetchPriority={i === 0 ? "high" : "low"}
             loading={i === 0 ? "eager" : "lazy"}
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.82) saturate(0.88) contrast(1.02)" }}
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(1.02) saturate(1.04) contrast(1.0)" }}
           />
         </div>
       ))}
@@ -256,9 +253,9 @@ function StoneJourneyScene() {
         src="/assets/gotham-diamond-macro.webp"
         alt="" aria-hidden="true"
         loading="lazy"
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", filter: "brightness(0.55) saturate(0.65)", transition: "filter 0.1s linear", willChange: "filter" }}
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", filter: "brightness(0.74) saturate(0.82)", transition: "filter 0.1s linear", willChange: "filter" }}
       />
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 50% 50%, transparent 0%, rgba(0,0,0,0.62) 100%)" }} />
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 60% 70% at 50% 50%, transparent 0%, rgba(0,0,0,0.48) 100%)" }} />
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, var(--c-void) 0%, transparent 30%)" }} />
 
       {/* Progress bar */}
@@ -301,7 +298,7 @@ function StoneJourneyScene() {
       </div>
 
       {/* Mobile layout — additional overlay behind text for contrast */}
-      <div className="show-mobile-only" style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, rgba(0,0,0,0.52) 0%, rgba(0,0,0,0.28) 60%, transparent 100%)", pointerEvents: "none", zIndex: 9 }} />
+      <div className="show-mobile-only" style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)", pointerEvents: "none", zIndex: 9 }} />
       <div className="show-mobile-only" style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", gap: "clamp(48px, 10vw, 72px)", padding: "var(--s-xl) var(--gutter)", minHeight: "100%", justifyContent: "center" }}>
         {[
           { num: "01", label: "The Earth",    title: "Rough.",      body: "Every diamond begins as carbon under pressure — millions of years compressed into light. We source only what passes our loupe on day one." },
@@ -477,7 +474,7 @@ function NightRevealScene() {
       onProgress={onProgress}
     >
           <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 75% 85% at 50% 50%, transparent 0%, rgba(0,0,0,0.50) 100%)" }} />
-          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 52%)" }} />
+          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 52%)" }} />
 
           {/* Flex centering on outer div means GSAP never touches the centering offset.
               Inner ref div is what GSAP animates (y, opacity only — no conflicting transform). */}
@@ -548,8 +545,8 @@ function StoreMobileCards() {
       >
         {STORE_CARDS.map((s, i) => (
           <div key={i} style={{ position: "relative", width: "100vw", height: "80vh", flexShrink: 0, scrollSnapAlign: "start", overflow: "hidden" }}>
-            <Pic src={s.img} alt="" aria-hidden="true" loading={i === 0 ? "eager" : "lazy"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.72) saturate(0.88)" }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.08) 55%, transparent 100%)" }} />
+            <Pic src={s.img} alt="" aria-hidden="true" loading={i === 0 ? "eager" : "lazy"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.9) saturate(0.94)" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.05) 55%, transparent 100%)" }} />
             <div style={{ position: "relative", zIndex: 10, padding: "var(--gutter)", height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
               <span style={lbl}>{s.label}</span>
               <h3 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h2)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", marginBottom: "10px" }}>{s.title}</h3>
@@ -650,11 +647,11 @@ function StoreScene() {
 
       {/* Layer 1: Exterior — desktop only; mobile fallback renders its own images */}
       <div ref={layer1Ref} className="hide-mobile" style={{ position: "absolute", inset: 0, willChange: "opacity, transform" }}>
-        <video className="hide-mobile" autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.60) saturate(0.85)" }}>
+        <video className="hide-mobile" autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.86) saturate(0.9)" }}>
           <source src="/assets/gotham-showroom-walk.mp4" type="video/mp4" />
         </video>
-        <Pic src="/assets/gotham-store-interior-1.webp" alt="" aria-hidden="true" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.60) saturate(0.85)" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.10) 50%, transparent 100%)" }} />
+        <Pic src="/assets/gotham-store-interior-1.webp" alt="" aria-hidden="true" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.86) saturate(0.9)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.06) 50%, transparent 100%)" }} />
         <div ref={text1Ref} style={textBox}>
           <span style={lbl}>23 West 47th Street · Suite 402</span>
           <h2 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h1)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", letterSpacing: "var(--ls-display)", marginBottom: "16px" }}>
@@ -668,8 +665,8 @@ function StoreScene() {
 
       {/* Layer 2: Display Cases */}
       <div ref={layer2Ref} style={{ position: "absolute", inset: 0, willChange: "opacity, transform", opacity: 0 }}>
-        <Pic src="/assets/gotham-store-interior-2.webp" alt="Jewelry display cases" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.78) saturate(0.88)" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.12) 55%, transparent 100%)" }} />
+        <Pic src="/assets/gotham-store-interior-2.webp" alt="Jewelry display cases" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.92) saturate(0.92)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.56) 0%, rgba(0,0,0,0.08) 55%, transparent 100%)" }} />
         <div ref={text2Ref} style={textBox}>
           <span style={lbl}>The Collection · Price on Request</span>
           <h2 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h1)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", letterSpacing: "var(--ls-display)", marginBottom: "16px" }}>
@@ -684,8 +681,8 @@ function StoreScene() {
 
       {/* Layer 3: The Consultation — single CTA: Call */}
       <div ref={layer3Ref} style={{ position: "absolute", inset: 0, willChange: "opacity, transform", opacity: 0 }}>
-        <Pic src="/assets/gotham-diamond-macro.webp" alt="Private consultation" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.78) saturate(0.85)" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.1) 60%, transparent 100%)" }} />
+        <Pic src="/assets/gotham-diamond-macro.webp" alt="Private consultation" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.92) saturate(0.88)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.06) 60%, transparent 100%)" }} />
         <div ref={text3Ref} style={{ ...textBox, maxWidth: "600px" }}>
           <span style={lbl}>Private Consultation · By Appointment</span>
           <h2 style={{ fontFamily: "var(--f-display)", fontSize: "var(--t-h1)", color: "var(--c-white)", fontStyle: "italic", fontWeight: 400, lineHeight: "var(--lh-display)", letterSpacing: "var(--ls-display)", marginBottom: "16px" }}>
@@ -899,8 +896,8 @@ function CityScene() {
 
   return (
     <section ref={ref} style={{ position: "relative", overflow: "hidden", minHeight: "72vh", display: "flex", alignItems: "center", background: "var(--bg-void-grad)", zIndex: 5 }}>
-      <Pic ref={imgRef} src="/assets/gotham-newyork.webp" alt="Manhattan" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.58) saturate(0.68)", willChange: "transform" }} />
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.04) 100%)" }} />
+      <Pic ref={imgRef} src="/assets/gotham-newyork.webp" alt="Manhattan" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.85) saturate(0.9)", willChange: "transform" }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(0,0,0,0.44) 0%, rgba(0,0,0,0.02) 100%)" }} />
 
       <div className="city-scene-rule" style={{ position: "absolute", top: "14%", bottom: "14%", left: "var(--gutter)", width: "1px", background: "linear-gradient(to bottom, transparent, rgba(201,168,76,0.48) 30%, rgba(201,168,76,0.48) 70%, transparent)" }} />
 
@@ -929,14 +926,6 @@ function CityScene() {
 // HOME ROOT
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function Home() {
-  const [loaded, setLoaded] = useState(_loaderShown);
-
-  const handleLoaderDone = useCallback(() => {
-    _loaderShown = true;
-    setLoaded(true);
-    requestAnimationFrame(() => requestAnimationFrame(() => ScrollTrigger.refresh()));
-  }, []);
-
   useEffect(() => {
     const handleLoad = () => ScrollTrigger.refresh();
     window.addEventListener("load", handleLoad);
@@ -950,11 +939,10 @@ export default function Home() {
 
   return (
     <>
-      {!_loaderShown && <LoadingScreen onDone={handleLoaderDone} />}
       <Nav />
       <main style={{ background: "var(--bg-void-grad)" }}>
 
-        <HeroScene live={loaded} />
+        <HeroScene live={true} />
         <GoldLine />
 
         <StoneJourneyScene />

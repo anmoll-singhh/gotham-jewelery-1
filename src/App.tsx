@@ -6,6 +6,7 @@ const Home          = lazy(() => import('./pages/Home'))
 const Timepieces    = lazy(() => import('./pages/Timepieces'))
 const RingBuilder   = lazy(() => import('./pages/RingBuilder'))
 const CustomJewelry = lazy(() => import('./pages/CustomJewelry'))
+const Product       = lazy(() => import('./pages/Product'))
 
 // ── 404 ─────────────────────────────────────────────────────────────────────
 function NotFound() {
@@ -74,6 +75,7 @@ function App() {
         <Routes>
           <Route path="/"               element={<Home />} />
           <Route path="/timepieces"     element={<Timepieces />} />
+          <Route path="/products/:handle" element={<Product />} />
           <Route path="/ring-builder"   element={<RingBuilder />} />
           <Route path="/custom-jewelry" element={<CustomJewelry />} />
           <Route path="*"               element={<NotFound />} />

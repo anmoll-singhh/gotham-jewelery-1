@@ -241,14 +241,14 @@ function Invitation() {
           height:          '120%',
           objectFit:      'cover',
           objectPosition: 'center',
-          filter:         'brightness(0.64)',
+          filter:         'brightness(0.85)',
           willChange:     'transform',
         }}
       />
       <div style={{
         position:   'absolute',
         inset:       0,
-        background:  'linear-gradient(135deg, rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.18) 100%)',
+        background:  'linear-gradient(135deg, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.12) 100%)',
       }} />
 
       <div style={{
@@ -366,14 +366,14 @@ export default function RingBuilder() {
               height:          '100%',
               objectFit:      'cover',
               objectPosition: 'center',
-              filter:         'brightness(0.74)',
+              filter:         'brightness(0.9)',
               willChange:     'transform',
             }}
           />
           <div style={{
             position:   'absolute',
             inset:       0,
-            background:  'linear-gradient(to top, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0.22) 35%, transparent 100%)',
+            background:  'linear-gradient(to top, rgba(0,0,0,0.52) 0%, rgba(0,0,0,0.16) 35%, transparent 100%)',
           }} />
 
           <div style={{

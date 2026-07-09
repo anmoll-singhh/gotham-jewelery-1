@@ -2,6 +2,7 @@
 import gsap from "gsap";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useSearchParams } from "react-router-dom";
+import { handleForRef } from "@/data/products";
 import {
   Nav,
   Footer,
@@ -89,7 +90,7 @@ function VaultScene() {
           {/* Radial vignette */}
           <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 52% 62% at 50% 50%, transparent 0%, rgba(0,0,0,0.82) 100%)" }} />
           {/* Bottom fade */}
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "44%", pointerEvents: "none", background: "linear-gradient(to top, rgba(0,0,0,0.95), transparent)" }} />
+          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "44%", pointerEvents: "none", background: "linear-gradient(to top, rgba(0,0,0,0.8), transparent)" }} />
 
           {/* P1 — Rolex Submariner */}
           <div className="vault-panel-1" ref={p1Wrap}>
@@ -299,7 +300,7 @@ function TheHouses() {
                 loading="lazy"
                 style={{
                   position: "absolute", inset: 0, width: "100%", height: "100%",
-                  objectFit: "cover", filter: "brightness(0.72) saturate(0.92)",
+                  objectFit: "cover", filter: "brightness(0.9) saturate(0.96)",
                   transition: "transform 0.9s var(--ease-out)",
                 }}
                 onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.04)"; }}
@@ -307,7 +308,7 @@ function TheHouses() {
               />
               <div style={{
                 position: "absolute", inset: 0,
-                background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.22) 60%, rgba(0,0,0,0.06) 100%)",
+                background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.16) 60%, rgba(0,0,0,0.04) 100%)",
               }} />
               <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "clamp(20px,4vw,40px) var(--gutter)" }}>
                 <img
@@ -352,11 +353,11 @@ function TheHouses() {
               <img
                 src={brand.watch} alt={brand.name}
                 loading="lazy"
-                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.72) saturate(0.92)" }}
+                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.9) saturate(0.96)" }}
               />
               <div style={{
                 position: "absolute", inset: 0,
-                background: "linear-gradient(to top, rgba(0,0,0,0.84) 0%, rgba(0,0,0,0.18) 65%, transparent 100%)",
+                background: "linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.12) 65%, transparent 100%)",
               }} />
               <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "24px var(--gutter)" }}>
                 <img src={brand.img} alt={brand.name} loading="lazy" style={{ height: "22px", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.88, marginBottom: "10px" }} />
@@ -444,16 +445,23 @@ function FeaturedWatches({ activeBrand, sectionRef }: { activeBrand: string; sec
 
         {hasInventory ? (
           <div className="grid-3col">
-            {filtered.map((watch, i) => (
-              <WatchTiltCard
-                key={watch.ref}
-                img={watch.img}
-                name={watch.name}
-                ref_={watch.ref}
-                brand={watch.brand}
-                delay={i * 0.08}
-              />
-            ))}
+            {filtered.map((watch, i) => {
+              const h = handleForRef(watch.ref);
+              const card = (
+                <WatchTiltCard
+                  img={watch.img}
+                  name={watch.name}
+                  ref_={watch.ref}
+                  brand={watch.brand}
+                  delay={i * 0.08}
+                />
+              );
+              return h ? (
+                <Link key={watch.ref} to={`/products/${h}`} style={{ display: "block", height: "100%" }}>{card}</Link>
+              ) : (
+                <div key={watch.ref} style={{ height: "100%" }}>{card}</div>
+              );
+            })}
           </div>
         ) : (
           <div style={{ padding: "var(--s-lg) 0", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "28px", borderTop: "1px solid rgba(50,61,34,0.08)" }}>
@@ -511,9 +519,9 @@ function ExchangeCTA() {
         src="/assets/gotham-sell-trade.webp"
         alt="Sell or trade your luxury watch"
         loading="lazy"
-        style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.65) saturate(0.88)", willChange: "transform" }}
+        style={{ position: "absolute", inset: 0, width: "100%", height: "120%", objectFit: "cover", filter: "brightness(0.88) saturate(0.94)", willChange: "transform" }}
       />
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.28) 100%)" }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.18) 100%)" }} />
 
       <div style={{
         position: "relative", zIndex: 10, maxWidth: "var(--max-w)", margin: "0 auto",
@@ -608,7 +616,7 @@ export default function Timepieces() {
               {/* <picture> serves portrait AI-generated shots on mobile, landscape banners on desktop */}
               <picture style={{ position: "absolute", inset: 0, display: "block" }}>
                 <source media="(max-width: 767px)" srcSet={s.mobileImg} type="image/webp" />
-                <img src={s.img} alt="" aria-hidden="true" className="vault-hero-img" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.62) saturate(0.88) contrast(1.06)" }} />
+                <img src={s.img} alt="" aria-hidden="true" className="vault-hero-img" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "brightness(0.88) saturate(0.94) contrast(1.03)" }} />
               </picture>
             </div>
           ))}

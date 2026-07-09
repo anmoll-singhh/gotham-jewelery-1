@@ -88,7 +88,7 @@ function TheCraft() {
                       width:      '100%',
                       height:     '100%',
                       objectFit: 'cover',
-                      filter:     'brightness(0.78) saturate(0.92)',
+                      filter:     'brightness(0.92) saturate(0.96)',
                       transition: 'transform 0.9s var(--ease-out)',
                     }}
                     onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.04)' }}
@@ -408,14 +408,14 @@ export default function CustomJewelry() {
               height:          '100%',
               objectFit:      'cover',
               objectPosition: 'center',
-              filter:         'brightness(0.74)',
+              filter:         'brightness(0.9)',
               willChange:     'transform',
             }}
           />
           <div style={{
             position:   'absolute',
             inset:       0,
-            background:  'linear-gradient(to top, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0.22) 35%, transparent 100%)',
+            background:  'linear-gradient(to top, rgba(0,0,0,0.52) 0%, rgba(0,0,0,0.16) 35%, transparent 100%)',
           }} />
 
           <div style={{

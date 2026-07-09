@@ -2,11 +2,18 @@
  * WatchCanvas — Apple-style scroll-driven frame sequence player.
  *
  * HOW IT WORKS:
- *  1. Probe frame0001.jpg. If it loads → canvas mode. If it 404s → static mode.
- *  2. Canvas mode: preload all frames, RAF loop draws current frame.
- *  3. Static mode: show frame0001.jpg as a poster (also the always-on bg layer).
- *  4. Desktop: GSAP ScrollTrigger pins + scrubs.
- *     Mobile:   CSS position:sticky wrapper + native scroll listener drives same doUpdate.
+ *  1. Resolve which frame set to use: on phones/touch, probe `${framesPath}-mobile`
+ *     and use it if present (smaller frames → far less decode/memory/draw cost);
+ *     otherwise fall back to the desktop `framesPath`. The pages never see this —
+ *     the mobile path is derived internally from the prop.
+ *  2. Probe frame0001.jpg of the resolved path. If it loads → canvas mode, else static.
+ *  3. Canvas mode: preload all frames — each is fully `img.decode()`d BEFORE it counts
+ *     as loaded, so no JPEG is decoded synchronously on the main thread mid-scroll
+ *     (the #1 source of scrub stutter). A RAF loop then draws the current frame.
+ *  4. Static mode: show frame0001.jpg as a poster (also the always-on bg layer).
+ *  5. Desktop: GSAP ScrollTrigger pins + scrubs. Canvas backing store capped at DPR 3.
+ *     Mobile:  CSS position:sticky wrapper + native scroll listener drives same doUpdate.
+ *              Canvas backing store capped at DPR 2 so it isn't gigantic on phones.
  */
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -23,6 +30,12 @@ interface WatchCanvasProps {
 
 const DEFAULT_FRAMES = 193;
 const DEFAULT_PATH = "/assets/watch-frames";
+
+// Phones/small touch screens: load the lighter `-mobile` frame set (if it exists)
+// and cap the canvas backing store at DPR 2. Desktop keeps the full set at DPR 3.
+const MOBILE_MQ = "(max-width: 767px)";
+const isMobileViewport = () =>
+  typeof window !== "undefined" && window.matchMedia(MOBILE_MQ).matches;
 
 export function WatchCanvas({
   totalFrames = DEFAULT_FRAMES,
@@ -45,9 +58,13 @@ export function WatchCanvas({
   const [mode, setMode]       = useState<"detecting" | "canvas" | "static">("detecting");
   const [loadPct, setLoadPct] = useState(0);
   const [ready, setReady]     = useState(false);
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches
-  );
+  const [isMobile, setIsMobile] = useState(isMobileViewport);
+
+  // Which frame directory to actually load. Defaults to the prop (desktop set);
+  // upgraded to `${framesPath}-mobile` on phones once that set is confirmed present.
+  // Resolved synchronously on desktop (no probe) so the poster never flickers.
+  const [activePath, setActivePath] = useState(framesPath);
+  const [pathResolved, setPathResolved] = useState(() => !isMobileViewport());
 
   const modeRef  = useRef(mode);
   const readyRef = useRef(ready);
@@ -59,11 +76,36 @@ export function WatchCanvas({
 
   // Track viewport breakpoint for sticky vs GSAP pin decision
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
+    const mq = window.matchMedia(MOBILE_MQ);
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
   }, []);
+
+  // ─── Phase 0: Resolve desktop vs mobile frame set (decided ONCE at mount) ──
+  // On a phone, probe `${framesPath}-mobile/frame0001.jpg`; use that lighter set
+  // if present, else fall back to the desktop set. Decided once (not on resize) so
+  // crossing the breakpoint never triggers a full 193-frame re-download.
+  useEffect(() => {
+    if (!isMobileViewport()) {
+      setActivePath(framesPath);   // no-ops on desktop (already the initial value)
+      setPathResolved(true);
+      return;
+    }
+    let cancelled = false;
+    const mobilePath = `${framesPath}-mobile`;
+    const finish = (path: string) => {
+      if (cancelled) return;
+      setActivePath(path);
+      setPathResolved(true);
+    };
+    const probe = new Image();
+    const timeout = setTimeout(() => finish(framesPath), 1500); // slow probe → desktop set
+    probe.onload  = () => { clearTimeout(timeout); finish(mobilePath); };
+    probe.onerror = () => { clearTimeout(timeout); finish(framesPath); };
+    probe.src = `${mobilePath}/frame0001.jpg`;
+    return () => { cancelled = true; clearTimeout(timeout); };
+  }, [framesPath]);
 
   // Parse "320%" → 320  (used for sticky wrapper height: scrubVh + 100)
   const scrubVh = parseInt(scrubLength.replace("%", ""), 10) || 500;
@@ -77,7 +119,10 @@ export function WatchCanvas({
   }, []);
 
   // ─── Phase 1: Probe for frames (all devices — mobile also gets canvas) ─
+  // Waits for Phase 0 so it probes the resolved (possibly `-mobile`) path.
   useEffect(() => {
+    if (!pathResolved) return;
+
     const timeout = setTimeout(() => {
       if (modeRef.current === "detecting") setMode("static");
     }, 1800);
@@ -85,37 +130,71 @@ export function WatchCanvas({
     const probe = new Image();
     probe.onload = () => { clearTimeout(timeout); setMode("canvas"); };
     probe.onerror = () => { clearTimeout(timeout); setMode("static"); };
-    probe.src = `${framesPath}/frame0001.jpg`;
+    probe.src = `${activePath}/frame0001.jpg`;
 
     return () => clearTimeout(timeout);
-  }, [framesPath]);
+  }, [pathResolved, activePath]);
 
-  // ─── Phase 2a: Canvas mode — preload all frames ──────────────────────
+  // ─── Phase 2a: Canvas mode — preload + DECODE all frames ─────────────
+  // Each frame is fully decoded (img.decode()) before it counts as "loaded", so the
+  // heavy JPEG decode happens here — off the scroll-time main thread — instead of
+  // lazily on the first drawImage() during a scrub (the biggest cause of stutter).
+  // A small concurrency pool keeps a bounded number of decodes in flight so the
+  // preload itself stays smooth and early (visible-first) frames land first.
   useEffect(() => {
     if (mode !== "canvas") return;
 
+    let cancelled = false;
     let loaded = 0;
+    let next = 0;
+    const CONCURRENCY = 6;
     const imgs = new Array<HTMLImageElement>(totalFrames);
 
-    for (let i = 0; i < totalFrames; i++) {
-      const img = new Image();
-      const idx = i;
-      const onDone = () => {
-        loaded++;
-        setLoadPct(Math.round((loaded / totalFrames) * 100));
-        if (loaded === totalFrames) {
-          frames.current = imgs;
-          setReady(true);
-        }
-      };
-      img.onload = onDone;
-      img.onerror = onDone;
-      img.src = `${framesPath}/frame${String(idx + 1).padStart(4, "0")}.jpg`;
-      imgs[idx] = img;
-    }
+    const loadOne = (idx: number) =>
+      new Promise<void>((resolve) => {
+        const img = new Image();
+        img.decoding = "async";
+        imgs[idx] = img;
+        let settled = false;
+        const done = () => {
+          if (settled) return;
+          settled = true;
+          loaded++;
+          if (!cancelled) setLoadPct(Math.round((loaded / totalFrames) * 100));
+          resolve();
+        };
+        // Attach handlers BEFORE src so nothing is missed. On load, decode() moves
+        // the pixel decode off the main thread; if decode() rejects (cache/CORS
+        // quirks) we still count the frame so the preload can never stall.
+        img.onload = () => {
+          if (typeof img.decode === "function") {
+            img.decode().then(done).catch(done);
+          } else {
+            done();
+          }
+        };
+        img.onerror = done; // 404/broken frame → count it, don't hang the bar
+        img.src = `${activePath}/frame${String(idx + 1).padStart(4, "0")}.jpg`;
+      });
 
-    return () => { frames.current = []; };
-  }, [mode, totalFrames, framesPath]);
+    const worker = async () => {
+      while (!cancelled) {
+        const idx = next++;
+        if (idx >= totalFrames) return;
+        await loadOne(idx);
+      }
+    };
+
+    const workers: Promise<void>[] = [];
+    for (let i = 0; i < Math.min(CONCURRENCY, totalFrames); i++) workers.push(worker());
+    Promise.all(workers).then(() => {
+      if (cancelled) return;
+      frames.current = imgs;
+      setReady(true);
+    });
+
+    return () => { cancelled = true; frames.current = []; };
+  }, [mode, totalFrames, activePath]);
 
   // ─── Phase 2b: Static mode ────────────────────────────────────────────
   useEffect(() => {
@@ -131,7 +210,12 @@ export function WatchCanvas({
 
     const resize = () => {
       const rawDpr = window.devicePixelRatio || 1;
-      const dpr = Math.min(rawDpr, 3);
+      // Cap DPR harder on phones/touch: a full-DPR-3 backing store on a small screen
+      // is a huge per-frame GPU/memory cost for no visible gain (source detail tops
+      // out at 720p). DPR 2 still exceeds the source's detail ceiling → crisp + fast.
+      const touch = window.matchMedia("(pointer: coarse)").matches;
+      const small = window.matchMedia(MOBILE_MQ).matches;
+      const dpr = Math.min(rawDpr, touch || small ? 2 : 3);
       canvas.width  = Math.ceil(canvas.offsetWidth  * dpr);
       canvas.height = Math.ceil(canvas.offsetHeight * dpr);
       const ctx = canvas.getContext("2d")!;
@@ -262,19 +346,24 @@ export function WatchCanvas({
             Rendered in every mode (detecting, static AND canvas-while-loading)
             so the section shows frame 1 instead of the raw green void before
             the canvas has painted. This is the fallback picture for the whole
-            scene. zIndex:1 keeps it behind the live canvas. */}
-        <img
-          src={`${framesPath}/frame0001.jpg`}
-          alt=""
-          aria-hidden="true"
-          style={{
-            position: "absolute", inset: 0,
-            width: "100%", height: "100%",
-            objectFit: "cover", objectPosition: "center",
-            zIndex: 1, background: "#000",
-          }}
-          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-        />
+            scene. zIndex:1 keeps it behind the live canvas.
+            Gated on pathResolved so a phone never fetches the heavy desktop
+            frame0001 before the lighter `-mobile` set is confirmed. Desktop
+            resolves synchronously, so there the poster still shows immediately. */}
+        {pathResolved && (
+          <img
+            src={`${activePath}/frame0001.jpg`}
+            alt=""
+            aria-hidden="true"
+            style={{
+              position: "absolute", inset: 0,
+              width: "100%", height: "100%",
+              objectFit: "cover", objectPosition: "center",
+              zIndex: 1, background: "#000",
+            }}
+            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+          />
+        )}
 
         {/* ── Canvas ──────────────────────────────────────────── */}
         {/* transparent bg (NOT var(--c-void)) so the poster shows through until
