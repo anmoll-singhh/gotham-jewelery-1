@@ -585,6 +585,20 @@ function StoreScene() {
   const text2Ref    = useRef<HTMLDivElement>(null);
   const text3Ref    = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
+  const videoRef    = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const tryPlay = () => video.play().catch(() => {});
+    tryPlay();
+    video.addEventListener('loadeddata', tryPlay);
+    video.addEventListener('canplay', tryPlay);
+    return () => {
+      video.removeEventListener('loadeddata', tryPlay);
+      video.removeEventListener('canplay', tryPlay);
+    };
+  }, []);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -647,7 +661,7 @@ function StoreScene() {
 
       {/* Layer 1: Exterior — desktop only; mobile fallback renders its own images */}
       <div ref={layer1Ref} className="hide-mobile" style={{ position: "absolute", inset: 0, willChange: "opacity, transform" }}>
-        <video className="hide-mobile" autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.86) saturate(0.9)" }}>
+        <video ref={videoRef} className="hide-mobile" autoPlay muted loop playsInline preload="auto" controls={false} disablePictureInPicture style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.86) saturate(0.9)" }}>
           <source src="/assets/gotham-showroom-walk.mp4" type="video/mp4" />
         </video>
         <Pic src="/assets/gotham-store-interior-1.webp" alt="" aria-hidden="true" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.86) saturate(0.9)" }} />
